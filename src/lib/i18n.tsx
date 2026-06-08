@@ -20,7 +20,6 @@ export const DICT = {
   navPipeline: { zh: '管道推理', en: 'Pipeline Logic' },
   navSeries: { zh: '图形推理', en: 'Figure Series' },
   navNumerical: { zh: '数字推理', en: 'Numerical' },
-  navBank: { zh: '管道题库', en: 'Pipeline Bank' },
   comingSoon: { zh: '敬请期待', en: 'Coming soon' },
   comingSoonBody: {
     zh: '该题型正在开发中，敬请期待。',
@@ -98,21 +97,6 @@ export const DICT = {
     zh: (n: number) => `找到 ${n} 个有效组合（流程图显示第一个）。`,
     en: (n: number) => `${n} valid combinations found (flow shows the first).`,
   },
-
-  // ---- bank page ----
-  bankTitle:    { zh: '管道题库', en: 'Pipeline Question Bank' },
-  bankSubtitle: { zh: '共 30 道题，涵盖简单、中等、困难三个难度。', en: '30 puzzles across easy, medium, and hard difficulties.' },
-  bankAll:      { zh: '全部', en: 'All' },
-  bankEasy:     { zh: '简单', en: 'Easy' },
-  bankMedium:   { zh: '中等', en: 'Medium' },
-  bankHard:     { zh: '困难', en: 'Hard' },
-  bankProgress: { zh: (s: number, t: number) => `${s} / ${t} 已答对`, en: (s: number, t: number) => `${s} / ${t} solved` },
-  bankCorrect:  { zh: '回答正确！', en: 'Correct!' },
-  bankWrong:    { zh: '答错了', en: 'Wrong' },
-  bankReveal:   { zh: '正确答案', en: 'Correct answer' },
-  bankReset:    { zh: '重置全部', en: 'Reset all' },
-  bankInput:    { zh: '输入', en: 'Input' },
-  bankOutput:   { zh: '输出', en: 'Output' },
 
   // ---- numerical page ----
   numTitle: { zh: '数字推理', en: 'Numerical' },

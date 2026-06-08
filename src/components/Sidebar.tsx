@@ -45,19 +45,6 @@ const NAV: NavItem[] = [
       </svg>
     ),
   },
-  {
-    href: "/bank",
-    key: "navBank",
-    icon: (
-      <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="M3 9h18M8 5v4M16 5v4" />
-        <circle cx="8" cy="14" r="1" fill="currentColor" stroke="none" />
-        <circle cx="12" cy="14" r="1" fill="currentColor" stroke="none" />
-        <circle cx="16" cy="14" r="1" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
 ];
 
 export default function Sidebar() {
