@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useI18n, type DictKey } from '@/lib/i18n';
 import { Shape } from '@/lib/shapes';
 import { shapeNameKey } from '@/lib/i18n';
@@ -19,26 +19,26 @@ export default function OrderCard({
   onChangeOrder: (order: number[]) => void;
 }) {
   const { t } = useI18n();
-  const dragIdx = useRef<number | null>(null);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [overIdx, setOverIdx] = useState<number | null>(null);
 
-  const onDragStart = (i: number) => { dragIdx.current = i; };
+  const onDragStart = (i: number) => { setDragIdx(i); };
   const onDragOver = (e: React.DragEvent, i: number) => {
     e.preventDefault();
     setOverIdx(i);
   };
   const onDrop = (e: React.DragEvent, i: number) => {
     e.preventDefault();
-    const from = dragIdx.current;
+    const from = dragIdx;
     if (from === null || from === i) { setOverIdx(null); return; }
     const next = order.slice();
     const [moved] = next.splice(from, 1);
     next.splice(i, 0, moved);
     onChangeOrder(next);
-    dragIdx.current = null;
+    setDragIdx(null);
     setOverIdx(null);
   };
-  const onDragEnd = () => { dragIdx.current = null; setOverIdx(null); };
+  const onDragEnd = () => { setDragIdx(null); setOverIdx(null); };
 
   return (
     <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -72,7 +72,7 @@ export default function OrderCard({
             title={t(shapeNameKey(id))}
             className={[
               'flex h-14 w-14 cursor-grab items-center justify-center rounded-xl border-2 bg-white transition select-none active:cursor-grabbing',
-              overIdx === i && dragIdx.current !== i
+              overIdx === i && dragIdx !== i
                 ? 'scale-105 border-indigo-400 shadow-md'
                 : 'border-gray-200 hover:border-indigo-300 hover:shadow-sm',
             ].join(' ')}

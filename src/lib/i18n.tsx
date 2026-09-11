@@ -8,9 +8,27 @@
      t('errBoxPerm', 2, '1325')      -> interpolated string
    ===================================================================== */
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from 'react';
 
 export type Lang = 'zh' | 'en';
+
+const LANG_STORAGE_KEY = 'lang';
+const LANGUAGE_CHANGE_EVENT = 'pg-quiz:language-change';
+
+function readStoredLanguage(): Lang {
+  if (typeof window === 'undefined') return 'zh';
+  const saved = localStorage.getItem(LANG_STORAGE_KEY);
+  return saved === 'en' ? 'en' : 'zh';
+}
+
+function subscribeToLanguage(onStoreChange: () => void) {
+  window.addEventListener('storage', onStoreChange);
+  window.addEventListener(LANGUAGE_CHANGE_EVENT, onStoreChange);
+  return () => {
+    window.removeEventListener('storage', onStoreChange);
+    window.removeEventListener(LANGUAGE_CHANGE_EVENT, onStoreChange);
+  };
+}
 
 type Entry = { zh: string; en: string } | { zh: (...a: never[]) => string; en: (...a: never[]) => string };
 
@@ -154,17 +172,11 @@ interface I18nCtx {
 const Ctx = createContext<I18nCtx | null>(null);
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('zh');
-
-  // hydrate from localStorage after mount (default stays 'zh' for SSR)
-  useEffect(() => {
-    const saved = typeof window !== 'undefined' ? (localStorage.getItem('lang') as Lang | null) : null;
-    if (saved === 'zh' || saved === 'en') setLangState(saved);
-  }, []);
+  const lang = useSyncExternalStore<Lang>(subscribeToLanguage, readStoredLanguage, () => 'zh');
 
   const setLang = useCallback((l: Lang) => {
-    setLangState(l);
-    if (typeof window !== 'undefined') localStorage.setItem('lang', l);
+    localStorage.setItem(LANG_STORAGE_KEY, l);
+    window.dispatchEvent(new Event(LANGUAGE_CHANGE_EVENT));
   }, []);
 
   const toggle = useCallback(() => setLang(lang === 'zh' ? 'en' : 'zh'), [lang, setLang]);
