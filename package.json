@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test tests/*.test.ts"
+    "test": "tsx --test tests/*.test.ts",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@clerk/localizations": "^4.16.1",
