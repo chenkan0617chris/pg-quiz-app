@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n, type DictKey } from "@/lib/i18n";
+import { localePath } from "@/lib/seo";
 
 type NavItem = {
   href: string;
@@ -13,6 +14,8 @@ type NavItem = {
 const iconClass = "h-5 w-5 shrink-0";
 
 const NAV: NavItem[] = [
+  {href:'',key:'navHome',icon:<span className={iconClass} aria-hidden="true">⌂</span>},
+  {href:'/practice',key:'navPractice',icon:<span className={iconClass} aria-hidden="true">✎</span>},
   {
     href: "/pipeline",
     key: "navPipeline",
@@ -45,33 +48,36 @@ const NAV: NavItem[] = [
       </svg>
     ),
   },
+  {href:'/guides',key:'navGuides',icon:<span className={iconClass} aria-hidden="true">✦</span>},
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { t, lang, toggle } = useI18n();
+  const href = (path: string) => localePath(lang, path);
 
   return (
     <aside className="flex w-16 shrink-0 flex-col border-r border-gray-200 bg-gray-50/60 px-2 py-5 sm:w-60 sm:px-4">
       {/* Brand */}
-      <div className="mb-8 flex items-center gap-2.5 px-1 sm:px-2">
+      <Link href={href("")} className="mb-8 flex items-center gap-2.5 px-1 sm:px-2">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white shadow-sm">
           P
         </span>
         <span className="hidden truncate text-base font-semibold tracking-tight text-slate-900 sm:block">
           {t("appName")}
         </span>
-      </div>
+      </Link>
 
       {/* Nav */}
       <nav className="flex flex-1 flex-col gap-1">
         {NAV.map((item) => {
+          const target = href(item.href);
           const active =
-            pathname === item.href || pathname.startsWith(item.href + "/");
+            pathname === target || (item.href !== "" && pathname.startsWith(target + "/"));
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={target}
               aria-current={active ? "page" : undefined}
               title={t(item.key)}
               className={[

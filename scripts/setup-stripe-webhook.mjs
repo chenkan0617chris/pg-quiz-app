@@ -1,0 +1,14 @@
+import Stripe from 'stripe';
+import {appendFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+if(!/^(sk|rk)_test_/.test(process.env.STRIPE_SECRET_KEY??''))throw new Error('This script only provisions sandbox webhooks');
+const stripe=new Stripe(process.env.STRIPE_SECRET_KEY);
+const url='https://quiz.ckautoflow.com/api/stripe/webhook';
+const endpoints=await stripe.webhookEndpoints.list({limit:100});
+if(endpoints.data.some(e=>e.url===url))throw new Error('Endpoint already exists; reuse its stored signing secret instead of creating a duplicate');
+const endpoint=await stripe.webhookEndpoints.create({url,enabled_events:['checkout.session.completed','checkout.session.async_payment_succeeded','charge.refunded'],description:'Quiz sandbox payment notifications'});
+if(!endpoint.secret)throw new Error('No signing secret returned');
+appendFileSync('.env.local',`\nSTRIPE_WEBHOOK_SECRET=${endpoint.secret}\n`);
+const result=spawnSync('npx',['--yes','vercel@59.16.0','env','add','STRIPE_WEBHOOK_SECRET','production','--sensitive'],{input:endpoint.secret+'\n',encoding:'utf8'});
+console.log({endpointCreated:true,productionSecretConfigured:result.status===0});
+if(result.status!==0)process.exitCode=1;

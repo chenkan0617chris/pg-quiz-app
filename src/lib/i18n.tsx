@@ -1,34 +1,21 @@
 'use client';
 
 /* =====================================================================
-   I18N — bilingual (中文 default / English), React context + localStorage.
+   I18N — bilingual (中文 / English), React context driven by the URL locale.
    Usage:
      const { lang, setLang, toggle, t } = useI18n();
      t('solve')                      -> string
      t('errBoxPerm', 2, '1325')      -> interpolated string
    ===================================================================== */
 
-import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
+
+import { languageFromPath, withLanguage } from './language';
 
 export type Lang = 'zh' | 'en';
 
-const LANG_STORAGE_KEY = 'lang';
-const LANGUAGE_CHANGE_EVENT = 'pg-quiz:language-change';
-
-function readStoredLanguage(): Lang {
-  if (typeof window === 'undefined') return 'zh';
-  const saved = localStorage.getItem(LANG_STORAGE_KEY);
-  return saved === 'en' ? 'en' : 'zh';
-}
-
-function subscribeToLanguage(onStoreChange: () => void) {
-  window.addEventListener('storage', onStoreChange);
-  window.addEventListener(LANGUAGE_CHANGE_EVENT, onStoreChange);
-  return () => {
-    window.removeEventListener('storage', onStoreChange);
-    window.removeEventListener(LANGUAGE_CHANGE_EVENT, onStoreChange);
-  };
-}
+const LANG_COOKIE = 'lang';
 
 type Entry = { zh: string; en: string } | { zh: (...a: never[]) => string; en: (...a: never[]) => string };
 
@@ -38,6 +25,10 @@ export const DICT = {
   navPipeline: { zh: '管道推理', en: 'Pipeline Logic' },
   navSeries: { zh: '图形推理', en: 'Figure Series' },
   navNumerical: { zh: '数字推理', en: 'Numerical' },
+  navData: { zh: '图表与数据分析', en: 'Data Interpretation' },
+  navPractice: { zh: '练习题库', en: 'Practice' },
+  navHome: { zh: '首页', en: 'Home' },
+  navGuides: { zh: '解题攻略', en: 'Guides' },
   comingSoon: { zh: '敬请期待', en: 'Coming soon' },
   comingSoonBody: {
     zh: '该题型正在开发中，敬请期待。',
@@ -171,13 +162,27 @@ interface I18nCtx {
 
 const Ctx = createContext<I18nCtx | null>(null);
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const lang = useSyncExternalStore<Lang>(subscribeToLanguage, readStoredLanguage, () => 'zh');
+/**
+ * The URL is the single source of truth for language: every public page lives
+ * under /zh or /en, so a crawler and a visitor at the same address always see
+ * the same words. The cookie only records a preference, used when someone
+ * arrives at a path that carries no locale prefix.
+ */
+export function I18nProvider({ children, lang }: { children: React.ReactNode; lang: Lang }) {
+  const pathname = usePathname();
 
-  const setLang = useCallback((l: Lang) => {
-    localStorage.setItem(LANG_STORAGE_KEY, l);
-    window.dispatchEvent(new Event(LANGUAGE_CHANGE_EVENT));
-  }, []);
+  const setLang = useCallback(
+    (next: Lang) => {
+      document.cookie = `${LANG_COOKIE}=${next}; Path=/; Max-Age=31536000; SameSite=Lax`;
+      // A full document load, not router.push: the locale is resolved in the
+      // root layout, which a client-side navigation between sibling [lang]
+      // routes does not re-render, leaving <html lang> and the sidebar stale.
+      // Switching language is rare enough that one real navigation is fine.
+      const target = languageFromPath(pathname) ? withLanguage(pathname, next) : pathname;
+      window.location.assign(target + window.location.search + window.location.hash);
+    },
+    [pathname],
+  );
 
   const toggle = useCallback(() => setLang(lang === 'zh' ? 'en' : 'zh'), [lang, setLang]);
 
