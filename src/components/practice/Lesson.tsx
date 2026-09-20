@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import type { Explanation, PublicQuestion } from '@/lib/practice';
-import { Shape } from '@/lib/shapes';
 import Figure from './Figure';
 import {ruleNames} from '@/lib/figure';
 import ShapeRow from '@/components/pipeline/ShapeRow';
-import { useI18n, shapeNameKey } from '@/lib/i18n';
+import { PipelineBoard, PipelineShapeLane, PipelineStage } from '@/components/pipeline/PipelineBoard';
+import { useI18n } from '@/lib/i18n';
 
 export default function Lesson({explanation:ex,question:q}:{explanation:Explanation;question:PublicQuestion}) {
   const {lang,t}=useI18n();
@@ -34,7 +34,8 @@ export default function Lesson({explanation:ex,question:q}:{explanation:Explanat
     <p className="text-sm">{zh?'结果保留一位小数。注意分母：增长率用基期，占比用总额，比值按题目指定的顺序。':'Round to one decimal place. The denominator is the base year for growth, the total for share, or the second quantity for a ratio.'}</p>
   </div>;
   if(ex.kind!=='pipeline')return null;
-  const seq=frame===0?ex.steps[0].input:ex.steps[frame-1].output;
+  const initial=ex.steps[0]?.input??ex.before;
+  const final=ex.steps.at(-1)?.output??ex.after;
   return <div className="mt-5 space-y-4 rounded-xl border bg-white p-5 text-slate-700">
     <h3 className="font-bold">{zh?'推导过程与动画':'Reasoning & walkthrough'}</h3>
     <p>{zh?'先从输入向前执行未知方框之前的变换；再从最终输出逆向撤销未知方框之后的变换。这样就能确定未知方框两端的图形。':'Apply the known boxes before the unknown box to the input. Work backwards from the final output, undoing the boxes after it. This isolates the shapes on both sides of the unknown box.'}</p>
@@ -42,9 +43,18 @@ export default function Lesson({explanation:ex,question:q}:{explanation:Explanat
     <p className="text-sm">{zh?'逐个查找右边图形在左边的位置：':'Find each right-hand shape’s position on the left:'} {ex.after.map((v,i)=>`${i+1} ← ${ex.before.indexOf(v)+1}`).join(' · ')}。</p>
     <div className="rounded-xl bg-slate-50 p-4">
       <p className="mb-3 text-sm" aria-live="polite">{frame===0?(zh?'初始输入':'Initial input'):`${zh?'第':'Step'} ${frame}${zh?' 级输出':''} · ${ex.steps[frame-1].permutation.join('')}`}</p>
-      <div className="relative mx-auto h-16 w-64" aria-label={zh?'图形移动演示':'Shape movement demonstration'}>
-        {[1,2,3,4].map(id=><div key={id} className="absolute top-1 flex h-12 w-12 items-center justify-center rounded-lg border bg-white transition-transform duration-700 motion-reduce:transition-none" style={{transform:`translateX(${seq.indexOf(id)*64}px)`}}><Shape id={id} size={28} title={t(shapeNameKey(id))}/></div>)}
-      </div>
+      <PipelineBoard
+        ariaLabel={t('pipelineDiagram')}
+        inputLane={<PipelineShapeLane label={t('inputOrder')} lane="input" order={initial}/>}
+        outputLane={<PipelineShapeLane label={t('outputOrder')} lane="output" order={final} highlight={frame===max}/>}
+      >
+        <h4 className="rounded-full border border-sky-100 bg-white/90 px-4 py-1.5 text-xs font-bold tracking-[0.12em] text-[#31566B] shadow-sm">{t('flowTitle')}</h4>
+        {ex.steps.map((step,index)=><PipelineStage
+          key={index}
+          label={t('pipelineStage',index+1)}
+          state={{key:index,value:step.permutation.join(''),unknown:step.unknown,solved:step.unknown,active:frame===index+1}}
+        />)}
+      </PipelineBoard>
       <div className="mt-3 flex flex-wrap gap-3 text-sm">
         <button type="button" onClick={()=>{setPlaying(false);setFrame(0);}} className="rounded border px-3 py-2">{zh?'重置':'Reset'}</button>
         <button type="button" onClick={()=>setPlaying(!playing)} className="rounded bg-indigo-600 px-3 py-2 text-white">{playing?(zh?'暂停':'Pause'):(zh?'播放动画':'Play animation')}</button>
