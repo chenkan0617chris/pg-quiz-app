@@ -5,9 +5,12 @@ test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
 
   const board = page.getByRole('group', { name: 'Pipeline diagram' });
   await expect(board).toBeVisible();
-  await expect(board.getByText('Input order (top)')).toBeVisible();
+  await expect(board.getByText('Input order (top)')).toHaveCount(0);
   await expect(board.getByText('Pipeline boxes')).toHaveCount(0);
-  await expect(board.getByText('Output order (bottom)')).toBeVisible();
+  await expect(board.getByText('Output order (bottom)')).toHaveCount(0);
+  await expect(board.locator('[data-pipeline-lane] span[aria-label^="Position"]')).toHaveCount(0);
+  await expect(board.locator('[data-pipeline-funnel="in"] path')).toHaveCount(1);
+  await expect(board.locator('[data-pipeline-funnel="out"] path')).toHaveCount(1);
   await expect(board.locator('[data-pipeline-stage]')).toHaveCount(1);
   await expect(board.getByRole('textbox', { name: 'Pipeline stage 1 candidate' })).toHaveCount(3);
   await expect(page.getByRole('heading', { name: 'Candidate options' })).toHaveCount(0);

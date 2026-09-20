@@ -18,41 +18,17 @@ function PipelineFunnel({ direction }: { direction: 'in' | 'out' }) {
     <svg
       aria-hidden="true"
       data-pipeline-funnel={direction}
-      viewBox="0 0 400 88"
+      viewBox="0 0 400 48"
       preserveAspectRatio="none"
-      className="pointer-events-none relative z-0 h-[76px] w-full overflow-visible sm:h-[84px]"
+      className={`pointer-events-none relative z-0 h-12 w-full overflow-visible ${incoming ? 'mt-3' : 'mb-3'}`}
     >
-      <g
-        fill="none"
-        stroke="#BFE8F8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="7"
-        opacity="0.9"
-      >
-        {incoming ? (
-          <>
-            <path d="M50 0v14c0 18 92 10 120 42" />
-            <path d="M150 0v17c0 15 24 21 36 39" />
-            <path d="M250 0v17c0 15-24 21-36 39" />
-            <path d="M350 0v14c0 18-92 10-120 42" />
-          </>
-        ) : (
-          <>
-            <path d="M170 32c-28 32-120 24-120 42v14" />
-            <path d="M186 32c-12 18-36 24-36 39v17" />
-            <path d="M214 32c12 18 36 24 36 39v17" />
-            <path d="M230 32c28 32 120 24 120 42v14" />
-          </>
-        )}
-      </g>
       <path
-        d={incoming ? 'M158 44h84l-22 34h-40z' : 'M180 12h40l22 34h-84z'}
+        d={incoming ? 'M158 0h84l-22 34h-40z' : 'M180 7h40l22 34h-84z'}
         fill="#1761C9"
       />
       <rect
         x="186"
-        y={incoming ? 74 : 6}
+        y={incoming ? 30 : 1}
         width="28"
         height="11"
         rx="5"
@@ -60,7 +36,7 @@ function PipelineFunnel({ direction }: { direction: 'in' | 'out' }) {
       />
       <g fill="#B9DDF8">
         {[192, 200, 208].map((x) => (
-          <circle key={x} cx={x} cy={incoming ? 79.5 : 11.5} r="1.7" />
+          <circle key={x} cx={x} cy={incoming ? 35.5 : 6.5} r="1.7" />
         ))}
       </g>
     </svg>
@@ -238,36 +214,20 @@ export function PipelineShapeLane({
     resetDrag();
   };
 
-  const positions = (
-    <div className="grid grid-cols-4 gap-2 px-1 text-center font-mono text-[11px] font-bold tracking-[0.2em] text-[#648399] sm:gap-4">
-      {[1, 2, 3, 4].map((position) => (
-        <span key={position} aria-label={t('position', position)}>{position}</span>
-      ))}
-    </div>
-  );
-
-  const header = (
-    <div className="flex min-h-7 items-center justify-between gap-3 px-1">
-      <h3 className="text-sm font-bold tracking-wide text-[#31566B]">{label}</h3>
-      {controls}
-    </div>
-  );
-
   return (
     <div
       data-pipeline-lane={lane}
+      role="group"
+      aria-label={label}
       className={`relative ${disabled ? 'opacity-45' : ''}`}
     >
-      {lane === 'input' ? <div className="mb-3">{header}</div> : (
-        <div className="absolute -top-7 right-0 left-0 z-20">{header}</div>
-      )}
-      {lane === 'input' && positions}
+      {controls ? <div className="absolute -top-1 right-1 z-20">{controls}</div> : null}
       <div
         ref={rowRef}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={resetDrag}
-        className="mt-1 grid grid-cols-4 gap-2 sm:gap-4"
+        className="grid grid-cols-4 gap-2 sm:gap-4"
       >
         {order.map((id, index) => (
           <div
@@ -300,7 +260,6 @@ export function PipelineShapeLane({
           </div>
         ))}
       </div>
-      {lane === 'output' && <div className="mt-1">{positions}</div>}
     </div>
   );
 }
