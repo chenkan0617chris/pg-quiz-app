@@ -71,6 +71,14 @@ export function cartesian<T>(pool: T[], n: number): T[][] {
   return res;
 }
 
+// Cartesian product across independent pools, one pool per unknown stage.
+export function cartesianProduct<T>(pools: T[][]): T[][] {
+  return pools.reduce<T[][]>(
+    (combos, pool) => combos.flatMap((combo) => pool.map((item) => combo.concat([item]))),
+    [[]],
+  );
+}
+
 const eq = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
 /* =====================================================================
@@ -80,6 +88,7 @@ const eq = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 export interface BoxInput {
   value: string;
   unknown: boolean;
+  candidates?: string[];
 }
 
 export interface PuzzleInput {
@@ -140,6 +149,11 @@ function parseCandidates(raw: string): { raw: string[]; perms: Perm[] } {
   return { raw: items, perms };
 }
 
+function candidatesForBox(box: BoxInput, legacy: ReturnType<typeof parseCandidates>) {
+  const own = parseCandidates((box.candidates ?? []).join(','));
+  return own.raw.length > 0 ? own : legacy;
+}
+
 /**
  * The single source of truth for the solving logic. Mirrors the original
  * solve() routing exactly:
@@ -196,10 +210,11 @@ export function solvePuzzle(inp: PuzzleInput): SolveResult {
 
   // ---------- CASE A: one or more boxes unknown, orders known ----------
   const P = derivePermutation(inputOrder!, outputOrder!);
-  const cand = parseCandidates(inp.candidates);
+  const legacyCandidates = parseCandidates(inp.candidates);
 
   if (unknownBoxIdxs.length === 1) {
     const idx = unknownBoxIdxs[0];
+    const cand = candidatesForBox(inp.boxes[idx], legacyCandidates);
     const before = parsed.slice(0, idx) as Perm[];
     const after = parsed.slice(idx + 1) as Perm[];
     const X = solveMissing(before, after, P);
@@ -219,11 +234,12 @@ export function solvePuzzle(inp: PuzzleInput): SolveResult {
   }
 
   // Multiple unknown boxes: candidates REQUIRED, brute-force combinations.
-  if (cand.perms.length === 0) {
+  const candidatePools = unknownBoxIdxs.map((idx) => candidatesForBox(inp.boxes[idx], legacyCandidates).perms);
+  if (candidatePools.some((pool) => pool.length !== 3)) {
     return { kind: 'errors', errors: [{ key: 'needCands', params: [unknownBoxIdxs.length] }] };
   }
   const solutions: { boxIndex: number; box: Perm }[][] = [];
-  cartesian(cand.perms, unknownBoxIdxs.length).forEach((combo) => {
+  cartesianProduct(candidatePools).forEach((combo) => {
     const boxes = parsed.slice() as Perm[];
     unknownBoxIdxs.forEach((bi, k) => (boxes[bi] = combo[k]));
     if (eq(foldBoxes(boxes), P)) {

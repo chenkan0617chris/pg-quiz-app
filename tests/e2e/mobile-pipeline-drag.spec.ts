@@ -9,6 +9,22 @@ test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
   await expect(board.getByText('Pipeline boxes')).toBeVisible();
   await expect(board.getByText('Output order (bottom)')).toBeVisible();
   await expect(board.locator('[data-pipeline-stage]')).toHaveCount(1);
+  await expect(board.getByRole('textbox', { name: 'Pipeline stage 1 candidate' })).toHaveCount(3);
+  await expect(page.getByRole('heading', { name: 'Candidate options' })).toHaveCount(0);
+
+  const firstStage = board.locator('[data-pipeline-stage]').first();
+  const firstStageUnknown = firstStage.getByRole('checkbox');
+  await firstStageUnknown.uncheck();
+  await expect(firstStage.getByRole('textbox', { name: 'Pipeline stage 1' })).toHaveCount(1);
+  await firstStageUnknown.check();
+  await expect(firstStage.getByRole('textbox', { name: 'Pipeline stage 1 candidate' })).toHaveCount(3);
+
+  await page.getByRole('button', { name: 'Add box' }).click();
+  await expect(board.locator('[data-pipeline-stage]')).toHaveCount(2);
+  const secondStage = board.locator('[data-pipeline-stage]').nth(1);
+  await expect(secondStage.getByRole('textbox', { name: 'Pipeline stage 2' })).toHaveCount(1);
+  await secondStage.getByRole('checkbox').check();
+  await expect(secondStage.getByRole('textbox', { name: 'Pipeline stage 2 candidate' })).toHaveCount(3);
 
   const inputLane = board.locator('[data-pipeline-lane="input"]');
   const shapes = inputLane.getByRole('img');

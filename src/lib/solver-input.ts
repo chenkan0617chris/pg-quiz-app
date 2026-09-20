@@ -4,11 +4,21 @@ const order = z.array(z.number().int().min(1).max(4)).length(4).refine(v => new 
 export const pipelineSchema = z.object({
   inputUnknown: z.boolean(), outputUnknown: z.boolean(),
   inputOrder: order, outputOrder: order,
-  boxes: z.array(z.object({value:z.string().max(4),unknown:z.boolean()})).min(1).max(8),
+  boxes: z.array(z.object({
+    value:z.string().max(4),
+    unknown:z.boolean(),
+    candidates:z.array(z.string().max(4)).length(3).optional(),
+  })).min(1).max(8),
   candidates: z.string().max(160),
 }).refine(v => {
-  const count = v.candidates.split(',').filter(s => s.trim()).length;
-  return Math.pow(count, v.boxes.filter(b => b.unknown).length) <= 4096;
+  const legacyCount = v.candidates.split(',').filter(s => s.trim()).length;
+  const combinations = v.boxes
+    .filter(b => b.unknown)
+    .reduce((count, box) => {
+      const ownCount = box.candidates?.filter(candidate => candidate.trim()).length ?? 0;
+      return count * (ownCount || legacyCount);
+    }, 1);
+  return combinations <= 4096;
 }, 'Too many combinations');
 
 const id = z.string().max(100);

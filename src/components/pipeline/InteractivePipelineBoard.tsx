@@ -36,6 +36,11 @@ export default function InteractivePipelineBoard({
   const updateBox = (index: number, patch: Partial<BoxInput>) => {
     onBoxesChange(boxes.map((box, i) => (i === index ? { ...box, ...patch } : box)));
   };
+  const updateCandidate = (boxIndex: number, candidateIndex: number, value: string) => {
+    const candidates = [...(boxes[boxIndex].candidates ?? ['', '', ''])];
+    candidates[candidateIndex] = value;
+    updateBox(boxIndex, { candidates });
+  };
   const removeBox = (index: number) => {
     if (boxes.length === 1) return;
     onBoxesChange(boxes.filter((_, i) => i !== index));
@@ -86,33 +91,59 @@ export default function InteractivePipelineBoard({
         </h3>
         {boxes.map((box, index) => {
           const label = t('pipelineStage', index + 1);
+          const candidates = box.candidates ?? ['', '', ''];
           return (
             <PipelineStage
               key={index}
               label={label}
               state={{ key: index, value: box.value, unknown: box.unknown }}
               valueEditor={(
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[1-4]*"
-                  maxLength={4}
-                  value={box.value}
-                  disabled={box.unknown}
-                  onChange={(event) => updateBox(index, {
-                    value: event.target.value.replace(/[^1-4]/g, ''),
-                  })}
-                  placeholder={box.unknown ? '????' : '____'}
-                  aria-label={label}
-                  className="w-28 bg-transparent text-center font-mono text-xl font-bold tracking-[0.25em] text-inherit outline-none placeholder:text-current placeholder:opacity-70 disabled:cursor-not-allowed"
-                />
+                box.unknown ? (
+                  <div className="flex items-center justify-center gap-2" aria-label={t('stageCandidates', index + 1)}>
+                    {candidates.map((candidate, candidateIndex) => (
+                      <input
+                        key={candidateIndex}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[1-4]*"
+                        maxLength={4}
+                        value={candidate}
+                        onChange={(event) => updateCandidate(
+                          index,
+                          candidateIndex,
+                          event.target.value.replace(/[^1-4]/g, ''),
+                        )}
+                        placeholder="____"
+                        aria-label={t('stageCandidate', index + 1)}
+                        className="h-11 w-[4.5rem] rounded-lg border border-white/45 bg-white/14 text-center font-mono text-base font-bold tracking-[0.16em] text-white outline-none transition placeholder:text-white/55 focus:bg-white/25 focus:ring-2 focus:ring-white sm:w-[5.25rem] sm:text-lg"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[1-4]*"
+                    maxLength={4}
+                    value={box.value}
+                    onChange={(event) => updateBox(index, {
+                      value: event.target.value.replace(/[^1-4]/g, ''),
+                    })}
+                    placeholder="____"
+                    aria-label={label}
+                    className="w-28 bg-transparent text-center font-mono text-xl font-bold tracking-[0.25em] text-inherit outline-none placeholder:text-current placeholder:opacity-70"
+                  />
+                )
               )}
             >
               <label className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-[#526F82]">
                 <input
                   type="checkbox"
                   checked={box.unknown}
-                  onChange={(event) => updateBox(index, { unknown: event.target.checked })}
+                  onChange={(event) => updateBox(index, {
+                    unknown: event.target.checked,
+                    candidates: box.candidates ?? ['', '', ''],
+                  })}
                   className="h-4 w-4 accent-[#1458C7]"
                 />
                 {t('unknown')}
@@ -135,7 +166,10 @@ export default function InteractivePipelineBoard({
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"
-          onClick={() => onBoxesChange([...boxes, { value: '', unknown: false }])}
+          onClick={() => onBoxesChange([
+            ...boxes,
+            { value: '', unknown: false, candidates: ['', '', ''] },
+          ])}
           className="rounded-full border border-dashed border-[#79CDED] bg-sky-50 px-5 py-2 text-sm font-bold text-[#1458C7] transition hover:bg-sky-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1458C7]"
         >
           {t('addBox')}

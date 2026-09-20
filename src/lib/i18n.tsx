@@ -53,11 +53,19 @@ export const DICT = {
     zh: (n: number) => `第 ${n} 级管道方框`,
     en: (n: number) => `Pipeline stage ${n}`,
   },
+  stageCandidates: {
+    zh: (n: number) => `第 ${n} 级管道候选项`,
+    en: (n: number) => `Pipeline stage ${n} candidates`,
+  },
+  stageCandidate: {
+    zh: (n: number) => `第 ${n} 级管道候选项`,
+    en: (n: number) => `Pipeline stage ${n} candidate`,
+  },
   position: { zh: (n: number) => `位置 ${n}`, en: (n: number) => `Position ${n}` },
   addBox: { zh: '＋ 添加方框', en: '+ Add box' },
   boxUnknownHint: {
-    zh: '在需要求解的方框上勾选“未知”。',
-    en: 'Tick “unknown” on the boxes you want to solve.',
+    zh: '勾选“未知”会显示三个候选框；单层未知时可以全部留空。',
+    en: 'Tick “unknown” to show three candidate slots; all may stay empty for one unknown stage.',
   },
   candidates: { zh: '候选项', en: 'Candidate options' },
   candHint: {
@@ -101,8 +109,8 @@ export const DICT = {
     en: 'Solved pipeline does not reproduce the output — inputs may be inconsistent.',
   },
   needCands: {
-    zh: (n: number) => `有 ${n} 个未知方框——请提供候选项以供选择。`,
-    en: (n: number) => `You have ${n} unknown boxes — provide candidate options to choose from.`,
+    zh: (n: number) => `有 ${n} 个未知方框——请为每个未知方框完整填写三个有效候选项。`,
+    en: (n: number) => `You have ${n} unknown boxes — enter three valid candidates for every unknown box.`,
   },
   noCombo: {
     zh: '没有任何候选项组合能复现输出。请检查候选项、方框和顺序。',

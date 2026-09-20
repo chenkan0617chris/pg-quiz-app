@@ -8,7 +8,7 @@ test('accepts ordinary pipeline and rejects invalid shape values', () => {
   assert.equal(pipelineSchema.safeParse({...pipeline,inputOrder:[1,1,2,3]}).success, false);
 });
 test('rejects combinatorial pipeline explosion', () => {
-  assert.equal(pipelineSchema.safeParse({...pipeline,boxes:Array(8).fill({value:'',unknown:true}),candidates:'1234,1243,1324,1342,1423,1432'}).success,false);
+  assert.equal(pipelineSchema.safeParse({...pipeline,boxes:Array(8).fill({value:'',unknown:true,candidates:['1234','1243','1324']}),candidates:''}).success,false);
 });
 test('rejects unbounded numeric options and malformed expressions', () => {
   const input = {tokens:[{kind:'blank',id:'a'},{kind:'op',id:'b',op:'+'},{kind:'blank',id:'c'}],target:3,range:'1-9',distinct:true};
