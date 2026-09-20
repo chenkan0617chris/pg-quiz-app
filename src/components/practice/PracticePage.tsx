@@ -4,7 +4,13 @@ import { useEffect,useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { useI18n } from '@/lib/i18n';
 import { useSolveRequest } from '@/lib/solve-request';
-import ShapeRow from '@/components/pipeline/ShapeRow';
+import {
+  PipelineAnswerInputs,
+  PipelineBoard,
+  PipelineShapeLane,
+  PipelineStage,
+} from '@/components/pipeline/PipelineBoard';
+import { updatePipelineDigit } from '@/lib/practice-answer';
 
 import type { PublicQuestion as Question, Explanation, Difficulty } from '@/lib/practice';
 import Lesson from '@/components/practice/Lesson';
@@ -19,7 +25,7 @@ export default function PracticePage({initialKind = 'pipeline'}: {initialKind?: 
 }
 
 function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
-  const {lang}=useI18n();
+  const {lang,t}=useI18n();
   const {isSignedIn,userId}=useAuth();
   const zh=lang==='zh';
   const [kind,setKind]=useState<Question['kind']>(initialKind);
@@ -77,12 +83,30 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
           <p className="mt-4 font-medium">{zh?'点击开始练习；未登录时会提示登录。题目为规则生成的原创练习。':'Start to practice; sign in when prompted. Questions are original generated exercises.'}</p>
         </div> : <form onSubmit={submit}>
           {exercise.question.kind==='pipeline'?<div className="space-y-5">
-            <div><p className="mb-2 text-sm text-gray-500">{zh?'输入顺序':'Input order'}</p><ShapeRow seq={exercise.question.input}/></div>
-            <div className="space-y-2">{exercise.question.boxes.map((box,i)=><div key={i} className={`rounded-lg border p-3 ${box?'border-gray-200':'border-indigo-300 bg-indigo-50 text-indigo-800'}`}>↓ {zh?'第':'Stage'} {i+1} · {box?box.join(' '):(zh?'未知变换 ? ? ? ?':'Unknown ? ? ? ?')} ↓</div>)}</div>
-            <div><p className="mb-2 text-sm text-gray-500">{zh?'输出顺序':'Output order'}</p><ShapeRow seq={exercise.question.output}/></div>
+            <PipelineBoard
+              ariaLabel={t('pipelineDiagram')}
+              inputLane={<PipelineShapeLane label={t('inputOrder')} lane="input" order={exercise.question.input}/>}
+              outputLane={<PipelineShapeLane label={t('outputOrder')} lane="output" order={exercise.question.output}/>}
+            >
+              <h3 className="rounded-full border border-sky-100 bg-white/90 px-4 py-1.5 text-xs font-bold tracking-[0.12em] text-[#31566B] shadow-sm">{t('pipelineBoxes')}</h3>
+              {exercise.question.boxes.map((box,i)=>{
+                const label=t('pipelineStage',i+1);
+                return <PipelineStage
+                  key={i}
+                  label={label}
+                  state={{key:i,value:box?box.join(''):'????',unknown:!box}}
+                  valueEditor={!box?<PipelineAnswerInputs
+                    values={digits}
+                    disabled={!!result||busy}
+                    labels={[1,2,3,4].map(position=>t('position',position))}
+                    onChange={(index,value)=>setDigits(old=>updatePipelineDigit(old,index,value))}
+                  />:undefined}
+                />;
+              })}
+            </PipelineBoard>
             <p className="text-sm text-gray-500">{zh?'填入 1、2、3、4，各一次。第 i 个数字表示第 i 个输出取自哪个输入位置。':'Use 1, 2, 3, 4 once each. Each digit selects the input position for that output.'}</p>
           </div>:exercise.question.kind==='figure'?<div><p className="mb-4 text-sm text-slate-600">{zh?'观察前五幅图，选择下一幅。格子按旋转、镜像、移动或黑白翻转规律变化。':'Study the five figures and select the next. Look for rotation, reflection, movement or inversion.'}</p><div className="flex flex-wrap gap-3">{exercise.question.frames.map((mask,i)=><Figure key={i} mask={mask} label={`${i+1}`}/>)}<div className="flex w-24 items-center justify-center text-3xl">?</div></div></div>:exercise.question.kind==='data'?<DataPrompt question={exercise.question} zh={zh}/>:<div className="rounded-xl bg-indigo-50 p-7"><p className="text-2xl font-semibold text-indigo-900">a × b + c = {exercise.question.target}</p><p className="mt-3 text-sm text-indigo-700">{zh?'使用 1–9，不重复；任何符合等式的答案都算正确。':'Use distinct digits 1–9. Any valid solution is accepted.'}</p></div>}
-          {exercise.question.kind==='figure'?<fieldset className="my-6 flex flex-wrap gap-3"><legend className="mb-2">{zh?'选择下一幅图形':'Choose the next figure'}</legend>{exercise.question.options.map((mask,i)=><label key={i} className={`cursor-pointer rounded-lg border p-3 ${digits[0]===String(i+1)?'border-indigo-500 bg-indigo-50':'border-slate-200'}`}><input type="radio" name="figure-answer" aria-label={`${zh?'选项':'Option'} ${String.fromCharCode(65+i)}`} disabled={!!result||busy} checked={digits[0]===String(i+1)} onChange={()=>setDigits([String(i+1)])}/><Figure mask={mask} label={String.fromCharCode(65+i)}/></label>)}</fieldset>:exercise.question.kind==='data'?<fieldset className="my-6 grid gap-3 sm:grid-cols-2"><legend className="mb-2 text-sm">{zh?'选择一个答案':'Choose one answer'}</legend>{exercise.question.options.map((option,i)=><label key={i} className={`flex cursor-pointer items-center gap-3 rounded-lg border p-4 ${digits[0]===String(i+1)?'border-indigo-500 bg-indigo-50':'border-gray-200'}`}><input type="radio" name="data-answer" required disabled={!!result||busy} checked={digits[0]===String(i+1)} onChange={()=>setDigits([String(i+1)])}/>{String.fromCharCode(65+i)}. {option.toFixed(1)}{exercise.question.kind==='data'&&exercise.question.metric!=='ratio'?'%':''}</label>)}</fieldset>:<div className="my-6 flex flex-wrap gap-3">{digits.map((value,i)=><label key={i} className="text-sm text-gray-600">{exercise.question.kind==='numerical'?['a','b','c'][i]:`${zh?'位置':'Position'} ${i+1}`}<input required inputMode="numeric" pattern="[1-9]" maxLength={1} value={value} disabled={!!result||busy} onChange={e=>{const v=e.target.value;if(!/^[1-9]?$/.test(v))return;setDigits(old=>old.map((d,j)=>i===j?v:d));}} className="mt-2 block w-14 rounded-lg border border-gray-300 p-3 text-center text-xl disabled:bg-gray-50"/></label>)}</div>}
+          {exercise.question.kind==='figure'?<fieldset className="my-6 flex flex-wrap gap-3"><legend className="mb-2">{zh?'选择下一幅图形':'Choose the next figure'}</legend>{exercise.question.options.map((mask,i)=><label key={i} className={`cursor-pointer rounded-lg border p-3 ${digits[0]===String(i+1)?'border-indigo-500 bg-indigo-50':'border-slate-200'}`}><input type="radio" name="figure-answer" aria-label={`${zh?'选项':'Option'} ${String.fromCharCode(65+i)}`} disabled={!!result||busy} checked={digits[0]===String(i+1)} onChange={()=>setDigits([String(i+1)])}/><Figure mask={mask} label={String.fromCharCode(65+i)}/></label>)}</fieldset>:exercise.question.kind==='data'?<fieldset className="my-6 grid gap-3 sm:grid-cols-2"><legend className="mb-2 text-sm">{zh?'选择一个答案':'Choose one answer'}</legend>{exercise.question.options.map((option,i)=><label key={i} className={`flex cursor-pointer items-center gap-3 rounded-lg border p-4 ${digits[0]===String(i+1)?'border-indigo-500 bg-indigo-50':'border-gray-200'}`}><input type="radio" name="data-answer" required disabled={!!result||busy} checked={digits[0]===String(i+1)} onChange={()=>setDigits([String(i+1)])}/>{String.fromCharCode(65+i)}. {option.toFixed(1)}{exercise.question.kind==='data'&&exercise.question.metric!=='ratio'?'%':''}</label>)}</fieldset>:exercise.question.kind==='numerical'?<div className="my-6 flex flex-wrap gap-3">{digits.map((value,i)=><label key={i} className="text-sm text-gray-600">{['a','b','c'][i]}<input required inputMode="numeric" pattern="[1-9]" maxLength={1} value={value} disabled={!!result||busy} onChange={e=>{const v=e.target.value;if(!/^[1-9]?$/.test(v))return;setDigits(old=>old.map((d,j)=>i===j?v:d));}} className="mt-2 block w-14 rounded-lg border border-gray-300 p-3 text-center text-xl disabled:bg-gray-50"/></label>)}</div>:null}
           {!result && <button disabled={busy||digits.some(v=>!v)} className="rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white disabled:opacity-50">{zh?'提交答案':'Check answer'}</button>}
           {result && <div role="status" className={`rounded-lg p-5 ${result.correct?'bg-green-50 text-green-900':'bg-amber-50 text-amber-900'}`}>
             <p className="font-bold">{result.correct?(zh?'回答正确':'Correct'):(zh?'再接再厉':'Not quite')}</p>
