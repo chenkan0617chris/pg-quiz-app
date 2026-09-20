@@ -48,6 +48,12 @@ export const DICT = {
   unknown: { zh: '未知 ?', en: 'unknown ?' },
   orderHint: { zh: '拖动图形调整顺序。', en: 'Drag shapes to reorder.' },
   pipelineBoxes: { zh: '管道方框', en: 'Pipeline boxes' },
+  pipelineDiagram: { zh: '管道图', en: 'Pipeline diagram' },
+  pipelineStage: {
+    zh: (n: number) => `第 ${n} 级管道方框`,
+    en: (n: number) => `Pipeline stage ${n}`,
+  },
+  position: { zh: (n: number) => `位置 ${n}`, en: (n: number) => `Position ${n}` },
   addBox: { zh: '＋ 添加方框', en: '+ Add box' },
   boxUnknownHint: {
     zh: '在需要求解的方框上勾选“未知”。',
