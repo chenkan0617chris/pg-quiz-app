@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "tsx --test tests/*.test.ts",
+    "test:e2e": "playwright test",
     "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "zod": "^4.6.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
