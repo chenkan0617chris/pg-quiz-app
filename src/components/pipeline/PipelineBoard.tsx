@@ -123,6 +123,13 @@ export function PipelineShapeLane({
   const rowRef = useRef<HTMLDivElement>(null);
   const interactive = Boolean(onChangeOrder) && !disabled;
 
+  const swapWith = (from: number, to: number) => {
+    if (!onChangeOrder || from === to || to < 0 || to >= order.length) return;
+    const next = order.slice();
+    [next[from], next[to]] = [next[to], next[from]];
+    onChangeOrder(next);
+  };
+
   const resetDrag = () => {
     dragIdxRef.current = null;
     overIdxRef.current = null;
@@ -173,9 +180,7 @@ export function PipelineShapeLane({
     const from = dragIdxRef.current;
     const to = indexAtPointer(event) ?? overIdxRef.current;
     if (from !== null && to !== null && from !== to) {
-      const next = order.slice();
-      [next[from], next[to]] = [next[to], next[from]];
-      onChangeOrder(next);
+      swapWith(from, to);
     }
     if (pointerTargetRef.current?.hasPointerCapture(event.pointerId)) {
       pointerTargetRef.current.releasePointerCapture(event.pointerId);
@@ -212,11 +217,25 @@ export function PipelineShapeLane({
           <div
             key={id}
             data-order-index={index}
+            role={interactive ? 'button' : undefined}
+            tabIndex={interactive ? 0 : undefined}
+            aria-label={interactive ? `${t(shapeNameKey(id))}, ${t('position', index + 1)}` : undefined}
             onPointerDown={(event) => onPointerDown(event, index)}
+            onKeyDown={(event) => {
+              if (!interactive) return;
+              if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                swapWith(index, index - 1);
+              }
+              if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                swapWith(index, index + 1);
+              }
+            }}
             title={t(shapeNameKey(id))}
             className={[
               'mx-auto flex h-12 w-12 items-center justify-center rounded-[0.9rem] border border-white/80 bg-[#EEF1F3] shadow-[0_5px_12px_rgba(48,75,93,0.13)] transition sm:h-14 sm:w-14',
-              interactive ? 'touch-none cursor-grab select-none active:cursor-grabbing' : '',
+              interactive ? 'touch-none cursor-grab select-none active:cursor-grabbing focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#1458C7]' : '',
               overIdx === index && dragIdx !== index ? 'scale-105 ring-3 ring-[#79CDED]' : '',
               highlight ? 'ring-2 ring-emerald-400' : '',
             ].join(' ')}

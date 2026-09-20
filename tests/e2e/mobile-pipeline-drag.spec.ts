@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-test('touch pointer drag swaps the source and target pipeline shapes', async ({ page }) => {
-  await page.goto('/en/pipeline');
+test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
+  await page.goto('/en/pipeline', { waitUntil: 'domcontentloaded' });
 
   const board = page.getByRole('group', { name: 'Pipeline diagram' });
   await expect(board).toBeVisible();
@@ -37,4 +37,12 @@ test('touch pointer drag swaps the source and target pipeline shapes', async ({ 
   await expect(inputLane.getByRole('img').nth(1)).toHaveAccessibleName('Yellow triangle');
   await expect(inputLane.getByRole('img').nth(2)).toHaveAccessibleName('Green circle');
   await expect(inputLane.getByRole('img').nth(3)).toHaveAccessibleName('Blue plus');
+
+  const firstShape = inputLane.getByRole('button', { name: 'Red square, Position 1' });
+  await firstShape.click();
+  await firstShape.focus();
+  await firstShape.press('ArrowRight');
+
+  await expect(inputLane.getByRole('img').nth(0)).toHaveAccessibleName('Yellow triangle');
+  await expect(inputLane.getByRole('img').nth(1)).toHaveAccessibleName('Red square');
 });
