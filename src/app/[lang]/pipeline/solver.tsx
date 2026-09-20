@@ -7,8 +7,7 @@ import {
   type SolveResult,
 } from '@/lib/engine';
 import { useI18n } from '@/lib/i18n';
-import OrderCard from '@/components/pipeline/OrderCard';
-import BoxesCard from '@/components/pipeline/BoxesCard';
+import InteractivePipelineBoard from '@/components/pipeline/InteractivePipelineBoard';
 import ResultView from '@/components/pipeline/ResultView';
 
 export default function PipelinePage() {
@@ -34,25 +33,17 @@ export default function PipelinePage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         {/* ===== Problem column ===== */}
         <div className="flex min-w-0 flex-1 flex-col gap-6">
-          {/* Input order (top) */}
-          <OrderCard
-            titleKey="inputOrder"
-            order={inputOrder}
-            unknown={inputUnknown}
-            onChangeUnknown={setInputUnknown}
-            onChangeOrder={setInputOrder}
-          />
-
-          {/* Pipeline boxes (middle) */}
-          <BoxesCard boxes={boxes} onChange={setBoxes} />
-
-          {/* Output order (bottom) */}
-          <OrderCard
-            titleKey="outputOrder"
-            order={outputOrder}
-            unknown={outputUnknown}
-            onChangeUnknown={setOutputUnknown}
-            onChangeOrder={setOutputOrder}
+          <InteractivePipelineBoard
+            inputOrder={inputOrder}
+            outputOrder={outputOrder}
+            inputUnknown={inputUnknown}
+            outputUnknown={outputUnknown}
+            boxes={boxes}
+            onInputOrderChange={setInputOrder}
+            onOutputOrderChange={setOutputOrder}
+            onInputUnknownChange={setInputUnknown}
+            onOutputUnknownChange={setOutputUnknown}
+            onBoxesChange={setBoxes}
           />
 
           {/* Candidates */}
