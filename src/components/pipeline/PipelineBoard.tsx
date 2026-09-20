@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, type Key, type ReactNode } from 'react';
+import { Children, Fragment, useRef, useState, type Key, type ReactNode } from 'react';
 import { Shape } from '@/lib/shapes';
 import { shapeNameKey, useI18n } from '@/lib/i18n';
 
@@ -17,48 +17,83 @@ function PipelineFunnel({ direction }: { direction: 'in' | 'out' }) {
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 260 82"
-      className="pointer-events-none relative z-0 h-[70px] w-[min(100%,260px)] overflow-visible"
+      data-pipeline-funnel={direction}
+      viewBox="0 0 400 88"
+      preserveAspectRatio="none"
+      className="pointer-events-none relative z-0 h-[76px] w-full overflow-visible sm:h-[84px]"
     >
       <g
         fill="none"
         stroke="#BFE8F8"
         strokeLinecap="round"
-        strokeWidth="8"
+        strokeLinejoin="round"
+        strokeWidth="7"
         opacity="0.9"
       >
         {incoming ? (
           <>
-            <path d="M24 2v16c0 18 36 10 70 34" />
-            <path d="M94 2v16c0 14 17 18 28 34" />
-            <path d="M166 2v16c0 14-17 18-28 34" />
-            <path d="M236 2v16c0 18-36 10-70 34" />
+            <path d="M50 0v14c0 18 92 10 120 42" />
+            <path d="M150 0v17c0 15 24 21 36 39" />
+            <path d="M250 0v17c0 15-24 21-36 39" />
+            <path d="M350 0v14c0 18-92 10-120 42" />
           </>
         ) : (
           <>
-            <path d="M94 30C60 54 24 46 24 64v16" />
-            <path d="M122 30c-11 16-28 20-28 34v16" />
-            <path d="M138 30c11 16 28 20 28 34v16" />
-            <path d="M166 30c34 24 70 16 70 34v16" />
+            <path d="M170 32c-28 32-120 24-120 42v14" />
+            <path d="M186 32c-12 18-36 24-36 39v17" />
+            <path d="M214 32c12 18 36 24 36 39v17" />
+            <path d="M230 32c28 32 120 24 120 42v14" />
           </>
         )}
       </g>
       <path
-        d={incoming ? 'M91 18h78l-20 35h-38z' : 'M111 29h38l20 35H91z'}
+        d={incoming ? 'M158 44h84l-22 34h-40z' : 'M180 12h40l22 34h-84z'}
         fill="#1761C9"
       />
       <rect
-        x="116"
-        y={incoming ? 49 : 20}
+        x="186"
+        y={incoming ? 74 : 6}
         width="28"
-        height="12"
+        height="11"
         rx="5"
         fill="#0F4EAC"
       />
       <g fill="#B9DDF8">
-        {[122, 130, 138].map((x) => (
-          <circle key={x} cx={x} cy={incoming ? 55 : 26} r="1.7" />
+        {[192, 200, 208].map((x) => (
+          <circle key={x} cx={x} cy={incoming ? 79.5 : 11.5} r="1.7" />
         ))}
+      </g>
+    </svg>
+  );
+}
+
+export type PipelinePortCount = 1 | 3;
+
+export function PipelineConnector({
+  from,
+  to,
+}: {
+  from: PipelinePortCount;
+  to: PipelinePortCount;
+}) {
+  const paths = from === 1 && to === 1
+    ? ['M200 0v64']
+    : from === 1 && to === 3
+      ? ['M200 0v14', 'M200 14c0 20-108 10-108 38v12', 'M200 14v50', 'M200 14c0 20 108 10 108 38v12']
+      : from === 3 && to === 1
+        ? ['M92 0v12c0 28 108 18 108 38v14', 'M200 0v64', 'M308 0v12c0 28-108 18-108 38v14']
+        : ['M92 0v64', 'M200 0v64', 'M308 0v64'];
+
+  return (
+    <svg
+      aria-hidden="true"
+      data-pipeline-connector={`${from}-${to}`}
+      viewBox="0 0 400 64"
+      preserveAspectRatio="none"
+      className="pointer-events-none h-12 w-full overflow-visible sm:h-14"
+    >
+      <g fill="none" stroke="#BFE8F8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7">
+        {paths.map((path) => <path key={path} d={path} />)}
       </g>
     </svg>
   );
@@ -69,14 +104,21 @@ export function PipelineBoard({
   inputLane,
   outputLane,
   children,
+  stagePorts,
   className = '',
 }: {
   ariaLabel: string;
   inputLane: ReactNode;
   outputLane: ReactNode;
   children: ReactNode;
+  stagePorts?: PipelinePortCount[];
   className?: string;
 }) {
+  const stages = Children.toArray(children);
+  const ports = stagePorts ?? stages.map(() => 1 as const);
+  const firstPort = ports[0] ?? 1;
+  const lastPort = ports.at(-1) ?? 1;
+
   return (
     <section
       role="group"
@@ -85,12 +127,20 @@ export function PipelineBoard({
       className={`relative mx-auto w-full max-w-[34rem] overflow-hidden rounded-[2rem] border border-sky-100 bg-[#F8FBFE] px-3 py-6 shadow-[0_22px_60px_-38px_rgba(20,88,199,0.5)] sm:px-7 sm:py-8 ${className}`}
     >
       <div className="relative z-10">{inputLane}</div>
-      <div className="flex justify-center"><PipelineFunnel direction="in" /></div>
-      <div className="relative z-10 flex flex-col items-center gap-5">
-        <span className="absolute top-0 bottom-0 left-1/2 -z-10 w-2 -translate-x-1/2 rounded-full bg-[#BFE8F8]" aria-hidden="true" />
-        {children}
+      <PipelineFunnel direction="in" />
+      <PipelineConnector from={1} to={firstPort} />
+      <div className="relative z-10 flex flex-col items-center">
+        {stages.map((stage, index) => (
+          <Fragment key={index}>
+            {stage}
+            {index < stages.length - 1 ? (
+              <PipelineConnector from={ports[index] ?? 1} to={ports[index + 1] ?? 1} />
+            ) : null}
+          </Fragment>
+        ))}
       </div>
-      <div className="flex justify-center"><PipelineFunnel direction="out" /></div>
+      <PipelineConnector from={lastPort} to={1} />
+      <PipelineFunnel direction="out" />
       <div className="relative z-10">{outputLane}</div>
     </section>
   );
@@ -196,15 +246,21 @@ export function PipelineShapeLane({
     </div>
   );
 
+  const header = (
+    <div className="flex min-h-7 items-center justify-between gap-3 px-1">
+      <h3 className="text-sm font-bold tracking-wide text-[#31566B]">{label}</h3>
+      {controls}
+    </div>
+  );
+
   return (
     <div
       data-pipeline-lane={lane}
-      className={disabled ? 'opacity-45' : ''}
+      className={`relative ${disabled ? 'opacity-45' : ''}`}
     >
-      <div className="mb-3 flex min-h-7 items-center justify-between gap-3 px-1">
-        <h3 className="text-sm font-bold tracking-wide text-[#31566B]">{label}</h3>
-        {controls}
-      </div>
+      {lane === 'input' ? <div className="mb-3">{header}</div> : (
+        <div className="absolute -top-7 right-0 left-0 z-20">{header}</div>
+      )}
       {lane === 'input' && positions}
       <div
         ref={rowRef}
@@ -252,22 +308,31 @@ export function PipelineShapeLane({
 export function PipelineStage({
   label,
   state,
+  ports = 1,
   valueEditor,
   children,
 }: {
   label: string;
   state: PipelineStageState;
+  ports?: PipelinePortCount;
   valueEditor?: ReactNode;
   children?: ReactNode;
 }) {
   return (
-    <div data-pipeline-stage data-stage-key={String(state.key)} className="relative flex w-full flex-col items-center">
-      <div className="pointer-events-none absolute top-7 left-[12%] right-[12%] -z-10 h-8 rounded-b-[1.5rem] border-r-[7px] border-b-[7px] border-l-[7px] border-[#BFE8F8]" aria-hidden="true" />
+    <div
+      data-pipeline-stage
+      data-stage-key={String(state.key)}
+      data-stage-ports={ports}
+      className="relative flex w-full flex-col items-center"
+    >
       <div
         aria-label={label}
         className={[
-          'relative flex min-h-14 min-w-36 items-center justify-center rounded-xl border-2 px-5 py-2.5 shadow-[0_9px_18px_-12px_rgba(20,88,199,0.8)] transition',
-          state.unknown ? 'border-[#0F4EAC] bg-[#1458C7] text-white' : 'border-[#70C4E5] bg-[#8BD5F0] text-[#31566B]',
+          'relative flex items-center justify-center transition',
+          ports === 3
+            ? 'min-h-12 w-full bg-transparent'
+            : 'min-h-14 min-w-36 rounded-xl border-2 border-[#70C4E5] bg-[#8BD5F0] px-5 py-2.5 text-[#31566B] shadow-[0_9px_18px_-12px_rgba(20,88,199,0.8)]',
+          ports === 1 && state.unknown ? 'border-[#0F4EAC] bg-[#1458C7] text-white' : '',
           state.solved ? 'ring-3 ring-emerald-400 ring-offset-2' : '',
           state.active ? 'scale-[1.03] ring-3 ring-indigo-400 ring-offset-2' : '',
         ].join(' ')}

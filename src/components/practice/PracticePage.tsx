@@ -88,7 +88,6 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
               inputLane={<PipelineShapeLane label={t('inputOrder')} lane="input" order={exercise.question.input}/>}
               outputLane={<PipelineShapeLane label={t('outputOrder')} lane="output" order={exercise.question.output}/>}
             >
-              <h3 className="rounded-full border border-sky-100 bg-white/90 px-4 py-1.5 text-xs font-bold tracking-[0.12em] text-[#31566B] shadow-sm">{t('pipelineBoxes')}</h3>
               {exercise.question.boxes.map((box,i)=>{
                 const label=t('pipelineStage',i+1);
                 return <PipelineStage

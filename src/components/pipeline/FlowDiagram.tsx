@@ -22,7 +22,6 @@ export default function FlowDiagram({
         inputLane={<PipelineShapeLane label={t('inputOrder')} lane="input" order={flow.input}/>}
         outputLane={<PipelineShapeLane label={t('outputOrder')} lane="output" order={output} highlight={highlightOutput}/>}
       >
-        <h3 className="rounded-full border border-sky-100 bg-white/90 px-4 py-1.5 text-xs font-bold tracking-[0.12em] text-[#31566B] shadow-sm">{t('flowTitle')}</h3>
         {flow.stages.map((stage, index) => (
           <PipelineStage
             key={index}

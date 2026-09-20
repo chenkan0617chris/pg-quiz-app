@@ -48,7 +48,6 @@ export default function Lesson({explanation:ex,question:q}:{explanation:Explanat
         inputLane={<PipelineShapeLane label={t('inputOrder')} lane="input" order={initial}/>}
         outputLane={<PipelineShapeLane label={t('outputOrder')} lane="output" order={final} highlight={frame===max}/>}
       >
-        <h4 className="rounded-full border border-sky-100 bg-white/90 px-4 py-1.5 text-xs font-bold tracking-[0.12em] text-[#31566B] shadow-sm">{t('flowTitle')}</h4>
         {ex.steps.map((step,index)=><PipelineStage
           key={index}
           label={t('pipelineStage',index+1)}

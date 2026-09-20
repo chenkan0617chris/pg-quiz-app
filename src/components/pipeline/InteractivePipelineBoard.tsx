@@ -65,6 +65,7 @@ export default function InteractivePipelineBoard({
     <div>
       <PipelineBoard
         ariaLabel={t('pipelineDiagram')}
+        stagePorts={boxes.map((box) => box.unknown ? 3 : 1)}
         inputLane={(
           <PipelineShapeLane
             label={t('inputOrder')}
@@ -86,9 +87,6 @@ export default function InteractivePipelineBoard({
           />
         )}
       >
-        <h3 className="rounded-full border border-sky-100 bg-white/90 px-4 py-1.5 text-xs font-bold tracking-[0.12em] text-[#31566B] shadow-sm">
-          {t('pipelineBoxes')}
-        </h3>
         {boxes.map((box, index) => {
           const label = t('pipelineStage', index + 1);
           const candidates = box.candidates ?? ['', '', ''];
@@ -97,6 +95,7 @@ export default function InteractivePipelineBoard({
               key={index}
               label={label}
               state={{ key: index, value: box.value, unknown: box.unknown }}
+              ports={box.unknown ? 3 : 1}
               valueEditor={(
                 box.unknown ? (
                   <div className="flex items-center justify-center gap-2" aria-label={t('stageCandidates', index + 1)}>
@@ -115,7 +114,7 @@ export default function InteractivePipelineBoard({
                         )}
                         placeholder="____"
                         aria-label={t('stageCandidate', index + 1)}
-                        className="h-11 w-[4.5rem] rounded-lg border border-white/45 bg-white/14 text-center font-mono text-base font-bold tracking-[0.16em] text-white outline-none transition placeholder:text-white/55 focus:bg-white/25 focus:ring-2 focus:ring-white sm:w-[5.25rem] sm:text-lg"
+                        className="h-12 w-[4.5rem] rounded-lg border-2 border-[#63BFDF] bg-[#83D0EB] text-center font-mono text-base font-bold tracking-[0.16em] text-[#31566B] shadow-[0_8px_16px_-11px_rgba(20,88,199,0.9)] outline-none transition placeholder:text-[#31566B]/55 focus:border-[#1458C7] focus:ring-2 focus:ring-[#79CDED] sm:w-[5.25rem] sm:text-lg"
                       />
                     ))}
                   </div>
