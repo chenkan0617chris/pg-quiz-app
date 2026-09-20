@@ -8,7 +8,8 @@ test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
   await expect(board.getByText('Input order (top)')).toHaveCount(0);
   await expect(board.getByText('Pipeline boxes')).toHaveCount(0);
   await expect(board.getByText('Output order (bottom)')).toHaveCount(0);
-  await expect(board.locator('[data-pipeline-lane] span[aria-label^="Position"]')).toHaveCount(0);
+  await expect(board.locator('[data-pipeline-lane] span[aria-label^="Position"]')).toHaveCount(8);
+  await expect(board.locator('[data-pipeline-lane] input[type="checkbox"]')).toHaveCount(0);
   await expect(board.locator('[data-pipeline-funnel="in"] path')).toHaveCount(1);
   await expect(board.locator('[data-pipeline-funnel="out"] path')).toHaveCount(1);
   await expect(board.locator('[data-pipeline-stage]')).toHaveCount(1);
@@ -16,6 +17,10 @@ test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Candidate options' })).toHaveCount(0);
   await expect(board.locator('[data-pipeline-connector="1-3"]')).toHaveCount(1);
   await expect(board.locator('[data-pipeline-connector="3-1"]')).toHaveCount(1);
+  const connectorPaths = await board
+    .locator('[data-pipeline-connector="1-3"] path, [data-pipeline-connector="3-1"] path')
+    .evaluateAll((paths) => paths.map((path) => path.getAttribute('d') ?? ''));
+  expect(connectorPaths.every((path) => !/[cC]/.test(path))).toBe(true);
 
   const firstStage = board.locator('[data-pipeline-stage]').first();
   const firstStageUnknown = firstStage.getByRole('checkbox');

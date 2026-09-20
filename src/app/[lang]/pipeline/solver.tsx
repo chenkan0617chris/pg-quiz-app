@@ -13,8 +13,6 @@ import ResultView from '@/components/pipeline/ResultView';
 export default function PipelinePage() {
   const { t } = useI18n();
 
-  const [inputUnknown, setInputUnknown] = useState(false);
-  const [outputUnknown, setOutputUnknown] = useState(false);
   const [inputOrder, setInputOrder] = useState<number[]>([1, 2, 3, 4]);
   const [outputOrder, setOutputOrder] = useState<number[]>([4, 3, 2, 1]);
   const [boxes, setBoxes] = useState<BoxInput[]>([
@@ -24,7 +22,7 @@ export default function PipelinePage() {
 
   const {run,busy,ready,error} = useSolveRequest<SolveResult>('/api/solve/pipeline');
   const solve = async () => {
-    const next = await run({inputUnknown,outputUnknown,inputOrder,outputOrder,boxes,candidates:''});
+    const next = await run({inputUnknown:false,outputUnknown:false,inputOrder,outputOrder,boxes,candidates:''});
     if (next) setResult(next);
   };
 
@@ -37,13 +35,9 @@ export default function PipelinePage() {
           <InteractivePipelineBoard
             inputOrder={inputOrder}
             outputOrder={outputOrder}
-            inputUnknown={inputUnknown}
-            outputUnknown={outputUnknown}
             boxes={boxes}
             onInputOrderChange={setInputOrder}
             onOutputOrderChange={setOutputOrder}
-            onInputUnknownChange={setInputUnknown}
-            onOutputUnknownChange={setOutputUnknown}
             onBoxesChange={setBoxes}
           />
 

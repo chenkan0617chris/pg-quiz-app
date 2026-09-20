@@ -11,24 +11,16 @@ import {
 export default function InteractivePipelineBoard({
   inputOrder,
   outputOrder,
-  inputUnknown,
-  outputUnknown,
   boxes,
   onInputOrderChange,
   onOutputOrderChange,
-  onInputUnknownChange,
-  onOutputUnknownChange,
   onBoxesChange,
 }: {
   inputOrder: number[];
   outputOrder: number[];
-  inputUnknown: boolean;
-  outputUnknown: boolean;
   boxes: BoxInput[];
   onInputOrderChange: (value: number[]) => void;
   onOutputOrderChange: (value: number[]) => void;
-  onInputUnknownChange: (value: boolean) => void;
-  onOutputUnknownChange: (value: boolean) => void;
   onBoxesChange: (value: BoxInput[]) => void;
 }) {
   const { t } = useI18n();
@@ -46,21 +38,6 @@ export default function InteractivePipelineBoard({
     onBoxesChange(boxes.filter((_, i) => i !== index));
   };
 
-  const unknownControl = (
-    checked: boolean,
-    onChange: (value: boolean) => void,
-  ) => (
-    <label className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-[#526F82]">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(event) => onChange(event.target.checked)}
-        className="h-4 w-4 accent-[#1458C7]"
-      />
-      {t('unknown')}
-    </label>
-  );
-
   return (
     <div>
       <PipelineBoard
@@ -71,8 +48,6 @@ export default function InteractivePipelineBoard({
             label={t('inputOrder')}
             lane="input"
             order={inputOrder}
-            disabled={inputUnknown}
-            controls={unknownControl(inputUnknown, onInputUnknownChange)}
             onChangeOrder={onInputOrderChange}
           />
         )}
@@ -81,8 +56,6 @@ export default function InteractivePipelineBoard({
             label={t('outputOrder')}
             lane="output"
             order={outputOrder}
-            disabled={outputUnknown}
-            controls={unknownControl(outputUnknown, onOutputUnknownChange)}
             onChangeOrder={onOutputOrderChange}
           />
         )}

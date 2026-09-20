@@ -55,9 +55,9 @@ export function PipelineConnector({
   const paths = from === 1 && to === 1
     ? ['M200 0v64']
     : from === 1 && to === 3
-      ? ['M200 0v14', 'M200 14c0 20-108 10-108 38v12', 'M200 14v50', 'M200 14c0 20 108 10 108 38v12']
+      ? ['M200 0V24H92V64', 'M200 24V64', 'M200 24H308V64']
       : from === 3 && to === 1
-        ? ['M92 0v12c0 28 108 18 108 38v14', 'M200 0v64', 'M308 0v12c0 28-108 18-108 38v14']
+        ? ['M92 0V40H200V64', 'M200 0V64', 'M308 0V40H200V64']
         : ['M92 0v64', 'M200 0v64', 'M308 0v64'];
 
   return (
@@ -127,7 +127,6 @@ export function PipelineShapeLane({
   lane,
   order,
   disabled = false,
-  controls,
   onChangeOrder,
   highlight = false,
 }: {
@@ -135,7 +134,6 @@ export function PipelineShapeLane({
   lane: 'input' | 'output';
   order: number[];
   disabled?: boolean;
-  controls?: ReactNode;
   onChangeOrder?: (next: number[]) => void;
   highlight?: boolean;
 }) {
@@ -214,6 +212,14 @@ export function PipelineShapeLane({
     resetDrag();
   };
 
+  const positions = (
+    <div className="grid grid-cols-4 gap-2 px-1 text-center font-mono text-[11px] font-bold tracking-[0.2em] text-[#648399] sm:gap-4">
+      {[1, 2, 3, 4].map((position) => (
+        <span key={position} aria-label={t('position', position)}>{position}</span>
+      ))}
+    </div>
+  );
+
   return (
     <div
       data-pipeline-lane={lane}
@@ -221,7 +227,7 @@ export function PipelineShapeLane({
       aria-label={label}
       className={`relative ${disabled ? 'opacity-45' : ''}`}
     >
-      {controls ? <div className="absolute -top-1 right-1 z-20">{controls}</div> : null}
+      {lane === 'input' ? <div className="mb-1">{positions}</div> : null}
       <div
         ref={rowRef}
         onPointerMove={onPointerMove}
@@ -260,6 +266,7 @@ export function PipelineShapeLane({
           </div>
         ))}
       </div>
+      {lane === 'output' ? <div className="mt-1">{positions}</div> : null}
     </div>
   );
 }
