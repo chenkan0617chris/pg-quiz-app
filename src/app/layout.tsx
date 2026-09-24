@@ -1,5 +1,6 @@
 import { headers, cookies } from 'next/headers';
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import { languageFromPath, preferredLanguage } from '@/lib/language';
 import { HREFLANG, SITE_URL } from '@/lib/seo';
 import './globals.css';
@@ -54,6 +55,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             </div>
           </AuthProvider>
         </I18nProvider>
+        <Analytics />
       </body>
     </html>
   );
