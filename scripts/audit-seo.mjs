@@ -28,7 +28,8 @@ for(const url of urls){
  if(path.endsWith('/pricing')){
   const offer=data.find(d=>d['@type']==='SoftwareApplication')?.offers;
   assert.ok(offer,`${path}: no Offer`);
-  const shown=`A$${offer.price} ${offer.priceCurrency}`;
+  assert.equal(offer.priceCurrency,'AUD',`${path}: checkout currency must remain AUD`);
+  const shown=`$${offer.price}`;
   assert.ok(html.includes(shown),`${path}: visible price differs from Offer`);
  }
  if(path.includes('/guides/')){
