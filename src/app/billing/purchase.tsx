@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { PRICE_LABEL } from '@/lib/payment-product';
 import { useState } from 'react';
 import { useAuth,useClerk } from '@clerk/nextjs';
@@ -20,10 +21,11 @@ export default function Purchase({enabled}:{enabled:boolean}){
  }
  return <section className="mx-auto max-w-xl rounded-2xl border border-gray-200 bg-white p-8">
   <h1 className="text-2xl font-bold">{zh?'会员与价格':'Membership and access'}</h1>
-  <p className="mt-4 text-gray-600">{zh?'每种解题器各有 10 次免费机会，不每日重置；每种练习题型有 5 道固定样题，可反复练习。无需绑卡。':'Get 10 lifetime free uses per solver and 5 fixed samples per practice type. Samples can be repeated. No card required.'}</p>
+  <p className="mt-4 text-gray-600">{zh?'每种解题器各有 10 次免费机会，不每日重置；每种练习题型有 5 道固定样题。记忆训练累计免费 10 轮，其他样题可反复练习。无需绑卡。':'Get 10 lifetime free uses per solver and 5 fixed samples per practice type. Memory has 10 lifetime free rounds; other samples can be repeated. No card required.'}</p>
   <p className="mt-6 text-3xl font-bold">{PRICE_LABEL} <span className="text-base font-normal">/ {zh?'30 天':'30 days'}</span></p>
   <p className="mt-2 text-gray-600">{zh?'会员可继续使用全部解题器、生成更多练习并选择管道题难度。付款确认后立即生效 30 天，不叠加原有试用时间，不自动续费。会员到期后，未用完的免费次数仍保留。':'Unlock continued solving, new generated practice and pipeline difficulty selection for 30 days from payment confirmation. No automatic renewal or addition of unused trial days. Unused free credits remain after paid access ends.'}</p>
-  <p className="mt-4 text-sm text-gray-500">{zh?'付款后以页面上方的账户有效期为准；支付通知可能稍有延迟。':'After payment, check your access expiry above. Payment confirmation may take a moment.'}</p>
+  <p className="mt-4 text-sm text-gray-500">{zh?'付款后在「我的账号」查看有效期；支付通知可能稍有延迟。':'After payment, check your expiry in My account. Payment confirmation may take a moment.'}</p>
+  <Link href="/account" className="mt-3 inline-block text-sm text-indigo-600 underline">{zh?'查看我的账号与使用情况':'View my account and usage'}</Link>
   {enabled&&<p className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">{zh?'通过 Stripe 安全结账，支持支付宝、微信支付及 Visa、Mastercard 等银行卡；实际可用方式以结账页显示为准。':'Pay securely through Stripe with Alipay, WeChat Pay, Visa, Mastercard and other supported cards. Available methods appear at checkout.'}</p>}
   {!enabled&&<p className="mt-6 rounded-lg bg-amber-50 p-4 text-amber-800">{zh?'支付开通中，目前不会收取费用。支付宝、微信支付以正式商户审核和结账页实际可用方式为准。':'Payments are not open yet. No charges are taken. Alipay and WeChat Pay depend on merchant approval and checkout availability.'}</p>}
   <button disabled={!enabled||busy} onClick={buy} className="mt-6 rounded-lg bg-indigo-600 px-6 py-3 text-white disabled:opacity-50">{busy?(zh?'正在打开…':'Opening…'):enabled?(zh?'购买 30 天使用权':'Buy 30-day access'):(zh?'即将开放':'Coming soon')}</button>

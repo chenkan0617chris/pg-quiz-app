@@ -1,15 +1,17 @@
 import { database } from './db';
 import { accessStatus } from './access-status';
-import { FREE_SOLVES_PER_KIND, SOLVER_KINDS, type SolverKind, type SolverRemaining } from './access-policy';
+import { FREE_MEMORY_ROUNDS, FREE_SOLVES_PER_KIND, SOLVER_KINDS, type SolverKind, type SolverRemaining } from './access-policy';
 
 export async function readAccess(userId:string) {
   const sql=database();
   const [row]=await sql`SELECT trial_ends_at, trial_eligible, paid_until, now() AS checked_at,
+    (SELECT used FROM memory_usage WHERE user_id=${userId}) AS memory_used,
     (SELECT jsonb_object_agg(kind,used) FROM solver_usage WHERE user_id=${userId}) AS usage
     FROM user_access WHERE user_id=${userId}`;
   if(!row)return null;
   return {
     status:accessStatus(row.trial_eligible?new Date(row.trial_ends_at).getTime():0,row.paid_until?new Date(row.paid_until).getTime():null,new Date(row.checked_at).getTime()),
+    memoryRemaining:FREE_MEMORY_ROUNDS-Number(row.memory_used??0),
     solverRemaining:Object.fromEntries(SOLVER_KINDS.map(kind=>[kind,FREE_SOLVES_PER_KIND-Number(row.usage?.[kind]??0)])) as SolverRemaining,
     trialEndsAt:new Date(row.trial_ends_at).toISOString(),
     paidUntil:row.paid_until?new Date(row.paid_until).toISOString():null,

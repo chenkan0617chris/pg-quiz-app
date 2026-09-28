@@ -110,7 +110,7 @@ export default async function GuidePage({ params }: Props) {
         <Prose blocks={guide.body} />
         <section className="mt-10 rounded-xl border border-indigo-100 bg-indigo-50 p-6">
           <h2 className="text-xl font-bold">{lang==='zh'?'用练习检验刚学到的方法':'Put the method into practice'}</h2>
-          <p className="mt-3 text-sm leading-7">{lang==='zh'?'登录后，每种题型可反复练习 5 道固定样题，每种解题器各有 10 次免费机会，不每日重置。需要更多新题和持续求解时，可购买 30 天会员。':'After signing in, repeat 5 fixed samples per practice type and use each solver 10 times for free, with no daily reset. Paid access unlocks new generated questions and continued solving for 30 days.'}</p>
+          <p className="mt-3 text-sm leading-7">{lang==='zh'?'登录后，每种题型有 5 道固定样题（记忆训练累计免费 10 轮），每种解题器各有 10 次免费机会，不每日重置。需要更多新题和持续求解时，可购买 30 天会员。':'After signing in, repeat 5 fixed samples per practice type (10 lifetime memory rounds) and use each solver 10 times for free, with no daily reset. Paid access unlocks new generated questions and continued solving for 30 days.'}</p>
           <div className="mt-4 flex flex-wrap gap-4 text-sm">
             <Link className="rounded-lg bg-indigo-600 px-4 py-2 text-white" href={localePath(lang,GUIDE_PRACTICE[slug])}>{lang==='zh'?'练习这一题型':'Practise this topic'}</Link>
             <Link className="py-2 text-indigo-700 underline" href={localePath(lang,'/pricing')}>{PRICE_LABEL} / {lang==='zh'?'30 天 · 查看包含内容':'30 days · See what is included'}</Link>

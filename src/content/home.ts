@@ -119,7 +119,7 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     accessHeading: '免费体验与会员价格',
     accessText:
-      '每个账号的管道、图形和数字解题器各有 10 次免费机会，独立累计，不每日重置；每种练习题型开放 5 道固定样题，可重复作答并查看解析。购买会员后可在 30 天内继续使用解题器、生成更多新题，一次付款，不自动续费。',
+      '每个账号的管道、图形和数字解题器各有 10 次免费机会，独立累计，不每日重置；每种练习题型开放 5 道固定样题；记忆训练累计免费 10 轮，其他样题可重复作答并查看解析。购买会员后可在 30 天内继续使用解题器、生成更多新题，一次付款，不自动续费。',
     accessCta: '查看免费体验与会员',
     faqHeading: '常见问题',
     faq: [
@@ -141,7 +141,7 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         q: '免费机会如何计算，需要绑卡吗？',
-        a: '无需绑卡。每个账号每种解题器各有 10 次免费机会，输入校验失败不扣次数，成功求解（包括没有找到可行解）计一次，不每日重置。免费固定样题可以反复练习。已有的 7 天试用保留至原到期时间。',
+        a: '无需绑卡。每个账号每种解题器各有 10 次免费机会，输入校验失败不扣次数，成功求解（包括没有找到可行解）计一次，不每日重置。记忆训练累计免费 10 轮，每开始一轮扣 1 次；其他固定样题可以反复练习。已有的 7 天试用保留至原到期时间。',
       },
     ],
   },
@@ -239,7 +239,7 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     accessHeading: 'Free access and pricing',
     accessText:
-      'Each account gets 10 lifetime free uses of each solver and 5 fixed samples per practice type, with full explanations. Allowances do not reset daily. Buy 30-day access for continued solving and new generated questions. One-time payment, no automatic renewal.',
+      'Each account gets 10 lifetime free uses of each solver and 5 fixed samples per practice type, with full explanations. Memory training has 10 lifetime free rounds, one credit per start. Allowances do not reset daily. Buy 30-day access for continued solving and new generated questions. One-time payment, no automatic renewal.',
     accessCta: 'See free access and pricing',
     faqHeading: 'Frequently asked questions',
     faq: [
@@ -261,7 +261,7 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         q: 'How do free uses work, and is a card required?',
-        a: 'No card is required. Each account gets 10 free uses per solver, with no daily reset. Invalid inputs do not count; a completed solve counts even when no solution is found. Fixed practice samples can be repeated. Existing seven-day trials are honoured until their original expiry.',
+        a: 'No card is required. Each account gets 10 free uses per solver, with no daily reset. Invalid inputs do not count; a completed solve counts even when no solution is found. Memory has 10 lifetime free rounds; other fixed samples can be repeated. Existing seven-day trials are honoured until their original expiry.',
       },
     ],
   },

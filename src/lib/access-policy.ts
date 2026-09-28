@@ -1,3 +1,4 @@
+export const FREE_MEMORY_ROUNDS = 10;
 export const FREE_SOLVES_PER_KIND = 10;
 export const FREE_SAMPLES_PER_KIND = 5;
 export const SOLVER_KINDS = ['pipeline', 'numerical', 'figure'] as const;

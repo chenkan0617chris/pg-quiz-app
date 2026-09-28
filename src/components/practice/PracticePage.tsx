@@ -39,6 +39,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
   const [sampleIndex,setSampleIndex]=useState(0);
   const {account}=useAccount();
   const fullAccess=!!account&&hasFullAccess(account.status);
+  const memoryExhausted=!!account&&!fullAccess&&kind==='memory'&&account.memoryRemaining===0;
   const [exercise,setExercise]=useState<Exercise|null>(null);
   const [digits,setDigits]=useState<string[]>([]);
   const [result,setResult]=useState<Result|null>(null);
@@ -73,7 +74,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
     <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
       <section className="rounded-xl border border-gray-200 p-5 shadow-sm sm:p-7">
         {!fullAccess&&<div className="mb-5 rounded-lg bg-indigo-50 p-4 text-sm text-indigo-900">
-          <p>{zh?'免费练习：每种题型 5 道固定样题，可重复练习并查看完整解析。会员可生成更多新题。':'Free practice: 5 fixed samples per question type, with repeat practice and full explanations. Paid access unlocks new generated questions.'}</p>
+          <p>{zh?'免费练习：每题型 5 道固定样题。记忆训练共 10 轮，每开始一轮扣 1 次；其他样题可反复练习。会员可生成新题。':'Free practice: 5 fixed samples per type. Memory has 10 lifetime rounds, one credit per start; other samples can be repeated. Members can generate new questions.'}</p>
           <Link href="/billing" className="mt-2 inline-block font-medium underline">{zh?'解锁会员':'Unlock full access'} · {PRICE_LABEL} / {zh?'30 天':'30 days'}</Link>
         </div>}
         <div className="mb-6 flex flex-wrap gap-3">
@@ -87,8 +88,9 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
           </select>
           {fullAccess&&(kind==='pipeline'||kind==='memory') && <label className="flex items-center gap-2 text-sm">{zh?'难度':'Difficulty'}<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)} className="rounded-lg border px-3 py-2"><option value="easy">{kind==='memory'?(zh?'基础 · 3 个位置':'Basic · 3 positions'):(zh?'基础 · 1 级':'Basic · 1 stage')}</option><option value="medium">{kind==='memory'?(zh?'进阶 · 5 个位置':'Intermediate · 5 positions'):(zh?'进阶 · 2 级':'Intermediate · 2 stages')}</option><option value="hard">{kind==='memory'?(zh?'挑战 · 7 个位置':'Advanced · 7 positions'):(zh?'挑战 · 3 级':'Advanced · 3 stages')}</option></select></label>}
           {!fullAccess&&<label className="flex items-center gap-2 text-sm">{zh?'固定样题':'Sample'}<select value={sampleIndex} onChange={e=>setSampleIndex(Number(e.target.value))} className="rounded-lg border px-3 py-2">{Array.from({length:FREE_SAMPLES_PER_KIND},(_,i)=><option key={i} value={i}>{zh?'样题':'Sample'} {i+1}</option>)}</select></label>}
-          <button disabled={busy||!ready||(!!isSignedIn&&!account)} onClick={()=>start()} className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white disabled:opacity-50">{busy?'…':fullAccess?(zh?'开始 / 换一题':'Start / New question'):(zh?'练习所选样题':'Start selected sample')}</button>
+          <button disabled={busy||!ready||(!!isSignedIn&&!account)||memoryExhausted} onClick={()=>start()} className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white disabled:opacity-50">{busy?'…':fullAccess?(zh?'开始 / 换一题':'Start / New question'):(zh?'练习所选样题':'Start selected sample')}</button>
         </div>
+        {memoryExhausted&&<p role="status" className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">{zh?'10 次免费记忆训练已用完，升级会员后可继续。':'Your 10 free memory rounds are used. Upgrade to continue.'} <Link href="/account" className="underline">{zh?'查看我的账号':'View my account'}</Link></p>}
         {error && <p role="alert" className="mb-4 text-red-600">{error}</p>}
         {!exercise || !isSignedIn ? <div className="rounded-lg bg-slate-50 p-6 text-sm leading-7 text-slate-600">
           <p>{zh?'记忆力训练：记住蓝色板上粉色圆点亮起的顺序，再依次点击。':'Sequence memory: remember the pink dots on the blue board, then repeat their order.'}</p>

@@ -39,8 +39,8 @@ for(const url of urls){
  }
  console.log(`OK ${path}`);
 }
-for(const path of ['/billing','/sign-in','/sign-up']){
+for(const path of ['/billing','/sign-in','/sign-up','/account']){
  const html=await get(path);assert.match(html,/<meta name="robots" content="[^"]*noindex/,`${path}: missing noindex`);
 }
 assert.ok(urls.every(url=>new URL(url).origin===canonicalOrigin),'Off-domain sitemap URL');
-console.log(`PASS: ${urls.length} indexable pages, ${schemas} JSON-LD blocks, 3 noindex pages; crawler=${agent}`);
+console.log(`PASS: ${urls.length} indexable pages, ${schemas} JSON-LD blocks, 4 noindex pages; crawler=${agent}`);

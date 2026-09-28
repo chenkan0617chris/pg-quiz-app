@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { database } from './db';
 import { generateQuestion,gradeAnswer,publicQuestion,explainQuestion,type Difficulty,type PracticeQuestion } from './practice';
+import { FREE_MEMORY_ROUNDS } from './access-policy';
 import { freePracticeQuestion } from './free-practice';
 
 export class PracticeAccessError extends Error {}
@@ -26,7 +27,18 @@ export async function createPractice(userId:string,kind:PracticeQuestion['kind']
     sampleKey=`${kind}:${sampleIndex}`;
   } else question=generateQuestion(kind,difficulty);
   const id=randomUUID();
-  await sql`INSERT INTO practice_attempts(id,user_id,question,sample_key) VALUES (${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey})`;
+  if(!fullAccess && question.kind==='memory') {
+    // One statement: reserve a lifetime credit and create the round, or do neither.
+    const rows=await sql`WITH allowance AS (
+      INSERT INTO memory_usage(user_id,used) VALUES (${userId},1)
+      ON CONFLICT(user_id) DO UPDATE SET used=memory_usage.used+1
+      WHERE memory_usage.used < ${FREE_MEMORY_ROUNDS} RETURNING used
+    ) INSERT INTO practice_attempts(id,user_id,question,sample_key)
+      SELECT ${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey} FROM allowance RETURNING id`;
+    if(!rows.length)throw new PracticeAccessError('Memory allowance exhausted');
+  } else {
+    await sql`INSERT INTO practice_attempts(id,user_id,question,sample_key) VALUES (${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey})`;
+  }
   return {id,question:publicQuestion(question),sampleKey};
 }
 
@@ -49,4 +61,12 @@ export async function practiceHistory(userId:string) {
   const sql=database();
   const rows=await sql`SELECT * FROM practice_attempts WHERE user_id=${userId} AND submitted_at IS NOT NULL ORDER BY submitted_at DESC LIMIT 50`;
   return rows.map(row=>result(row as Row));
+}
+
+/** Account-owned lifetime practice counts, not a paid-period usage claim. */
+export async function practiceUsage(userId:string) {
+ const rows=await database()`SELECT question->>'kind' AS kind, count(*)::int AS started,
+   count(submitted_at)::int AS completed FROM practice_attempts WHERE user_id=${userId}
+   GROUP BY question->>'kind'`;
+ return Object.fromEntries(rows.map(row=>[row.kind,{started:Number(row.started),completed:Number(row.completed)}]));
 }
