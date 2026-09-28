@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import type { Explanation, PublicQuestion } from '@/lib/practice';
 import Figure from './Figure';
+import MemoryBoard from './MemoryBoard';
 import {ruleNames} from '@/lib/figure';
 import ShapeRow from '@/components/pipeline/ShapeRow';
 import { PipelineBoard, PipelineShapeLane, PipelineStage } from '@/components/pipeline/PipelineBoard';
@@ -18,6 +19,7 @@ export default function Lesson({explanation:ex,question:q}:{explanation:Explanat
     const timer=setInterval(()=>setFrame(old=>old>=max?0:old+1),1800);
     return ()=>clearInterval(timer);
   },[playing,max]);
+  if(ex.kind==='memory')return <MemoryBoard sequence={ex.sequence} zh={zh} review/>;
   if(ex.kind==='figure')return <div className="mt-5 space-y-4 rounded-xl border bg-white p-5 text-slate-700"><h3 className="font-bold">{zh?'图形规律解析':'Figure explanation'}</h3><p>{zh?'正确选项：':'Correct option: '}{String.fromCharCode(64+ex.choice)}</p><p>{ruleNames[ex.rule][lang]}</p><p className="text-sm">{zh?'逐幅检验同一变换，再把它应用到第五幅。下面最后一幅就是预测结果。':'Check the same transformation between every pair, then apply it to figure 5. The final figure below is the predicted answer.'}</p><div className="flex flex-wrap gap-3">{ex.frames.map((mask,i)=><Figure key={i} mask={mask} label={`${i+1}${i===5?' ✓':''}`}/>)}</div></div>;
   if(ex.kind==='numerical')return <div className="mt-5 space-y-2 rounded-xl border bg-white p-5 text-slate-700">
     <h3 className="font-bold">{zh?'解题步骤':'Worked solution'}</h3>

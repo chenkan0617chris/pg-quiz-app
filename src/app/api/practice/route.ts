@@ -1,13 +1,14 @@
 import { getAccess } from '@/lib/access';
 import { auth } from '@clerk/nextjs/server';
 import { z } from 'zod';
+import { practiceAnswerSchema } from '@/lib/practice-answer-schema';
 import { allowRequest } from '@/lib/db';
 import { readJson } from '@/lib/request-body';
 import { createPractice,practiceHistory,submitPractice } from '@/lib/practice-store';
 
 const schema=z.discriminatedUnion('action',[
-  z.object({action:z.literal('start'),kind:z.enum(['pipeline','numerical','data','figure']),difficulty:z.enum(['easy','medium','hard']).optional(),retryId:z.uuid().optional()}),
-  z.object({action:z.literal('submit'),id:z.uuid(),answer:z.array(z.number().int().min(0).max(9)).min(1).max(4)}),
+  z.object({action:z.literal('start'),kind:z.enum(['pipeline','numerical','data','figure','memory']),difficulty:z.enum(['easy','medium','hard']).optional(),retryId:z.uuid().optional()}),
+  z.object({action:z.literal('submit'),id:z.uuid(),answer:practiceAnswerSchema}),
 ]);
 const reply=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store'}});
 export async function GET() {

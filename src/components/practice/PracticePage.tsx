@@ -16,6 +16,7 @@ import type { PublicQuestion as Question, Explanation, Difficulty } from '@/lib/
 import Lesson from '@/components/practice/Lesson';
 import Figure from '@/components/practice/Figure';
 import DataPrompt from '@/components/practice/DataPrompt';
+import MemoryBoard from './MemoryBoard';
 type Exercise = {id:string;question:Question};
 type Result = Exercise & {answer:number[];correct:boolean;referenceAnswer:number[];submittedAt:string;explanation:Explanation};
 
@@ -51,7 +52,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
 
   async function start(retry?:Result) {
     const next=await run({action:'start',kind:retry?.question.kind??kind,difficulty,...(retry?{retryId:retry.id}:{})});
-    if(next){setKind(next.question.kind);if(next.question.kind==='pipeline')setDifficulty(next.question.difficulty);setExercise(next);setDigits(Array(next.question.kind==='pipeline'?4:(next.question.kind==='data'||next.question.kind==='figure')?1:3).fill(''));setResult(null);}
+    if(next){setKind(next.question.kind);if(next.question.kind==='pipeline'||next.question.kind==='memory')setDifficulty(next.question.difficulty);setExercise(next);setDigits(Array(next.question.kind==='memory'?next.question.sequence.length:next.question.kind==='pipeline'?4:(next.question.kind==='data'||next.question.kind==='figure')?1:3).fill(''));setResult(null);}
   }
   async function submit(e:React.FormEvent) {
     e.preventDefault();
@@ -66,23 +67,25 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
         <div className="mb-6 flex flex-wrap gap-3">
           <label className="sr-only" htmlFor="practice-kind">{zh?'题型':'Question type'}</label>
           <select id="practice-kind" value={kind} onChange={e=>setKind(e.target.value as typeof kind)} className="rounded-lg border border-gray-300 px-3 py-2">
+            <option value="memory">{zh?'记忆力训练':'Sequence memory'}</option>
             <option value="pipeline">{zh?'管道推理':'Pipeline logic'}</option>
             <option value="figure">{zh?'图形推理':'Figure reasoning'}</option>
             <option value="data">{zh?'图表与数据分析':'Data interpretation'}</option>
             <option value="numerical">{zh?'数字运算':'Numerical reasoning'}</option>
           </select>
-          {kind==='pipeline' && <label className="flex items-center gap-2 text-sm">{zh?'难度':'Difficulty'}<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)} className="rounded-lg border px-3 py-2"><option value="easy">{zh?'基础 · 1 级':'Basic · 1 stage'}</option><option value="medium">{zh?'进阶 · 2 级':'Intermediate · 2 stages'}</option><option value="hard">{zh?'挑战 · 3 级':'Advanced · 3 stages'}</option></select></label>}
+          {(kind==='pipeline'||kind==='memory') && <label className="flex items-center gap-2 text-sm">{zh?'难度':'Difficulty'}<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)} className="rounded-lg border px-3 py-2"><option value="easy">{kind==='memory'?(zh?'基础 · 3 个位置':'Basic · 3 positions'):(zh?'基础 · 1 级':'Basic · 1 stage')}</option><option value="medium">{kind==='memory'?(zh?'进阶 · 5 个位置':'Intermediate · 5 positions'):(zh?'进阶 · 2 级':'Intermediate · 2 stages')}</option><option value="hard">{kind==='memory'?(zh?'挑战 · 7 个位置':'Advanced · 7 positions'):(zh?'挑战 · 3 级':'Advanced · 3 stages')}</option></select></label>}
           <button disabled={busy||!ready} onClick={()=>start()} className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white disabled:opacity-50">{busy?'…':zh?'开始 / 换一题':'Start / New question'}</button>
         </div>
         {error && <p role="alert" className="mb-4 text-red-600">{error}</p>}
         {!exercise || !isSignedIn ? <div className="rounded-lg bg-slate-50 p-6 text-sm leading-7 text-slate-600">
+          <p>{zh?'记忆力训练：记住蓝色板上粉色圆点亮起的顺序，再依次点击。':'Sequence memory: remember the pink dots on the blue board, then repeat their order.'}</p>
           <p>{zh?'管道推理：根据图形输入、输出顺序，推导变换方框。':'Pipeline: infer the transformation from the input and output shapes.'}</p>
           <p>{zh?'数字运算：为 a × b + c 填入 1–9 的不同数字。':'Numerical: fill a × b + c using distinct digits from 1–9.'}</p>
           <p>{zh?'图形推理：观察连续图形，找出规律并选择下一幅。':'Figure reasoning: infer the pattern and choose the next figure.'}</p>
           <p>{zh?'图表与数据分析：阅读销售图表，练习增长率、占比和比值。':'Data interpretation: read sales charts and practise growth rates, shares and ratios.'}</p>
           <p className="mt-4 font-medium">{zh?'点击开始练习；未登录时会提示登录。题目为规则生成的原创练习。':'Start to practice; sign in when prompted. Questions are original generated exercises.'}</p>
         </div> : <form onSubmit={submit}>
-          {exercise.question.kind==='pipeline'?<div className="space-y-5">
+          {exercise.question.kind==='memory'?(!result && <MemoryBoard key={exercise.id} sequence={exercise.question.sequence} zh={zh} disabled={busy} onAnswer={answer=>setDigits(answer.map(String))}/>):exercise.question.kind==='pipeline'?<div className="space-y-5">
             <PipelineBoard
               ariaLabel={t('pipelineDiagram')}
               inputLane={<PipelineShapeLane label={t('inputOrder')} lane="input" order={exercise.question.input}/>}
@@ -122,7 +125,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
         {historyError && isSignedIn && <button onClick={()=>setRevision(v=>v+1)} className="text-sm text-red-600">{zh?'记录加载失败，点击重试':'History unavailable. Retry'}</button>}
         {!visibleHistory.length && <p className="text-sm text-gray-400">{zh?'暂无记录':'No submissions yet'}</p>}
         <ul className="space-y-3">{visibleHistory.map(row=><li key={row.id} className="rounded-lg bg-gray-50 p-3 text-sm">
-          <div className="flex justify-between"><span>{row.question.kind==='pipeline'?(zh?'管道推理':'Pipeline'):row.question.kind==='figure'?(zh?'图形推理':'Figure reasoning'):row.question.kind==='data'?(zh?'数据分析':'Data interpretation'):(zh?'数字运算':'Numerical')}</span><span>{row.correct?'✓':'✗'}</span></div>
+          <div className="flex justify-between"><span>{row.question.kind==='memory'?(zh?'记忆力训练':'Sequence memory'):row.question.kind==='pipeline'?(zh?'管道推理':'Pipeline'):row.question.kind==='figure'?(zh?'图形推理':'Figure reasoning'):row.question.kind==='data'?(zh?'数据分析':'Data interpretation'):(zh?'数字运算':'Numerical')}</span><span>{row.correct?'✓':'✗'}</span></div>
           <p className="mt-1 text-xs text-gray-400">{new Date(row.submittedAt).toLocaleString(zh?'zh-CN':'en-US')}</p>
           <button disabled={busy} onClick={()=>{setExercise(row);setResult(row);setDigits(row.answer.map(String));setKind(row.question.kind);window.scrollTo({top:0,behavior:'smooth'});}} className="mr-4 mt-2 text-indigo-600">{zh?'查看题解':'View solution'}</button>
           <button disabled={busy} onClick={()=>start(row)} className="mt-2 text-indigo-600">{zh?'重新练习':'Practice again'}</button>

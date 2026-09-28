@@ -48,6 +48,7 @@ const NAV: NavItem[] = [
       </svg>
     ),
   },
+  {href:'/memory',key:'navMemory',icon:<span className={iconClass} aria-hidden="true">⠿</span>},
   {href:'/guides',key:'navGuides',icon:<span className={iconClass} aria-hidden="true">✦</span>},
 ];
 

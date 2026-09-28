@@ -24,6 +24,7 @@ export const DICT = {
   appName: { zh: '宝洁笔试题库', en: 'P&G Test Prep' },
   navPipeline: { zh: '管道推理', en: 'Pipeline Logic' },
   navSeries: { zh: '图形推理', en: 'Figure Series' },
+  navMemory: { zh: '记忆力训练', en: 'Sequence memory' },
   navNumerical: { zh: '数字推理', en: 'Numerical' },
   navData: { zh: '图表与数据分析', en: 'Data Interpretation' },
   navPractice: { zh: '练习题库', en: 'Practice' },

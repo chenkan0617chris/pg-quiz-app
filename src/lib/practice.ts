@@ -1,3 +1,4 @@
+import { MEMORY_POINTS } from './memory-layout';
 import { randomInt } from 'node:crypto';
 import { FIGURE_RULES, transformFigure, solveFigure, type FigureRule } from './figure';
 import { apply, invert, isPermutation } from './engine';
@@ -7,7 +8,8 @@ type PipelineQuestion = {kind:'pipeline';version:1|2;input:number[];output:numbe
 type NumericalQuestion = {kind:'numerical';version:1;target:number;answer:number[]};
 type DataQuestion = {kind:'data';version:1;metric:'growth'|'share'|'ratio';rows:{label:string;before:number;after:number}[];focus:number;options:number[];answer:number[]};
 type FigureQuestion = {kind:'figure';version:1;frames:number[];options:number[];rule:FigureRule;answer:number[]};
-export type PracticeQuestion = PipelineQuestion | NumericalQuestion | DataQuestion | FigureQuestion;
+type MemoryQuestion = {kind:'memory';version:1;difficulty:Difficulty;answer:number[]};
+export type PracticeQuestion = MemoryQuestion | PipelineQuestion | NumericalQuestion | DataQuestion | FigureQuestion;
 
 function shuffle(values:number[]):number[] {
   const result = [...values];
@@ -24,6 +26,7 @@ function nonIdentity() {
 }
 
 export function generateQuestion(kind:PracticeQuestion['kind'],difficulty:Difficulty='easy'):PracticeQuestion {
+  if(kind==='memory') return {kind,version:1,difficulty,answer:shuffle(MEMORY_POINTS.map((_, index) => index + 1)).slice(0,{easy:3,medium:5,hard:7}[difficulty])};
   if(kind==='figure') {
     for(let attempt=0;attempt<200;attempt++) {
       const rule=FIGURE_RULES[randomInt(FIGURE_RULES.length)];
@@ -72,8 +75,9 @@ export function dataValue(q:Pick<DataQuestion,'metric'|'rows'|'focus'>) {
     :r.after/q.rows[(q.focus+1)%q.rows.length].after;
   return Math.round(value*10)/10;
 }
-/** Explicit projection: no answers or explanation until submission. */
+/** Memory sequences are sent for playback; grading and explanations stay server-side. */
 export function publicQuestion(q:PracticeQuestion) {
+  if(q.kind==='memory')return {kind:q.kind,version:q.version,difficulty:q.difficulty,sequence:[...q.answer]};
   if(q.kind==='figure')return {kind:q.kind,version:q.version,frames:q.frames,options:q.options};
   if(q.kind==='pipeline') return {kind:q.kind,version:q.version,input:q.input,output:q.output,boxes:q.boxes??[null],difficulty:q.difficulty??'easy'};
   if(q.kind==='data') return {kind:q.kind,version:q.version,metric:q.metric,rows:q.rows,focus:q.focus,options:q.options};
@@ -82,6 +86,7 @@ export function publicQuestion(q:PracticeQuestion) {
 export type PublicQuestion = ReturnType<typeof publicQuestion>;
 
 export function gradeAnswer(q:PracticeQuestion,answer:number[]):boolean {
+  if(q.kind==='memory')return answer.length===q.answer.length && answer.every((value,index)=>value===q.answer[index]);
   if (q.kind === 'pipeline') {
     return isPermutation(answer) && (q.boxes??[null]).reduce<number[]>((seq,box)=>apply(box??answer,seq),q.input).every((v,i)=>v===q.output[i]);
   }
@@ -94,6 +99,7 @@ export function gradeAnswer(q:PracticeQuestion,answer:number[]):boolean {
 
 /** Reconstruct a lesson from the stored question, including older version-1 attempts. */
 export function explainQuestion(q:PracticeQuestion,submitted:number[]) {
+  if(q.kind==='memory')return {kind:'memory' as const,sequence:[...q.answer]};
   if(q.kind==='figure')return {kind:'figure' as const,rule:q.rule,frames:[...q.frames,q.options[q.answer[0]-1]],choice:q.answer[0]};
   if(q.kind==='pipeline') {
     const boxes=q.boxes??[null];
