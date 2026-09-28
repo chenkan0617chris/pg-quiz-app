@@ -1,0 +1,127 @@
+.board {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin-inline: auto;
+  padding: 20px 12px;
+  background: #fff;
+}
+
+.funnel {
+  display: block;
+  width: 100%;
+  height: 40px;
+  pointer-events: none;
+}
+
+.connector {
+  display: block;
+  width: 100%;
+  height: 28px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.shapeRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.shapeTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 64px;
+  aspect-ratio: 1;
+  margin-inline: auto;
+  border-radius: 17px;
+  background: #d9dbda;
+  box-shadow: 0 2px 6px #00000021;
+}
+
+.shapeTile svg {
+  width: 64%;
+  height: 64%;
+}
+
+.stageValue {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 74px;
+  border-radius: 6px;
+  padding: 6px 5px;
+  background: #204fc1;
+  color: #fff;
+}
+
+.digits {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+  text-align: center;
+}
+
+.knownInput {
+  width: 64px;
+  min-width: 0;
+  background: transparent;
+  outline: none;
+}
+
+.knownInput:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+.candidates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 82.5%;
+}
+
+.candidate {
+  width: calc(100% - 12px);
+  min-width: 0;
+  height: 44px;
+  margin-inline: auto;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: #91d5f6;
+  color: #416378;
+  outline: none;
+}
+
+.candidate::placeholder {
+  color: #416378;
+  opacity: 0.6;
+}
+
+.candidate:focus-visible {
+  outline: 2px solid #204fc1;
+  outline-offset: 2px;
+}
+
+.requirement {
+  position: absolute;
+  top: calc(100% + 3px);
+  right: 0;
+  font-size: 10px;
+  line-height: 14px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  .board { padding-inline: 4px; }
+  .shapeRow { gap: 10px; }
+  .digits { font-size: 18px; letter-spacing: 0.1em; }
+  .candidate { width: calc(100% - 8px); }
+}

@@ -25,23 +25,28 @@ export function Shape({
   id,
   size = 36,
   title,
+  variant,
 }: {
   id: number;
   size?: number;
   title?: string;
+  variant?: 'pipeline';
 }) {
   const s = SHAPES[id];
   if (!s) return null;
+  const color = variant === 'pipeline'
+    ? ({ circle: '#2EBC70', triangle: '#FFE414', square: '#FF2825', plus: '#2DAEF3' }[s.type])
+    : s.color;
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" aria-label={title} role="img">
       {title ? <title>{title}</title> : null}
-      {s.type === 'circle' && <circle cx="20" cy="20" r="15" fill={s.color} />}
-      {s.type === 'square' && <rect x="6" y="6" width="28" height="28" rx="5" fill={s.color} />}
-      {s.type === 'triangle' && <polygon points="20,4 35,34 5,34" fill={s.color} />}
+      {s.type === 'circle' && <circle cx="20" cy="20" r="15" fill={color} />}
+      {s.type === 'square' && <rect x="6" y="6" width="28" height="28" rx={variant === 'pipeline' ? 1 : 5} fill={color} />}
+      {s.type === 'triangle' && <polygon points="20,4 35,34 5,34" fill={color} />}
       {s.type === 'plus' && (
         <polygon
           points="14,5 26,5 26,14 35,14 35,26 26,26 26,35 14,35 14,26 5,26 5,14 14,14"
-          fill={s.color}
+          fill={color}
         />
       )}
     </svg>

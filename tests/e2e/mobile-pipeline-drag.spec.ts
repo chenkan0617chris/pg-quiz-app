@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 
 test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
   await page.goto('/en/pipeline', { waitUntil: 'domcontentloaded' });
+  // Wait for client hydration: native inputs can change before React is ready.
+  await expect(page.getByRole('button', { name: 'Solve', exact: true })).toBeEnabled();
 
   const board = page.getByRole('group', { name: 'Pipeline diagram' });
   await expect(board).toBeVisible();
@@ -23,7 +25,9 @@ test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
   expect(connectorPaths.every((path) => !/[cC]/.test(path))).toBe(true);
 
   const firstStage = board.locator('[data-pipeline-stage]').first();
-  const firstStageUnknown = firstStage.getByRole('checkbox');
+  const firstStageUnknown = page.getByRole('checkbox', { name: 'Pipeline stage 1: unknown ?' });
+  await expect(firstStage.getByText('Optional', { exact: true })).toBeVisible();
+  await expect(board.getByRole('checkbox')).toHaveCount(0);
   await firstStageUnknown.uncheck();
   await expect(firstStage.getByRole('textbox', { name: 'Pipeline stage 1' })).toHaveCount(1);
   await expect(board.locator('[data-pipeline-connector="1-1"]')).toHaveCount(2);
@@ -38,8 +42,12 @@ test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
   await expect(secondStage.getByRole('textbox', { name: 'Pipeline stage 2' })).toHaveCount(1);
   await expect(board.locator('[data-pipeline-connector="3-1"]')).toHaveCount(1);
   await expect(board.locator('[data-pipeline-connector="1-1"]')).toHaveCount(1);
-  await secondStage.getByRole('checkbox').check();
+  await page.getByRole('checkbox', { name: 'Pipeline stage 2: unknown ?' }).check();
   await expect(secondStage.getByRole('textbox', { name: 'Pipeline stage 2 candidate' })).toHaveCount(3);
+
+  await expect(firstStage.getByText('Required', { exact: true })).toBeVisible();
+  await expect(secondStage.getByText('Required', { exact: true })).toBeVisible();
+  await expect(secondStage.getByRole('textbox').first()).toHaveAttribute('aria-required', 'true');
 
   const inputLane = board.locator('[data-pipeline-lane="input"]');
   const shapes = inputLane.getByRole('img');

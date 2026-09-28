@@ -1,5 +1,7 @@
 'use client';
 
+import { useId } from 'react';
+import styles from './PipelineBoard.module.css';
 import type { BoxInput } from '@/lib/engine';
 import { useI18n } from '@/lib/i18n';
 import {
@@ -23,7 +25,12 @@ export default function InteractivePipelineBoard({
   onOutputOrderChange: (value: number[]) => void;
   onBoxesChange: (value: BoxInput[]) => void;
 }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const hintId = useId();
+  const candidatesRequired = boxes.filter((box) => box.unknown).length > 1;
+  const candidateRequirement = candidatesRequired
+    ? (lang === 'zh' ? '必填' : 'Required')
+    : (lang === 'zh' ? '可选' : 'Optional');
 
   const updateBox = (index: number, patch: Partial<BoxInput>) => {
     onBoxesChange(boxes.map((box, i) => (i === index ? { ...box, ...patch } : box)));
@@ -69,9 +76,14 @@ export default function InteractivePipelineBoard({
               label={label}
               state={{ key: index, value: box.value, unknown: box.unknown }}
               ports={box.unknown ? 3 : 1}
+              annotation={box.unknown ? (
+                <span id={`${hintId}-${index}`} className={styles.requirement}>
+                  {candidateRequirement}
+                </span>
+              ) : undefined}
               valueEditor={(
                 box.unknown ? (
-                  <div className="flex items-center justify-center gap-2" aria-label={t('stageCandidates', index + 1)}>
+                  <div className={styles.candidates} aria-label={t('stageCandidates', index + 1)}>
                     {candidates.map((candidate, candidateIndex) => (
                       <input
                         key={candidateIndex}
@@ -87,7 +99,9 @@ export default function InteractivePipelineBoard({
                         )}
                         placeholder="____"
                         aria-label={t('stageCandidate', index + 1)}
-                        className="h-12 w-[4.5rem] rounded-lg border-2 border-[#63BFDF] bg-[#83D0EB] text-center font-mono text-base font-bold tracking-[0.16em] text-[#31566B] shadow-[0_8px_16px_-11px_rgba(20,88,199,0.9)] outline-none transition placeholder:text-[#31566B]/55 focus:border-[#1458C7] focus:ring-2 focus:ring-[#79CDED] sm:w-[5.25rem] sm:text-lg"
+                        aria-describedby={`${hintId}-${index}`}
+                        aria-required={candidatesRequired}
+                        className={`${styles.candidate} ${styles.digits}`}
                       />
                     ))}
                   </div>
@@ -103,37 +117,45 @@ export default function InteractivePipelineBoard({
                     })}
                     placeholder="____"
                     aria-label={label}
-                    className="w-28 bg-transparent text-center font-mono text-xl font-bold tracking-[0.25em] text-inherit outline-none placeholder:text-current placeholder:opacity-70"
+                    className={`${styles.knownInput} ${styles.digits}`}
                   />
                 )
               )}
-            >
-              <label className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-[#526F82]">
-                <input
-                  type="checkbox"
-                  checked={box.unknown}
-                  onChange={(event) => updateBox(index, {
-                    unknown: event.target.checked,
-                    candidates: box.candidates ?? ['', '', ''],
-                  })}
-                  className="h-4 w-4 accent-[#1458C7]"
-                />
-                {t('unknown')}
-              </label>
-              <button
-                type="button"
-                disabled={boxes.length === 1}
-                onClick={() => removeBox(index)}
-                aria-label={t('remove')}
-                title={t('remove')}
-                className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition hover:bg-red-50 hover:text-red-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1458C7] disabled:cursor-not-allowed disabled:opacity-30"
-              >
-                ✕
-              </button>
-            </PipelineStage>
+            />
           );
         })}
       </PipelineBoard>
+
+      <div className="mx-auto mt-3 max-w-[360px] border-t border-slate-100 pt-2">
+        {boxes.map((box, index) => (
+          <div key={index} role="group" aria-label={`${t('pipelineStage', index + 1)} ${lang === 'zh' ? '设置' : 'settings'}`} className="flex items-center gap-3 px-2">
+            <span className="mr-auto text-xs text-slate-400">{t('pipelineStage', index + 1)}</span>
+            <label className="flex min-h-9 cursor-pointer items-center gap-1.5 text-xs text-slate-500">
+              <input
+                type="checkbox"
+                checked={box.unknown}
+                onChange={(event) => updateBox(index, {
+                  unknown: event.target.checked,
+                  candidates: box.candidates ?? ['', '', ''],
+                })}
+                aria-label={`${t('pipelineStage', index + 1)}: ${t('unknown')}`}
+                className="h-3.5 w-3.5 accent-[#204FC1]"
+              />
+              {t('unknown')}
+            </label>
+            <button
+              type="button"
+              disabled={boxes.length === 1}
+              onClick={() => removeBox(index)}
+              aria-label={`${t('remove')} ${index + 1}`}
+              title={t('remove')}
+              className="flex h-9 w-9 items-center justify-center rounded-full text-slate-400 transition hover:bg-red-50 hover:text-red-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1458C7] disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
         <button

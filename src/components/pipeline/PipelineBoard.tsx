@@ -1,8 +1,9 @@
 'use client';
 
-import { Children, Fragment, useRef, useState, type Key, type ReactNode } from 'react';
+import { Children, Fragment, useId, useRef, useState, type Key, type ReactNode } from 'react';
 import { Shape } from '@/lib/shapes';
 import { shapeNameKey, useI18n } from '@/lib/i18n';
+import styles from './PipelineBoard.module.css';
 
 export type PipelineStageState = {
   key: Key;
@@ -20,23 +21,20 @@ function PipelineFunnel({ direction }: { direction: 'in' | 'out' }) {
       data-pipeline-funnel={direction}
       viewBox="0 0 400 48"
       preserveAspectRatio="none"
-      className={`pointer-events-none relative z-0 h-12 w-full overflow-visible ${incoming ? 'mt-3' : 'mb-3'}`}
+      className={`${styles.funnel} ${incoming ? 'mt-3' : 'mb-3'}`}
     >
       <path
-        d={incoming ? 'M158 0h84l-22 34h-40z' : 'M180 7h40l22 34h-84z'}
-        fill="#1761C9"
+        d={incoming ? 'M171 6h58l-20 33h-18z' : 'M191 9h18l20 33h-58z'}
+        fill="#31A9EF"
       />
-      <rect
-        x="186"
-        y={incoming ? 30 : 1}
-        width="28"
-        height="11"
-        rx="5"
-        fill="#0F4EAC"
-      />
-      <g fill="#B9DDF8">
-        {[192, 200, 208].map((x) => (
-          <circle key={x} cx={x} cy={incoming ? 35.5 : 6.5} r="1.7" />
+      <rect x="170" y={incoming ? 0 : 39} width="60" height="9" rx="2" fill="#204FC1" />
+      <rect x="189" y={incoming ? 39 : 0} width="22" height="9" rx="2" fill="#204FC1" />
+      <g fill="#D4EEFF">
+        {[177, 186, 195, 204, 213, 222].map((x) => (
+          <circle key={x} cx={x} cy={incoming ? 4.5 : 43.5} r="1.4" />
+        ))}
+        {[193, 200, 207].map((x) => (
+          <circle key={x} cx={x} cy={incoming ? 43.5 : 4.5} r="1.4" />
         ))}
       </g>
     </svg>
@@ -52,23 +50,30 @@ export function PipelineConnector({
   from: PipelinePortCount;
   to: PipelinePortCount;
 }) {
+  const stripeId = useId();
   const paths = from === 1 && to === 1
-    ? ['M200 0v64']
+    ? ['M200 0v32']
     : from === 1 && to === 3
-      ? ['M200 0V24H92V64', 'M200 24V64', 'M200 24H308V64']
+      ? ['M200 0V16H102Q90 16 90 28V32', 'M200 16V32', 'M200 16H298Q310 16 310 28V32']
       : from === 3 && to === 1
-        ? ['M92 0V40H200V64', 'M200 0V64', 'M308 0V40H200V64']
-        : ['M92 0v64', 'M200 0v64', 'M308 0v64'];
+        ? ['M90 0V4Q90 16 102 16H200V32', 'M200 0V32', 'M310 0V4Q310 16 298 16H200']
+        : ['M90 0v32', 'M200 0v32', 'M310 0v32'];
 
   return (
     <svg
       aria-hidden="true"
       data-pipeline-connector={`${from}-${to}`}
-      viewBox="0 0 400 64"
+      viewBox="0 0 400 32"
       preserveAspectRatio="none"
-      className="pointer-events-none h-12 w-full overflow-visible sm:h-14"
+      className={styles.connector}
     >
-      <g fill="none" stroke="#BFE8F8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7">
+      <defs>
+        <pattern id={stripeId} width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+          <rect width="12" height="12" fill={from === 1 && to === 1 ? '#38ACEB' : '#B6E6F3'} />
+          <rect width="2" height="12" fill="#FFFFFF" fillOpacity="0.75" />
+        </pattern>
+      </defs>
+      <g fill="none" stroke={`url(#${stripeId})`} strokeLinecap="butt" strokeLinejoin="round" strokeWidth="11">
         {paths.map((path) => <path key={path} d={path} />)}
       </g>
     </svg>
@@ -100,7 +105,7 @@ export function PipelineBoard({
       role="group"
       aria-label={ariaLabel}
       data-pipeline-board
-      className={`relative mx-auto w-full max-w-[34rem] overflow-hidden rounded-[2rem] border border-sky-100 bg-[#F8FBFE] px-3 py-6 shadow-[0_22px_60px_-38px_rgba(20,88,199,0.5)] sm:px-7 sm:py-8 ${className}`}
+      className={`${styles.board} ${className}`}
     >
       <div className="relative z-10">{inputLane}</div>
       <PipelineFunnel direction="in" />
@@ -213,7 +218,7 @@ export function PipelineShapeLane({
   };
 
   const positions = (
-    <div className="grid grid-cols-4 gap-2 px-1 text-center font-mono text-[11px] font-bold tracking-[0.2em] text-[#648399] sm:gap-4">
+    <div className={`${styles.shapeRow} text-center font-mono text-[10px] text-slate-400`}>
       {[1, 2, 3, 4].map((position) => (
         <span key={position} aria-label={t('position', position)}>{position}</span>
       ))}
@@ -233,7 +238,7 @@ export function PipelineShapeLane({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={resetDrag}
-        className="grid grid-cols-4 gap-2 sm:gap-4"
+        className={styles.shapeRow}
       >
         {order.map((id, index) => (
           <div
@@ -256,13 +261,13 @@ export function PipelineShapeLane({
             }}
             title={t(shapeNameKey(id))}
             className={[
-              'mx-auto flex h-12 w-12 items-center justify-center rounded-[0.9rem] border border-white/80 bg-[#EEF1F3] shadow-[0_5px_12px_rgba(48,75,93,0.13)] transition sm:h-14 sm:w-14',
+              styles.shapeTile,
               interactive ? 'touch-none cursor-grab select-none active:cursor-grabbing focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#1458C7]' : '',
               overIdx === index && dragIdx !== index ? 'scale-105 ring-3 ring-[#79CDED]' : '',
               highlight ? 'ring-2 ring-emerald-400' : '',
             ].join(' ')}
           >
-            <Shape id={id} size={30} title={t(shapeNameKey(id))} />
+            <Shape id={id} size={40} variant="pipeline" title={t(shapeNameKey(id))} />
           </div>
         ))}
       </div>
@@ -277,12 +282,14 @@ export function PipelineStage({
   ports = 1,
   valueEditor,
   children,
+  annotation,
 }: {
   label: string;
   state: PipelineStageState;
   ports?: PipelinePortCount;
   valueEditor?: ReactNode;
   children?: ReactNode;
+  annotation?: ReactNode;
 }) {
   return (
     <div
@@ -296,19 +303,19 @@ export function PipelineStage({
         className={[
           'relative flex items-center justify-center transition',
           ports === 3
-            ? 'min-h-12 w-full bg-transparent'
-            : 'min-h-14 min-w-36 rounded-xl border-2 border-[#70C4E5] bg-[#8BD5F0] px-5 py-2.5 text-[#31566B] shadow-[0_9px_18px_-12px_rgba(20,88,199,0.8)]',
-          ports === 1 && state.unknown ? 'border-[#0F4EAC] bg-[#1458C7] text-white' : '',
+            ? 'min-h-11 w-full bg-transparent'
+            : styles.stageValue,
           state.solved ? 'ring-3 ring-emerald-400 ring-offset-2' : '',
           state.active ? 'scale-[1.03] ring-3 ring-indigo-400 ring-offset-2' : '',
         ].join(' ')}
       >
         {valueEditor ?? (
-          <span className="font-mono text-xl font-bold tracking-[0.28em]" aria-label={`${label}: ${state.value}`}>
+          <span className={styles.digits} aria-label={`${label}: ${state.value}`}>
             {state.value || (state.unknown ? '????' : '____')}
           </span>
         )}
       </div>
+      {annotation}
       {children && (
         <div className="mt-3 flex max-w-full flex-wrap items-center justify-center gap-3 rounded-xl border border-sky-100 bg-white/90 px-3 py-2 shadow-sm">
           {children}
