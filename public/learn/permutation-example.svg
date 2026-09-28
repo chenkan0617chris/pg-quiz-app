@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">Position reordering: ABCD to CADB uses rule 3142</title><desc id="desc">Input positions one to four contain A B C D. Output takes input positions three, one, four and two, producing C A D B.</desc>
+<rect width="1200" height="675" rx="24" fill="#f8fafc"/>
+<g font-family="Arial,sans-serif" text-anchor="middle" fill="#0f172a">
+<text x="600" y="72" font-size="34" font-weight="700">A B C D → C A D B</text>
+<g font-size="24" fill="#64748b"><text x="300" y="140">1</text><text x="500" y="140">2</text><text x="700" y="140">3</text><text x="900" y="140">4</text></g>
+<g fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"><rect x="235" y="162" width="130" height="110" rx="16"/><rect x="435" y="162" width="130" height="110" rx="16"/><rect x="635" y="162" width="130" height="110" rx="16"/><rect x="835" y="162" width="130" height="110" rx="16"/></g>
+<g font-size="52" font-weight="700"><text x="300" y="235">A</text><text x="500" y="235">B</text><text x="700" y="235">C</text><text x="900" y="235">D</text></g>
+<text x="600" y="358" font-size="44" fill="#4f46e5">3 · 1 · 4 · 2</text>
+<g fill="#dbeafe" stroke="#2563eb" stroke-width="2"><rect x="235" y="412" width="130" height="110" rx="16"/><rect x="435" y="412" width="130" height="110" rx="16"/><rect x="635" y="412" width="130" height="110" rx="16"/><rect x="835" y="412" width="130" height="110" rx="16"/></g>
+<g font-size="52" font-weight="700"><text x="300" y="486">C</text><text x="500" y="486">A</text><text x="700" y="486">D</text><text x="900" y="486">B</text></g>
+<text x="600" y="610" font-size="24" fill="#64748b">quiz.ckautoflow.com · Original practice by CKAutoFlow</text>
+</g></svg>

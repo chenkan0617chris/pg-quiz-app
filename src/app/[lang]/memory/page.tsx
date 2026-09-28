@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { isLanguage } from '@/lib/language';
 import { pageMetadata,localePath } from '@/lib/seo';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import Link from 'next/link';
 import PracticePage from '@/components/practice/PracticePage';
 
 type Props = { params: Promise<{ lang: string }> };
@@ -23,6 +24,7 @@ export default async function Page({ params }: Props) {
     <h1 className="text-3xl font-bold tracking-tight text-slate-900">{copy[lang].title}</h1>
     <p className="mb-8 mt-4 max-w-3xl text-sm leading-7 text-slate-600">{copy[lang].description}</p>
     <PracticePage initialKind="memory" />
+    <p className="mt-6 text-sm"><Link className="text-indigo-600 underline" href={localePath(lang,'/guides/memory')}>{lang==='zh'?'阅读圆点记忆方法与 Grid 类题的区别':'Read the memory guide and how it differs from Grid-style tasks'}</Link></p>
     <p className="mt-8 text-xs leading-6 text-slate-500">{lang === 'zh' ? '原创顺序记忆练习，不代表任何雇主的真实试题。25 个白色圆点散布在蓝色画布上；观察结束后可用触屏、鼠标或 Tab 和 Enter 作答。' : 'Original sequence-memory practice, not actual assessment content from any employer. 25 white dots are scattered across a blue canvas. After watching, use touch, mouse, or Tab and Enter to answer.'}</p>
   </>;
 }

@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-09-28T01:40:11.428Z",
+  "window": {
+    "days": 30,
+    "since": "2026-08-29T01:40:10.484Z"
+  },
+  "accounts": {
+    "accounts_registered": 39,
+    "currently_paid": 2
+  },
+  "practice": [
+    {
+      "kind": "data",
+      "fixed_sample": false,
+      "starts": 32,
+      "completed": 19,
+      "learners": 10,
+      "correct": 16
+    },
+    {
+      "kind": "figure",
+      "fixed_sample": false,
+      "starts": 71,
+      "completed": 60,
+      "learners": 15,
+      "correct": 60
+    },
+    {
+      "kind": "memory",
+      "fixed_sample": false,
+      "starts": 1,
+      "completed": 1,
+      "learners": 1,
+      "correct": 0
+    },
+    {
+      "kind": "numerical",
+      "fixed_sample": false,
+      "starts": 114,
+      "completed": 99,
+      "learners": 18,
+      "correct": 97
+    },
+    {
+      "kind": "pipeline",
+      "fixed_sample": false,
+      "starts": 309,
+      "completed": 243,
+      "learners": 27,
+      "correct": 209
+    }
+  ],
+  "confirmedPayments": [
+    {
+      "currency": "aud",
+      "status": "paid",
+      "orders": 1,
+      "buyers": 1,
+      "amount_minor_units": "50"
+    },
+    {
+      "currency": "cny",
+      "status": "paid",
+      "orders": 1,
+      "buyers": 1,
+      "amount_minor_units": "300"
+    }
+  ],
+  "lifetimeFreeAllowances": [],
+  "caveats": [
+    "Only initialized app accounts with Clerk-style user IDs are included; this is not the total Clerk signup count.",
+    "Accounts and practice use registration/start time. Completed counts reflect current state of attempts started in this window.",
+    "Payment time is inferred from granted_until minus the current 30-day grant duration. Paid/refunded states come from server fulfillment, not button clicks. Refund amounts and Stripe fees are not available here.",
+    "Amounts are minor currency units, grouped by currency; do not combine them without conversion. Orders marked refunded are not counted as retained paid revenue.",
+    "Free-use counters are lifetime totals, not usage during this report window.",
+    "No visitor, campaign-to-order, geography or signup conversion rate can be calculated from these tables. Use existing web analytics and Search Console for traffic, and keep their denominators separate.",
+    "Historical generated practice may have come from the old full-feature trial; generated does not itself mean paid.",
+    "Production-owner test payments cannot be identified automatically. Exclude known test transactions before treating payments as customer demand."
+  ]
+}

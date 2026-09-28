@@ -4,10 +4,11 @@ import { z } from 'zod';
 import { practiceAnswerSchema } from '@/lib/practice-answer-schema';
 import { allowRequest } from '@/lib/db';
 import { readJson } from '@/lib/request-body';
-import { createPractice,practiceHistory,submitPractice } from '@/lib/practice-store';
+import { createPractice,practiceHistory,submitPractice,PracticeAccessError } from '@/lib/practice-store';
+import { FREE_SAMPLES_PER_KIND,hasFullAccess } from '@/lib/access-policy';
 
 const schema=z.discriminatedUnion('action',[
-  z.object({action:z.literal('start'),kind:z.enum(['pipeline','numerical','data','figure','memory']),difficulty:z.enum(['easy','medium','hard']).optional(),retryId:z.uuid().optional()}),
+  z.object({action:z.literal('start'),kind:z.enum(['pipeline','numerical','data','figure','memory']),difficulty:z.enum(['easy','medium','hard']).optional(),retryId:z.uuid().optional(),sampleIndex:z.number().int().min(0).max(FREE_SAMPLES_PER_KIND-1).optional()}),
   z.object({action:z.literal('submit'),id:z.uuid(),answer:practiceAnswerSchema}),
 ]);
 const reply=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store'}});
@@ -27,11 +28,14 @@ export async function POST(request:Request) {
   if(!input.success)return reply({error:'Invalid input'},400);
   try {
     if(!await allowRequest(userId,'practice',30))return reply({error:'Too many requests'},429);
-    if((await getAccess(userId)).status==='expired')return reply({error:'Trial expired'},403);
+    const fullAccess=hasFullAccess((await getAccess(userId)).status);
     const data=input.data;
     const result=data.action==='start'
-      ? await createPractice(userId,data.kind,data.retryId,data.difficulty)
+      ? await createPractice(userId,data.kind,data.retryId,data.difficulty,fullAccess,data.sampleIndex)
       : await submitPractice(userId,data.id,data.answer);
     return result?reply(result):reply({error:'Not found'},404);
-  }catch{return reply({error:'Service temporarily unavailable'},503);}
+  }catch(error){
+    if(error instanceof PracticeAccessError)return reply({error:'Paid practice requires membership'},403);
+    return reply({error:'Service temporarily unavailable'},503);
+  }
 }

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">Distinct digit example: three times six plus five equals twenty-three</title><desc id="desc">For a times b plus c equals 23, with distinct digits from one to nine, the product must be between 14 and 22. One solution is a equals 3, b equals 6 and c equals 5.</desc>
+<rect width="1200" height="675" rx="24" fill="#f8fafc"/>
+<g font-family="Arial,sans-serif" text-anchor="middle" fill="#0f172a">
+<text x="600" y="130" font-size="64" font-weight="700">a × b + c = 23</text>
+<text x="600" y="218" font-size="32" fill="#64748b">1 ≤ a, b, c ≤ 9 · a ≠ b ≠ c ≠ a</text>
+<rect x="170" y="280" width="860" height="100" rx="18" fill="#e0e7ff"/>
+<text x="600" y="347" font-size="46" fill="#4338ca">14 ≤ a × b ≤ 22</text>
+<text x="600" y="487" font-size="64" font-weight="700">3 × 6 + 5 = 23</text>
+<text x="600" y="610" font-size="24" fill="#64748b">quiz.ckautoflow.com · One valid solution, not necessarily unique</text>
+</g></svg>

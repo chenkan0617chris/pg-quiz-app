@@ -2,14 +2,18 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isLanguage } from '@/lib/language';
-import { absolute, localePath, pageMetadata, SITE_NAME, SITE_URL } from '@/lib/seo';
-import { GUIDE_LABELS, GUIDE_SLUGS, getGuide, isGuideSlug } from '@/content/guides';
+import { absolute, localePath, pageMetadata, SITE_URL } from '@/lib/seo';
+import { GUIDE_LABELS, GUIDE_SLUGS, GUIDE_PRACTICE, getGuide, isGuideSlug } from '@/content/guides';
+import { PRICE_LABEL } from '@/lib/payment-product';
+import { GUIDE_SUMMARIES } from '@/content/guide-summaries';
+import { PUBLISHER_NAME, PRODUCT_INFO, OFFICIAL_HIRING_URL } from '@/content/product-info';
 import { UI } from '@/content/site';
 import { LOCALES } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import Prose, { headingId } from '@/components/seo/Prose';
 import FaqSection from '@/components/seo/FaqSection';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import GuideIllustration from '@/components/seo/GuideIllustration';
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
@@ -30,7 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: guide.description,
     keywords: guide.keywords,
     type: 'article',
-    publishedTime: guide.updated,
+    publishedTime: guide.published,
+    modifiedTime: guide.updated,
   });
 }
 
@@ -56,10 +61,11 @@ export default async function GuidePage({ params }: Props) {
           description: guide.description,
           inLanguage: lang === 'zh' ? 'zh-CN' : 'en',
           dateModified: guide.updated,
-          datePublished: guide.updated,
+          datePublished: guide.published,
+          image: absolute('/opengraph-image'),
           mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-          author: { '@type': 'Organization', name: SITE_NAME[lang], url: SITE_URL },
-          publisher: { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: SITE_NAME[lang] },
+          author: { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: PUBLISHER_NAME, url: absolute(localePath(lang, '/about')) },
+          publisher: { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: PUBLISHER_NAME },
         }}
       />
 
@@ -74,12 +80,13 @@ export default async function GuidePage({ params }: Props) {
       <article>
         <header className="border-b border-slate-200 pb-8">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">{guide.h1}</h1>
+          <p className="mt-3 text-sm text-slate-500">{lang === 'zh' ? '编写与维护：' : 'Written and maintained by '}<Link href={localePath(lang, '/about')} className="underline">{PUBLISHER_NAME}</Link></p>
           <p className="mt-4 text-[15px] leading-7 text-slate-600">{guide.lede}</p>
           <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             <Link href={localePath(lang, guide.toolHref)} className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700">
               {guide.toolLabel}
             </Link>
-            <Link href={localePath(lang, '/practice')} className="text-indigo-600 hover:underline">{ui.practice}</Link>
+            <Link href={localePath(lang, GUIDE_PRACTICE[slug])} className="text-indigo-600 hover:underline">{ui.practice}</Link>
             <time dateTime={guide.updated} className="text-slate-400">{ui.updated} {guide.updated}</time>
           </p>
         </header>
@@ -95,7 +102,25 @@ export default async function GuidePage({ params }: Props) {
           </ol>
         </nav>
 
+        <section className="mb-8 rounded-xl border border-slate-200 p-5">
+          <h2 className="text-lg font-semibold">{lang === 'zh' ? '先记住这个解题方法' : 'The method at a glance'}</h2>
+          <p className="mt-3 text-[15px] leading-7 text-slate-700">{GUIDE_SUMMARIES[lang][slug]}</p>
+        </section>
+        <GuideIllustration slug={slug} lang={lang}/>
         <Prose blocks={guide.body} />
+        <section className="mt-10 rounded-xl border border-indigo-100 bg-indigo-50 p-6">
+          <h2 className="text-xl font-bold">{lang==='zh'?'用练习检验刚学到的方法':'Put the method into practice'}</h2>
+          <p className="mt-3 text-sm leading-7">{lang==='zh'?'登录后，每种题型可反复练习 5 道固定样题，每种解题器各有 10 次免费机会，不每日重置。需要更多新题和持续求解时，可购买 30 天会员。':'After signing in, repeat 5 fixed samples per practice type and use each solver 10 times for free, with no daily reset. Paid access unlocks new generated questions and continued solving for 30 days.'}</p>
+          <div className="mt-4 flex flex-wrap gap-4 text-sm">
+            <Link className="rounded-lg bg-indigo-600 px-4 py-2 text-white" href={localePath(lang,GUIDE_PRACTICE[slug])}>{lang==='zh'?'练习这一题型':'Practise this topic'}</Link>
+            <Link className="py-2 text-indigo-700 underline" href={localePath(lang,'/pricing')}>{PRICE_LABEL} / {lang==='zh'?'30 天 · 查看包含内容':'30 days · See what is included'}</Link>
+          </div>
+        </section>
+        <section className="mt-10 border-t border-slate-200 pt-6">
+          <h2 className="text-xl font-bold">{PRODUCT_INFO[lang].sourcesTitle}</h2>
+          <p className="mt-3 text-sm leading-7 text-slate-600">{PRODUCT_INFO[lang].sourceNote}</p>
+          <p className="mt-3 text-sm"><a className="text-indigo-600 underline" href={OFFICIAL_HIRING_URL}>P&G Careers — Hiring process</a> · <Link className="text-indigo-600 underline" href={localePath(lang, '/about')}>{lang === 'zh' ? '本站题目编写方法' : 'Our question methodology'}</Link></p>
+        </section>
       </article>
 
       <FaqSection heading={ui.faqHeading} items={guide.faq} />

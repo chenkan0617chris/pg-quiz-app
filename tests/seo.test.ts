@@ -36,3 +36,28 @@ test('the site root is the x-default only for the home page', () => {
   assert.equal(alternates('zh').languages?.['x-default'], '/');
   assert.equal(alternates('zh', '/practice').languages?.['x-default'], '/en/practice');
 });
+
+import sitemap from '../src/app/sitemap';
+import robots from '../src/app/robots';
+import { getGuide, GUIDE_SLUGS } from '../src/content/guides';
+
+test('sitemap exposes public product information in both languages and uses editorial dates', () => {
+ const entries=sitemap();
+ for(const lang of ['zh','en'] as const){
+  for(const path of ['/pricing','/about'])assert.ok(entries.some(e=>e.url===`https://quiz.ckautoflow.com/${lang}${path}`));
+  for(const slug of GUIDE_SLUGS){
+   const entry=entries.find(e=>e.url===`https://quiz.ckautoflow.com/${lang}/guides/${slug}`);
+   assert.equal(entry?.lastModified,getGuide(lang,slug).updated);
+  }
+ }
+ assert.equal(new Set(entries.map(e=>e.url)).size,entries.length);
+ assert.ok(entries.every(e=>!e.url.includes('/billing')));
+});
+
+test('noindex account pages remain crawlable so crawlers can read the directive', () => {
+ const rules=robots().rules;
+ const groups=Array.isArray(rules)?rules:[rules];
+ const blocked=groups.flatMap(g=>g.disallow??[]);
+ for(const path of ['/billing','/sign-in','/sign-up'])assert.ok(!blocked.includes(path));
+ assert.ok(blocked.includes('/api/'));
+});

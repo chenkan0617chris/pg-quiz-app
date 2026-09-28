@@ -1,14 +1,18 @@
 import type { MetadataRoute } from 'next';
-import { GUIDE_SLUGS } from '@/content/guides';
+import { GUIDE_SLUGS, getGuide, isGuideSlug } from '@/content/guides';
+import { EDITORIAL_UPDATED } from '@/content/product-info';
 import { absolute, localePath, SITE_URL } from '@/lib/seo';
 
 /** Locale-relative paths, listed once and emitted for every language. */
 const PATHS: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
   { path: '', priority: 1, changeFrequency: 'weekly' },
   { path: '/practice', priority: 0.9, changeFrequency: 'weekly' },
+  { path: '/pricing', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/about', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/guides', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/pipeline', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/series', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/memory', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/numerical', priority: 0.8, changeFrequency: 'monthly' },
   ...GUIDE_SLUGS.map((slug) => ({
     path: `/guides/${slug}`,
@@ -18,12 +22,13 @@ const PATHS: { path: string; priority: number; changeFrequency: MetadataRoute.Si
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
 
   return PATHS.flatMap(({ path, priority, changeFrequency }) =>
     (['zh', 'en'] as const).map((lang) => ({
       url: absolute(localePath(lang, path)),
-      lastModified,
+      // Do not pretend every rebuild is an editorial update. Omit unknown dates.
+      ...(['', '/pricing', '/about'].includes(path) ? { lastModified: EDITORIAL_UPDATED } : {}),
+      ...(isGuideSlug(path.split('/')[2] ?? '') ? { lastModified: getGuide(lang, path.split('/')[2] as Parameters<typeof getGuide>[1]).updated } : {}),
       changeFrequency,
       priority,
       alternates: {

@@ -24,6 +24,12 @@ import { explainQuestion, dataValue } from '../src/lib/practice';
 import { preferredLanguage } from '../src/lib/language';
 import { apply } from '../src/lib/engine';
 
+test('data percentage rounding preserves exact half-tenths',()=>{
+  const rows=[1150,950,900,1000].map((after,i)=>({label:String(i),before:100,after}));
+  assert.equal(dataValue({metric:'share',rows,focus:0}),28.8);
+  assert.equal(dataValue({metric:'growth',rows:[{label:'A',before:800,after:1030}],focus:0}),28.8);
+});
+
 test('browser language defaults and manual overrides',()=>{
   assert.equal(preferredLanguage(null,['zh-CN','en-US']),'zh');
   assert.equal(preferredLanguage(null,['zh-TW']),'zh');

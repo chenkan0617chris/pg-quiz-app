@@ -70,10 +70,11 @@ export function generateQuestion(kind:PracticeQuestion['kind'],difficulty:Diffic
 }
 export function dataValue(q:Pick<DataQuestion,'metric'|'rows'|'focus'>) {
   const r=q.rows[q.focus];
-  const value=q.metric==='growth'?(r.after-r.before)/r.before*100
-    :q.metric==='share'?r.after/q.rows.reduce((sum,row)=>sum+row.after,0)*100
-    :r.after/q.rows[(q.focus+1)%q.rows.length].after;
-  return Math.round(value*10)/10;
+  // Scale integer source data before division to avoid 28.75 becoming 28.749999…
+  const scaled=q.metric==='growth'?(r.after-r.before)*1000/r.before
+    :q.metric==='share'?r.after*1000/q.rows.reduce((sum,row)=>sum+row.after,0)
+    :r.after*10/q.rows[(q.focus+1)%q.rows.length].after;
+  return Math.round(scaled)/10;
 }
 /** Memory sequences are sent for playback; grading and explanations stay server-side. */
 export function publicQuestion(q:PracticeQuestion) {

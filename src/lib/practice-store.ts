@@ -1,6 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { database } from './db';
 import { generateQuestion,gradeAnswer,publicQuestion,explainQuestion,type Difficulty,type PracticeQuestion } from './practice';
+import { freePracticeQuestion } from './free-practice';
+
+export class PracticeAccessError extends Error {}
 
 type Row = {id:string;question:PracticeQuestion;answer:number[]|null;correct:boolean|null;created_at:string;submitted_at:string|null};
 function result(row:Row) {
@@ -8,17 +11,23 @@ function result(row:Row) {
     referenceAnswer:row.question.answer,explanation:explainQuestion(row.question,row.answer??[]),submittedAt:row.submitted_at};
 }
 
-export async function createPractice(userId:string,kind:PracticeQuestion['kind'],retryId?:string,difficulty:Difficulty='easy') {
+export async function createPractice(userId:string,kind:PracticeQuestion['kind'],retryId?:string,difficulty:Difficulty='easy',fullAccess=true,sampleIndex=0) {
   const sql=database();
   let question:PracticeQuestion;
+  let sampleKey:string|null=null;
   if(retryId) {
-    const [old]=await sql`SELECT question FROM practice_attempts WHERE id=${retryId} AND user_id=${userId} AND submitted_at IS NOT NULL`;
+    const [old]=await sql`SELECT question,sample_key FROM practice_attempts WHERE id=${retryId} AND user_id=${userId} AND submitted_at IS NOT NULL`;
     if(!old) return null;
+    if(!fullAccess&&!old.sample_key)throw new PracticeAccessError('Paid practice requires membership');
+    sampleKey=old.sample_key;
     question=old.question as PracticeQuestion;
+  } else if(!fullAccess) {
+    question=freePracticeQuestion(kind,sampleIndex);
+    sampleKey=`${kind}:${sampleIndex}`;
   } else question=generateQuestion(kind,difficulty);
   const id=randomUUID();
-  await sql`INSERT INTO practice_attempts(id,user_id,question) VALUES (${id},${userId},${JSON.stringify(question)}::jsonb)`;
-  return {id,question:publicQuestion(question)};
+  await sql`INSERT INTO practice_attempts(id,user_id,question,sample_key) VALUES (${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey})`;
+  return {id,question:publicQuestion(question),sampleKey};
 }
 
 export async function submitPractice(userId:string,id:string,answer:number[]) {

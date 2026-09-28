@@ -2,10 +2,11 @@ import type { GuideCopy } from './guides.zh';
 
 export const GUIDES_EN: Record<string, GuideCopy> = {
   pipeline: {
-    title: 'Pipeline Logic Questions: How to Solve Them Step by Step',
+    title: 'Switch-Style Practice: Pipeline Logic Explained',
     description:
-      'A complete method for pipeline logic questions in P&G-style aptitude tests: how boxes reorder shapes, forward and backward solving, handling several unknown boxes, with worked examples and a free solver.',
+      'A complete method for pipeline logic questions in P&G-style aptitude tests: how boxes reorder shapes, forward and backward solving, handling several unknown boxes, with worked examples and a solver with 10 free uses.',
     keywords: [
+      'P&G switch challenge practice',
       'pipeline logic questions',
       'P&G online assessment',
       'P&G aptitude test practice',
@@ -13,10 +14,11 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
       'P&G reasoning test',
       'pipeline puzzle solver',
     ],
-    h1: 'How to Solve Pipeline Logic Questions',
+    h1: 'Switch-style practice: how to solve pipeline logic questions',
     lede:
-      'Pipeline questions are the most distinctive format in P&G-style reasoning screens. Four shapes enter a pipeline, pass through a row of boxes, and leave in a different order. Each box applies one fixed reordering rule, and the question usually hides a box and asks what it must have done. This guide covers the structure underneath the pictures, two reliable solving methods, and what to do when more than one box is unknown.',
-    updated: '2026-09-15',
+      'If you are looking for P&G Switch Challenge practice, pipeline logic exercises can help you learn position reordering. These original questions do not reproduce an official assessment. Four shapes enter a pipeline, pass through a row of boxes, and leave in a different order. Each box applies one fixed reordering rule, and the question usually hides a box and asks what it must have done. This guide covers the structure underneath the pictures, two reliable solving methods, and what to do when more than one box is unknown.',
+    published: '2026-09-15',
+    updated: '2026-09-28',
     toolHref: '/pipeline',
     toolLabel: 'Open the pipeline solver',
     body: [
@@ -132,7 +134,7 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
   figure: {
     title: 'Figure Series Questions: Six Rules and a Checking Order',
     description:
-      'A systematic method for figure series reasoning: rotation, reflection, cyclic shift, perimeter movement, inversion and rotation-with-inversion, in a fixed order of elimination, with 3x3 grid examples and a free rule solver.',
+      'A systematic method for figure series reasoning: rotation, reflection, cyclic shift, perimeter movement, inversion and rotation-with-inversion, in a fixed order of elimination, with 3x3 grid examples and a rule solver with 10 free uses.',
     keywords: [
       'figure series questions',
       'figural reasoning test',
@@ -144,7 +146,8 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
     h1: 'Figure Series Questions: Six Transformations and a Checking Order',
     lede:
       'A figure series gives you several figures in sequence and asks for the next one. The difficulty is not that any single transformation is hard, but that there are many candidate rules and no obvious order in which to test them, so it is easy to stare and get nowhere. This guide narrows the common rules to six families and gives you a fixed checking order that reaches an answer in about a minute.',
-    updated: '2026-09-15',
+    published: '2026-09-15',
+    updated: '2026-09-28',
     toolHref: '/series',
     toolLabel: 'Open the figure rule solver',
     body: [
@@ -261,10 +264,11 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
   },
 
   numerical: {
-    title: 'Numerical Reasoning: Solve Equation Blanks Fast',
+    title: 'Digit-Style Practice: Numerical Reasoning Explained',
     description:
-      'How to solve numerical reasoning blanks without brute force: use remainders, divisibility and parity to cut the search space, handle the distinct-digits constraint, with worked examples and a free solver.',
+      'How to solve numerical reasoning blanks without brute force: use remainders, divisibility and parity to cut the search space, handle the distinct-digits constraint, with worked examples and a solver with 10 free uses.',
     keywords: [
+      'P&G digit challenge practice',
       'numerical reasoning practice',
       'fill in the blank equations',
       'P&G numerical reasoning',
@@ -272,10 +276,11 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
       'aptitude test maths',
       'mental arithmetic test practice',
     ],
-    h1: 'Numerical Reasoning: From Brute Force to Constraint Reduction',
+    h1: 'Digit-style practice: solve numerical reasoning blanks',
     lede:
-      'A numerical reasoning blank gives you an equation with gaps and a target result, and asks which single digits belong in the gaps. Brute force gets there eventually, but nowhere near fast enough under exam conditions. This guide is about using remainders, divisibility and parity to remove roughly ninety per cent of the search space and bring a question down to thirty seconds.',
-    updated: '2026-09-15',
+      'If you are looking for P&G Digit Challenge practice, start by learning how equation blanks and distinct-digit constraints work. This guide uses original examples to explain remainders, divisibility and parity. These methods narrow the search; we do not claim a measured speed improvement or reproduce every official numerical task.',
+    published: '2026-09-15',
+    updated: '2026-09-28',
     toolHref: '/numerical',
     toolLabel: 'Open the numerical solver',
     body: [
@@ -387,7 +392,8 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
     h1: 'Data Interpretation: Three Question Types and Fast Estimation',
     lede:
       'The arithmetic in data interpretation is not the hard part. The hard part is finding the two right numbers among many within a few dozen seconds. Nearly every lost mark here comes from choosing the wrong denominator or missing a unit, not from calculating incorrectly. This guide reduces the common phrasings to three types and gives a denominator rule and an estimation strategy for each.',
-    updated: '2026-09-15',
+    published: '2026-09-15',
+    updated: '2026-09-28',
     toolHref: '/practice',
     toolLabel: 'Go to the practice bank',
     body: [
@@ -454,7 +460,7 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
       { type: 'h2', text: '5. How to practise' },
       {
         type: 'p',
-        text: 'The key is making the denominator decision reflexive. When working through the practice bank, force yourself to state the denominator out loud before calculating anything. After twenty or thirty questions the keyword in the prompt will locate it for you automatically. Every question in the bank comes with a step-by-step explanation that names the source of both the numerator and the denominator, so you can check it against your own reasoning.',
+        text: 'The key is making the denominator decision reflexive. When working through the practice bank, force yourself to state the denominator out loud before calculating anything. Check whether you can identify the right denominator on an unfamiliar question before increasing speed. Every question in the bank comes with a step-by-step explanation that names the source of both the numerator and the denominator, so you can check it against your own reasoning.',
       },
     ],
     faq: [

@@ -52,6 +52,7 @@ export function pageMetadata({
   keywords,
   type = 'website',
   publishedTime,
+  modifiedTime,
 }: {
   lang: Language;
   path?: string;
@@ -60,6 +61,7 @@ export function pageMetadata({
   keywords?: string[];
   type?: 'website' | 'article';
   publishedTime?: string;
+  modifiedTime?: string;
 }): Metadata {
   const url = localePath(lang, path);
   return {
@@ -77,6 +79,7 @@ export function pageMetadata({
       alternateLocale: OG_LOCALE[lang === 'zh' ? 'en' : 'zh'],
       images: [{ ...OG_IMAGE, alt: title }],
       ...(publishedTime ? { publishedTime } : {}),
+      ...(modifiedTime ? { modifiedTime } : {}),
     },
     twitter: {
       card: 'summary_large_image',

@@ -1,0 +1,545 @@
+{
+  "pipeline": [
+    {
+      "kind": "pipeline",
+      "version": 2,
+      "input": [
+        1,
+        4,
+        2,
+        3
+      ],
+      "output": [
+        3,
+        1,
+        4,
+        2
+      ],
+      "answer": [
+        4,
+        1,
+        2,
+        3
+      ],
+      "boxes": [
+        null
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "kind": "pipeline",
+      "version": 2,
+      "input": [
+        4,
+        3,
+        2,
+        1
+      ],
+      "output": [
+        4,
+        3,
+        1,
+        2
+      ],
+      "answer": [
+        1,
+        2,
+        4,
+        3
+      ],
+      "boxes": [
+        null
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "kind": "pipeline",
+      "version": 2,
+      "input": [
+        3,
+        4,
+        2,
+        1
+      ],
+      "output": [
+        4,
+        1,
+        3,
+        2
+      ],
+      "answer": [
+        2,
+        4,
+        1,
+        3
+      ],
+      "boxes": [
+        null
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "kind": "pipeline",
+      "version": 2,
+      "input": [
+        3,
+        2,
+        1,
+        4
+      ],
+      "output": [
+        3,
+        4,
+        1,
+        2
+      ],
+      "answer": [
+        1,
+        4,
+        3,
+        2
+      ],
+      "boxes": [
+        null
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "kind": "pipeline",
+      "version": 2,
+      "input": [
+        4,
+        1,
+        2,
+        3
+      ],
+      "output": [
+        1,
+        3,
+        4,
+        2
+      ],
+      "answer": [
+        2,
+        4,
+        1,
+        3
+      ],
+      "boxes": [
+        null
+      ],
+      "difficulty": "easy"
+    }
+  ],
+  "numerical": [
+    {
+      "kind": "numerical",
+      "version": 1,
+      "target": 11,
+      "answer": [
+        1,
+        3,
+        8
+      ]
+    },
+    {
+      "kind": "numerical",
+      "version": 1,
+      "target": 26,
+      "answer": [
+        3,
+        7,
+        5
+      ]
+    },
+    {
+      "kind": "numerical",
+      "version": 1,
+      "target": 14,
+      "answer": [
+        1,
+        9,
+        5
+      ]
+    },
+    {
+      "kind": "numerical",
+      "version": 1,
+      "target": 29,
+      "answer": [
+        3,
+        8,
+        5
+      ]
+    },
+    {
+      "kind": "numerical",
+      "version": 1,
+      "target": 7,
+      "answer": [
+        3,
+        2,
+        1
+      ]
+    }
+  ],
+  "figure": [
+    {
+      "kind": "figure",
+      "version": 1,
+      "frames": [
+        415,
+        375,
+        239,
+        415,
+        375
+      ],
+      "options": [
+        207,
+        175,
+        239,
+        235,
+        255
+      ],
+      "rule": "right",
+      "answer": [
+        3
+      ]
+    },
+    {
+      "kind": "figure",
+      "version": 1,
+      "frames": [
+        244,
+        267,
+        244,
+        267,
+        244
+      ],
+      "options": [
+        331,
+        267,
+        283,
+        11,
+        395
+      ],
+      "rule": "invert",
+      "answer": [
+        2
+      ]
+    },
+    {
+      "kind": "figure",
+      "version": 1,
+      "frames": [
+        13,
+        104,
+        321,
+        13,
+        104
+      ],
+      "options": [
+        321,
+        257,
+        449,
+        329,
+        323
+      ],
+      "rule": "down",
+      "answer": [
+        1
+      ]
+    },
+    {
+      "kind": "figure",
+      "version": 1,
+      "frames": [
+        345,
+        87,
+        309,
+        468,
+        345
+      ],
+      "options": [
+        95,
+        85,
+        87,
+        71,
+        215
+      ],
+      "rule": "cw",
+      "answer": [
+        3
+      ]
+    },
+    {
+      "kind": "figure",
+      "version": 1,
+      "frames": [
+        210,
+        301,
+        210,
+        301,
+        210
+      ],
+      "options": [
+        297,
+        317,
+        293,
+        301,
+        365
+      ],
+      "rule": "invert",
+      "answer": [
+        4
+      ]
+    }
+  ],
+  "data": [
+    {
+      "kind": "data",
+      "version": 1,
+      "metric": "ratio",
+      "rows": [
+        {
+          "label": "A",
+          "before": 450,
+          "after": 900
+        },
+        {
+          "label": "B",
+          "before": 250,
+          "after": 400
+        },
+        {
+          "label": "C",
+          "before": 1000,
+          "after": 1100
+        },
+        {
+          "label": "D",
+          "before": 500,
+          "after": 800
+        }
+      ],
+      "focus": 2,
+      "options": [
+        2.4,
+        1.7,
+        1.4,
+        1.6
+      ],
+      "answer": [
+        3
+      ]
+    },
+    {
+      "kind": "data",
+      "version": 1,
+      "metric": "ratio",
+      "rows": [
+        {
+          "label": "A",
+          "before": 850,
+          "after": 950
+        },
+        {
+          "label": "B",
+          "before": 300,
+          "after": 700
+        },
+        {
+          "label": "C",
+          "before": 250,
+          "after": 600
+        },
+        {
+          "label": "D",
+          "before": 1000,
+          "after": 1150
+        }
+      ],
+      "focus": 3,
+      "options": [
+        2.3,
+        1.2,
+        1.3,
+        1
+      ],
+      "answer": [
+        2
+      ]
+    },
+    {
+      "kind": "data",
+      "version": 1,
+      "metric": "share",
+      "rows": [
+        {
+          "label": "A",
+          "before": 400,
+          "after": 450
+        },
+        {
+          "label": "B",
+          "before": 800,
+          "after": 1150
+        },
+        {
+          "label": "C",
+          "before": 200,
+          "after": 650
+        },
+        {
+          "label": "D",
+          "before": 550,
+          "after": 250
+        }
+      ],
+      "focus": 0,
+      "options": [
+        32,
+        3,
+        18,
+        30
+      ],
+      "answer": [
+        3
+      ]
+    },
+    {
+      "kind": "data",
+      "version": 1,
+      "metric": "ratio",
+      "rows": [
+        {
+          "label": "A",
+          "before": 200,
+          "after": 800
+        },
+        {
+          "label": "B",
+          "before": 550,
+          "after": 1050
+        },
+        {
+          "label": "C",
+          "before": 400,
+          "after": 850
+        },
+        {
+          "label": "D",
+          "before": 200,
+          "after": 1100
+        }
+      ],
+      "focus": 2,
+      "options": [
+        0.8,
+        0.6,
+        1.2,
+        1.8
+      ],
+      "answer": [
+        1
+      ]
+    },
+    {
+      "kind": "data",
+      "version": 1,
+      "metric": "growth",
+      "rows": [
+        {
+          "label": "A",
+          "before": 700,
+          "after": 1050
+        },
+        {
+          "label": "B",
+          "before": 300,
+          "after": 300
+        },
+        {
+          "label": "C",
+          "before": 950,
+          "after": 650
+        },
+        {
+          "label": "D",
+          "before": 300,
+          "after": 250
+        }
+      ],
+      "focus": 2,
+      "options": [
+        -8.6,
+        -13.6,
+        -31.6,
+        -33.6
+      ],
+      "answer": [
+        3
+      ]
+    }
+  ],
+  "memory": [
+    {
+      "kind": "memory",
+      "version": 1,
+      "difficulty": "easy",
+      "answer": [
+        2,
+        7,
+        4
+      ]
+    },
+    {
+      "kind": "memory",
+      "version": 1,
+      "difficulty": "easy",
+      "answer": [
+        8,
+        3,
+        5
+      ]
+    },
+    {
+      "kind": "memory",
+      "version": 1,
+      "difficulty": "medium",
+      "answer": [
+        6,
+        1,
+        9,
+        4,
+        2
+      ]
+    },
+    {
+      "kind": "memory",
+      "version": 1,
+      "difficulty": "medium",
+      "answer": [
+        3,
+        8,
+        5,
+        1,
+        7
+      ]
+    },
+    {
+      "kind": "memory",
+      "version": 1,
+      "difficulty": "hard",
+      "answer": [
+        9,
+        2,
+        6,
+        1,
+        8,
+        4,
+        7
+      ]
+    }
+  ]
+}

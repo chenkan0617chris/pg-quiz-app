@@ -90,3 +90,18 @@ User confirmed the manual test succeeded and requested restoration of the origin
 ## 2026-09-15 — standard price changed to AUD 9.90
 
 User requested AUD 9.90 following verification that Alipay/WeChat Pay remain pending approval and Australian merchants have currency restrictions for those wallets. Shared billing/Checkout price now AUD 990 cents. Migration 007 allows the new amount while preserving historic CNY, USD and AUD 50-cent orders. Four payment tests with real DB passed, including AUD 990 fulfillment; lint and build passed. Duration remains 30 days from confirmation, no unused-trial extension or automatic renewal. This currency change does not itself approve Alipay or WeChat Pay.
+
+## 2026-09-28 — CNY 3.00 wallet payment test
+
+- Live Stripe Dashboard payment methods now show Alipay and WeChat Pay enabled; the earlier pending-approval status is outdated.
+- User requested CNY 1.00. Sandbox Checkout rejected it with amount_too_small (approximately AUD 0.21, below AUD 0.50). User approved CNY 3.00 instead; sandbox Checkout accepted CNY 300 and the verification session was expired without payment.
+- Shared Checkout/billing price changed to CNY 300. Migration 008 permits this price while preserving historical CNY, USD and AUD orders, and was applied to the database shared by local and production-check environments. Updated the stale pending-approval billing copy.
+- All 27 tests passed with real database tests enabled; lint and production build passed. Real Alipay charge and resulting access grant remain to be verified by the user. This is a temporary public price; restore AUD 9.90 after testing. No automatic restoration scheduled.
+- Production deployment dpl_25kcJQvZqsmYD5SDGR6kHDVjFva4 is READY and aliased to quiz.ckautoflow.com. Live browser confirms ¥3.00 CNY and updated wallet copy. Purchase opens Clerk sign-in; awaiting user login before verifying wallet selection in a real Checkout session.
+
+## 2026-09-28 — standard price AUD 4.99
+
+- User replaced the temporary CNY 3.00 test price with AUD 4.99 (supersedes the earlier plan to restore AUD 9.90). Shared billing/Checkout price is AUD 499 cents for 30 days, without automatic renewal.
+- Migration 009 applied: admits AUD 499 and preserves all historical prices, including CNY 300. Existing old-price pending sessions are retired when the user next starts checkout, using the existing price comparison.
+- All 27 tests passed with real database tests enabled; lint and production build passed.
+- Deployment dpl_7vGUMphYx7zUo5wjGPndy4BzCUGp is READY and aliased to quiz.ckautoflow.com. Live /billing returned HTTP 200 with A$4.99 AUD and no old ¥3.00 CNY price.

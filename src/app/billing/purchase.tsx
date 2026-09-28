@@ -19,12 +19,12 @@ export default function Purchase({enabled}:{enabled:boolean}){
   }catch{setError(zh?'暂时无法付款，请稍后重试。':'Checkout is currently unavailable.');}finally{setBusy(false);}
  }
  return <section className="mx-auto max-w-xl rounded-2xl border border-gray-200 bg-white p-8">
-  <h1 className="text-2xl font-bold">{zh?'试用与购买':'Trial and access'}</h1>
-  <p className="mt-4 text-gray-600">{zh?'注册即享七天免费试用，无需绑卡。试用期间也可随时购买。':'Enjoy a seven-day free trial with no card required. You can also purchase at any time during your trial.'}</p>
+  <h1 className="text-2xl font-bold">{zh?'会员与价格':'Membership and access'}</h1>
+  <p className="mt-4 text-gray-600">{zh?'每种解题器各有 10 次免费机会，不每日重置；每种练习题型有 5 道固定样题，可反复练习。无需绑卡。':'Get 10 lifetime free uses per solver and 5 fixed samples per practice type. Samples can be repeated. No card required.'}</p>
   <p className="mt-6 text-3xl font-bold">{PRICE_LABEL} <span className="text-base font-normal">/ {zh?'30 天':'30 days'}</span></p>
-  <p className="mt-2 text-gray-600">{zh?'包含解题与练习。付款确认后立即生效，有效期 30 天，不叠加剩余试用时间。一次购买，不自动续费。':'Includes solving and practice. Access starts when payment is confirmed and lasts 30 days; unused trial days are not added. One-time purchase, no automatic renewal.'}</p>
+  <p className="mt-2 text-gray-600">{zh?'会员可继续使用全部解题器、生成更多练习并选择管道题难度。付款确认后立即生效 30 天，不叠加原有试用时间，不自动续费。会员到期后，未用完的免费次数仍保留。':'Unlock continued solving, new generated practice and pipeline difficulty selection for 30 days from payment confirmation. No automatic renewal or addition of unused trial days. Unused free credits remain after paid access ends.'}</p>
   <p className="mt-4 text-sm text-gray-500">{zh?'付款后以页面上方的账户有效期为准；支付通知可能稍有延迟。':'After payment, check your access expiry above. Payment confirmation may take a moment.'}</p>
-  {enabled&&<p className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">{zh?'支持 Visa、Mastercard 等银行卡，通过 Stripe 安全结账。支付宝、微信支付仍待批准，以结账页显示为准。':'Pay securely through Stripe with Visa, Mastercard and other supported cards. Alipay and WeChat Pay are awaiting approval; available methods appear at checkout.'}</p>}
+  {enabled&&<p className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">{zh?'通过 Stripe 安全结账，支持支付宝、微信支付及 Visa、Mastercard 等银行卡；实际可用方式以结账页显示为准。':'Pay securely through Stripe with Alipay, WeChat Pay, Visa, Mastercard and other supported cards. Available methods appear at checkout.'}</p>}
   {!enabled&&<p className="mt-6 rounded-lg bg-amber-50 p-4 text-amber-800">{zh?'支付开通中，目前不会收取费用。支付宝、微信支付以正式商户审核和结账页实际可用方式为准。':'Payments are not open yet. No charges are taken. Alipay and WeChat Pay depend on merchant approval and checkout availability.'}</p>}
   <button disabled={!enabled||busy} onClick={buy} className="mt-6 rounded-lg bg-indigo-600 px-6 py-3 text-white disabled:opacity-50">{busy?(zh?'正在打开…':'Opening…'):enabled?(zh?'购买 30 天使用权':'Buy 30-day access'):(zh?'即将开放':'Coming soon')}</button>
   {error&&<p role="alert" className="mt-4 text-red-600">{error}</p>}

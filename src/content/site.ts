@@ -44,6 +44,8 @@ export const UI: Record<Language, {
 
 /** The interactive tool that pairs with each guide, used for cross-linking. */
 export const GUIDE_TOOL: Record<GuideSlug, string> = {
+  assessment: '/practice',
+  memory: '/memory',
   pipeline: '/pipeline',
   figure: '/series',
   numerical: '/numerical',

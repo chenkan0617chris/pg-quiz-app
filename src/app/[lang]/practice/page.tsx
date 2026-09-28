@@ -8,7 +8,7 @@ import Solver from '@/components/practice/PracticePage';
 
 const PATH = '/practice';
 
-type Props = { params: Promise<{ lang: string }> };
+type Props = { params: Promise<{ lang: string }>; searchParams:Promise<{kind?:string|string[]}> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
@@ -17,12 +17,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return pageMetadata({ lang, path: PATH, title: copy.title, description: copy.description, keywords: copy.keywords });
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params,searchParams }: Props) {
   const { lang } = await params;
   if (!isLanguage(lang)) notFound();
+  const {kind}=await searchParams;
+  const initialKind=kind==='numerical'||kind==='figure'||kind==='data'||kind==='memory'?kind:'pipeline';
   return (
     <ToolShell lang={lang} path={PATH} copy={TOOLS.practice[lang]}>
-      <Solver />
+      <Solver initialKind={initialKind} />
     </ToolShell>
   );
 }

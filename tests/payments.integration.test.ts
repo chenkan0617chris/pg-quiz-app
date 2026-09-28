@@ -6,9 +6,11 @@ import { initializeAccess,readAccess } from '../src/lib/access-store';
 test('buying during a trial starts 30 paid days immediately without adding remaining trial days',{skip:!process.env.RUN_DB_TESTS},async()=>{
  const sql=database();const uid='payment_trial_test_'+randomUUID();const order=randomUUID();
  try{
-  const trial=await initializeAccess(uid,Date.now());
-  assert.equal(trial.status,'trial');
-  await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${order},${uid},true,990,'aud')`;
+  await initializeAccess(uid,Date.now());
+  await sql`UPDATE user_access SET trial_eligible=true WHERE user_id=${uid}`;
+  const trial=await readAccess(uid);
+  assert.equal(trial?.status,'trial');
+  await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${order},${uid},true,699,'aud')`;
   const before=Date.now();
   await sql`SELECT fulfill_quiz_payment(${order}::uuid,${'cs_'+order},${'pi_'+order},true)`;
   const after=Date.now();

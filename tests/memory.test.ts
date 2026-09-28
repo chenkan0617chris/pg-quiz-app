@@ -22,6 +22,19 @@ for (const [difficulty, length] of [['easy', 3], ['medium', 5], ['hard', 7]] as 
   });
 }
 
+test('memory fixed samples can be graded and cannot mutate the sample bank', async () => {
+  const { freePracticeQuestion } = await import('../src/lib/free-practice');
+  for (let index = 0; index < 5; index++) {
+    const question = freePracticeQuestion('memory', index);
+    assert.equal(question.kind, 'memory');
+    assert.equal(gradeAnswer(question, question.answer), true);
+    assert.equal(gradeAnswer(question, [...question.answer].reverse()), false);
+    const original = [...question.answer];
+    question.answer.reverse();
+    assert.deepEqual(freePracticeQuestion('memory', index).answer, original);
+  }
+});
+
  test('memory submission accepts all 25 positions and rejects invalid payloads', async () => {
   const { practiceAnswerSchema } = await import('../src/lib/practice-answer-schema');
   assert.equal(practiceAnswerSchema.safeParse([18, 16, 25]).success, true);

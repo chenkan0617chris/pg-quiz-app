@@ -7,9 +7,8 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        // Account-only and machine endpoints carry no search value and would
-        // otherwise burn crawl budget on pages that redirect or require auth.
-        disallow: ['/api/', '/sign-in', '/sign-up', '/billing'],
+        // Keep noindex HTML pages crawlable: bots must fetch the directive.
+        disallow: ['/api/'],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

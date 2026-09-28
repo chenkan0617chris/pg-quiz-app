@@ -1,8 +1,9 @@
+import Link from 'next/link';
 import { headers, cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { languageFromPath, preferredLanguage } from '@/lib/language';
-import { HREFLANG, SITE_URL } from '@/lib/seo';
+import { HREFLANG, SITE_URL, localePath } from '@/lib/seo';
 import './globals.css';
 import { I18nProvider } from '@/lib/i18n';
 import Sidebar from '@/components/Sidebar';
@@ -50,7 +51,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <div className="flex min-h-screen">
               <Sidebar />
               <main className="flex-1 px-4 py-8 sm:px-8">
-                <div className="mx-auto w-full max-w-5xl"><AccountControls />{children}</div>
+                <div className="mx-auto w-full max-w-5xl"><AccountControls />{children}
+                  <footer className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-slate-200 pt-6 text-sm text-slate-600">
+                    <Link href={localePath(lang, '/guides')}>{lang === 'zh' ? '解题攻略' : 'Solving guides'}</Link>
+                    <Link href={localePath(lang, '/pricing')}>{lang === 'zh' ? '会员价格与免费体验' : 'Pricing and free access'}</Link>
+                    <Link href={localePath(lang, '/about')}>{lang === 'zh' ? '关于本站与题目来源' : 'About and methodology'}</Link>
+                  </footer>
+                </div>
               </main>
             </div>
           </AuthProvider>

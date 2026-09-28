@@ -12,7 +12,7 @@ export type HomeCopy = {
   secondaryCta: { label: string; href: string };
   typesHeading: string;
   typesIntro: string;
-  types: { slug: GuideSlug; name: string; blurb: string; toolHref: string; toolLabel: string }[];
+  types: { slug: GuideSlug | 'memory'; name: string; blurb: string; toolHref: string; toolLabel: string }[];
   howHeading: string;
   how: { title: string; text: string }[];
   whyHeading: string;
@@ -28,7 +28,7 @@ export const HOME: Record<Language, HomeCopy> = {
   zh: {
     title: '宝洁笔试题库 | 管道·图形·数字推理在线练习',
     description:
-      '宝洁笔试与在线测评练习平台：管道推理、图形推理、数字推理、图表数据分析四大题型，提供在线求解器、分难度题库和逐步解析。注册即享 7 天免费试用，无需绑卡。',
+      '宝洁笔试与在线测评练习平台：管道推理、图形推理、数字推理、图表数据分析、顺序记忆五大题型，提供在线求解器、分难度题库和逐步解析。每种解题器各享 10 次免费机会，并可练习固定样题，无需绑卡。',
     keywords: [
       '宝洁笔试',
       '宝洁笔试题库',
@@ -40,20 +40,21 @@ export const HOME: Record<Language, HomeCopy> = {
       'P&G 笔试',
       '快消管培生笔试',
     ],
-    h1: '宝洁笔试题库：四大题型在线练习与解题工具',
+    h1: '宝洁笔试题库：五大题型在线练习与解题工具',
     lede:
-      '这是一个面向宝洁及同类快消公司校招笔试的练习平台，覆盖管道推理、图形推理、数字推理和图表数据分析四种高频题型。每种题型都配有两样东西：一个能看到完整推导过程的求解器，和一个分难度、带逐步解析的练习题库。题目全部按公开题型格式生成，可以无限次练习。',
+      '这是一个面向宝洁及同类快消公司校招笔试的练习平台，覆盖管道推理、图形推理、数字推理、图表数据分析和顺序记忆五种题型。管道、图形和数字题配有在线求解器，各题型提供练习与反馈，记忆题支持正确顺序回放。题目全部按公开题型格式生成，可以无限次练习。',
     primaryCta: { label: '开始练习', href: '/practice' },
     secondaryCta: { label: '查看解题攻略', href: '/guides' },
-    typesHeading: '覆盖的四种题型',
+    typesHeading: '覆盖的五种题型',
     typesIntro:
       '每种题型都有独立的解题攻略，讲清底层结构、标准流程和常见失分点；攻略旁边就是对应的工具，可以边读边验证。',
     types: [
+      { slug: 'memory', name: '记忆力训练', blurb: '记住蓝色板上粉色圆点依次亮起的位置，再按原顺序点击。支持 3、5、7 个位置，提交后可以回看正确顺序。', toolHref: '/memory', toolLabel: '开始记忆训练' },
       {
         slug: 'pipeline',
         name: '管道推理题',
         blurb:
-          '四个图形穿过一排方框，顺序被重新排列，题目藏起其中一个方框让你反推。本质是排列的复合与求逆，掌握正推加逆推的夹逼法之后可以稳定在一分钟内完成。',
+          '四个图形穿过一排方框，顺序被重新排列，题目藏起其中一个方框让你反推。本质是排列的复合与求逆，可以通过正推与逆推逐步确定未知规则，再代回验证。',
         toolHref: '/pipeline',
         toolLabel: '管道题求解器',
       },
@@ -94,14 +95,14 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         title: '第三步：进题库限时刷量',
-        text: '练习题库按简单、中等、困难三档出题，答错的题会单独归档，可以只重做错题。每题都带逐步解析和动画演示。',
+        text: '练习题库按简单、中等、困难三档出题，答错的题会单独归档，可以只重做错题。每题都带逐步解析，管道题另有动画演示。',
       },
     ],
     whyHeading: '和一般题库的区别',
     why: [
       {
         title: '题目是生成的，不会刷完',
-        text: '题目按规则实时生成，不是一份固定的题库。同一档难度可以一直练下去，不存在背答案的问题。',
+        text: '题目按规则实时生成，可以重复练习同一档难度。部分题目可能重复，建议关注推导过程，而不只是记住答案。',
       },
       {
         title: '解析讲的是方法，不是答案',
@@ -116,10 +117,10 @@ export const HOME: Record<Language, HomeCopy> = {
         text: '全站中英双语，同一道题可以切换语言查看。准备英文测评时，可以直接熟悉英文题干里的表述方式。',
       },
     ],
-    accessHeading: '试用与价格',
+    accessHeading: '免费体验与会员价格',
     accessText:
-      '注册即享 7 天免费试用，无需绑定银行卡。试用期内可以使用全部求解器和练习题库。试用结束后答题记录仍然保留，可随时购买 30 天使用权，一次性付费，不会自动续费。',
-    accessCta: '查看试用与购买',
+      '每个账号的管道、图形和数字解题器各有 10 次免费机会，独立累计，不每日重置；每种练习题型开放 5 道固定样题，可重复作答并查看解析。购买会员后可在 30 天内继续使用解题器、生成更多新题，一次付款，不自动续费。',
+    accessCta: '查看免费体验与会员',
     faqHeading: '常见问题',
     faq: [
       {
@@ -128,19 +129,19 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         q: '宝洁笔试主要考哪些题型？',
-        a: '公开讨论中最常提到的推理题型包括：图形顺序重排（管道题）、图形序列推理、数字与算式推理，以及基于图表的资料分析。本站覆盖的就是这四类。具体考试形式和内容以官方通知为准，不同年份和岗位可能不同。',
+        a: '公开讨论中最常提到的推理题型包括：图形顺序重排（管道题）、图形序列推理、数字与算式推理，以及基于图表的资料分析。本站覆盖这四类，并提供顺序记忆训练。具体考试形式和内容以官方通知为准，不同年份和岗位可能不同。',
       },
       {
         q: '完全零基础需要练多久？',
-        a: '管道推理和数字推理的方法性很强，通常两三个小时就能把流程跑顺，之后主要靠限时练准确率。图形推理需要的积累更多，建议分散在一到两周内每天做二三十题，比集中突击效果好。',
+        a: '准备时间因基础而异。建议先完成一组练习记录正确率，读完对应攻略后重做错题，再逐步加入计时。本站没有验证过的学习时长或通过率保证。',
       },
       {
         q: '手机上可以用吗？',
         a: '可以，页面在手机和平板上都能正常使用。不过管道题和图形题需要点选格子录入，屏幕大一些会更顺手，建议在电脑上做系统练习。',
       },
       {
-        q: '免费试用需要绑卡吗？',
-        a: '不需要。注册后直接开始 7 天试用，期间不会产生任何费用，也不会自动扣款。是否购买完全由你在试用结束后决定。',
+        q: '免费机会如何计算，需要绑卡吗？',
+        a: '无需绑卡。每个账号每种解题器各有 10 次免费机会，输入校验失败不扣次数，成功求解（包括没有找到可行解）计一次，不每日重置。免费固定样题可以反复练习。已有的 7 天试用保留至原到期时间。',
       },
     ],
   },
@@ -148,7 +149,7 @@ export const HOME: Record<Language, HomeCopy> = {
   en: {
     title: 'P&G Test Prep — Pipeline, Figure & Numerical Practice',
     description:
-      'Practice for P&G-style online assessments: pipeline logic, figure series, numerical reasoning and data interpretation, with step-by-step solvers, a graded question bank and worked explanations. Seven-day free trial, no card required.',
+      'Practice for P&G-style online assessments: pipeline logic, figure series, numerical reasoning and data interpretation, with step-by-step solvers, a graded question bank and worked explanations. 10 free uses per solver and fixed practice samples; no card required.',
     keywords: [
       'P&G online assessment',
       'P&G aptitude test practice',
@@ -161,18 +162,19 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     h1: 'P&G Test Prep: Four Question Types, Solvers and a Practice Bank',
     lede:
-      'This is a practice platform for P&G-style graduate assessments and similar FMCG reasoning screens, covering four recurring question types: pipeline logic, figure series, numerical reasoning and data interpretation. Each type comes with two things — a solver that shows its full working rather than just an answer, and a graded question bank with step-by-step explanations. Questions are generated from publicly described formats, so you can practise without running out.',
+      'This is a practice platform for P&G-style graduate assessments and similar FMCG reasoning screens, covering five question types: pipeline logic, figure series, numerical reasoning, data interpretation and sequence memory. Pipeline, figure and numerical questions have dedicated solvers; all five types have practice with feedback, including sequence replay for memory exercises. Questions are generated from publicly described formats, so you can practise without running out.',
     primaryCta: { label: 'Start practising', href: '/practice' },
     secondaryCta: { label: 'Read the guides', href: '/guides' },
-    typesHeading: 'The four question types',
+    typesHeading: 'The five question types',
     typesIntro:
       'Each type has its own guide covering the structure underneath it, a standard procedure and the mistakes that cost most marks. The matching tool sits alongside, so you can verify as you read.',
     types: [
+      { slug: 'memory', name: 'Sequence memory', blurb: 'Watch pink dots light up on a blue board, then repeat their order. Practise 3, 5 or 7 positions and replay the correct sequence after submitting.', toolHref: '/memory', toolLabel: 'Train your memory' },
       {
         slug: 'pipeline',
         name: 'Pipeline logic',
         blurb:
-          'Four shapes pass through a row of boxes and come out reordered, with one box hidden for you to deduce. Underneath it is composition and inversion of permutations, and once the forward-and-backward squeeze method clicks, a minute per question is realistic.',
+          'Four shapes pass through a row of boxes and come out reordered, with one box hidden for you to deduce. Underneath it is composition and inversion of permutations, and forward and backward reasoning lets you determine the unknown rule and check it against the full sequence.',
         toolHref: '/pipeline',
         toolLabel: 'Pipeline solver',
       },
@@ -220,7 +222,7 @@ export const HOME: Record<Language, HomeCopy> = {
     why: [
       {
         title: 'Questions are generated, so you cannot exhaust them',
-        text: 'Questions are produced from the underlying rules on demand rather than drawn from a fixed set. You can keep drilling one difficulty indefinitely, and memorising answers is not possible.',
+        text: 'Questions are produced from the underlying rules on demand rather than drawn from a fixed set. You can keep practising at one difficulty. Questions may repeat, so focus on the reasoning rather than memorising an answer.',
       },
       {
         title: 'Explanations teach the method, not the answer',
@@ -235,10 +237,10 @@ export const HOME: Record<Language, HomeCopy> = {
         text: 'The whole site runs in both languages and you can switch on any question. If you are preparing for an assessment in English, you can get used to how these questions are worded before it matters.',
       },
     ],
-    accessHeading: 'Trial and pricing',
+    accessHeading: 'Free access and pricing',
     accessText:
-      'Sign up for a seven-day free trial with no card required. The trial includes every solver and the full practice bank. Your history stays available after it ends, and you can buy 30 days of access at any point — a one-time payment with no automatic renewal.',
-    accessCta: 'See trial and pricing',
+      'Each account gets 10 lifetime free uses of each solver and 5 fixed samples per practice type, with full explanations. Allowances do not reset daily. Buy 30-day access for continued solving and new generated questions. One-time payment, no automatic renewal.',
+    accessCta: 'See free access and pricing',
     faqHeading: 'Frequently asked questions',
     faq: [
       {
@@ -247,19 +249,19 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         q: 'Which question types appear in P&G-style assessments?',
-        a: 'The reasoning formats most often described publicly are shape-reordering questions (pipeline), figure sequences, numerical and equation reasoning, and chart-based data interpretation. Those four are what this site covers. The actual format and content of any assessment is set by the employer and can differ by year and by role.',
+        a: 'The reasoning formats most often described publicly are shape-reordering questions (pipeline), figure sequences, numerical and equation reasoning, and chart-based data interpretation. This site covers those four and adds sequence-memory practice. The actual format and content of any assessment is set by the employer and can differ by year and by role.',
       },
       {
         q: 'How long does it take starting from scratch?',
-        a: 'Pipeline and numerical reasoning are highly procedural, and two or three hours is usually enough to get the method running smoothly, after which it is timed practice for accuracy. Figure series takes more exposure; twenty or thirty questions a day spread over one to two weeks works better than cramming.',
+        a: 'Preparation time depends on your starting point. Try a set to measure accuracy, read the relevant guide, retry your mistakes and then introduce a timer. We do not claim a verified preparation time or pass-rate guarantee.',
       },
       {
         q: 'Does it work on a phone?',
         a: 'Yes, the pages work on phones and tablets. That said, pipeline and figure questions need you to tap cells to enter a question, which is easier on a larger screen, so a computer is better for sustained practice.',
       },
       {
-        q: 'Does the free trial need a card?',
-        a: 'No. The seven-day trial starts as soon as you sign up, nothing is charged during it, and there is no automatic billing afterwards. Whether to buy is entirely your decision at the end.',
+        q: 'How do free uses work, and is a card required?',
+        a: 'No card is required. Each account gets 10 free uses per solver, with no daily reset. Invalid inputs do not count; a completed solve counts even when no solution is found. Fixed practice samples can be repeated. Existing seven-day trials are honoured until their original expiry.',
       },
     ],
   },

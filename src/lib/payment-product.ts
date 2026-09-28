@@ -1,6 +1,6 @@
-export const PRICE_AMOUNT = 990;
+export const PRICE_AMOUNT = 699;
 export const PRICE_CURRENCY = 'aud';
-export const PRICE_LABEL = 'A$9.90 AUD';
+export const PRICE_LABEL = 'A$6.99 AUD';
 
 export function isCurrentPrice(order: { amount: number; currency: string }) {
  return order.amount === PRICE_AMOUNT && order.currency === PRICE_CURRENCY;

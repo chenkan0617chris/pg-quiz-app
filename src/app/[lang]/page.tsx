@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isLanguage, type Language } from '@/lib/language';
 import { absolute, localePath, pageMetadata, SITE_NAME, SITE_URL } from '@/lib/seo';
+import { PRICE_LABEL } from '@/lib/payment-product';
+import { PUBLISHER_NAME } from '@/content/product-info';
 import { HOME } from '@/content/home';
 import { UI } from '@/content/site';
 import JsonLd from '@/components/JsonLd';
@@ -36,7 +38,7 @@ export default async function HomePage({ params }: Props) {
           '@graph': [
             {
               '@type': 'WebSite',
-              '@id': `${SITE_URL}/#website`,
+              '@id': `${absolute(href(''))}#website`,
               url: absolute(href('')),
               name: SITE_NAME[lang],
               inLanguage: lang === 'zh' ? 'zh-CN' : 'en',
@@ -45,7 +47,7 @@ export default async function HomePage({ params }: Props) {
             {
               '@type': 'Organization',
               '@id': `${SITE_URL}/#org`,
-              name: SITE_NAME[lang],
+              name: PUBLISHER_NAME,
               url: SITE_URL,
               description: copy.description,
             },
@@ -55,7 +57,7 @@ export default async function HomePage({ params }: Props) {
               url: absolute(href('')),
               name: copy.title,
               description: copy.description,
-              isPartOf: { '@id': `${SITE_URL}/#website` },
+              isPartOf: { '@id': `${absolute(href(''))}#website` },
               inLanguage: lang === 'zh' ? 'zh-CN' : 'en',
             },
           ],
@@ -73,6 +75,7 @@ export default async function HomePage({ params }: Props) {
             {copy.secondaryCta.label}
           </Link>
         </div>
+        <p className="mt-5 text-sm"><Link href={href('/guides/assessment')} className="text-indigo-600 underline">{lang==='zh'?'第一次准备在线测评？从这里开始':'Preparing for an online assessment? Start here'}</Link></p>
       </header>
 
       <section className="mt-12">
@@ -124,7 +127,8 @@ export default async function HomePage({ params }: Props) {
       <section className="mt-12 rounded-2xl border border-slate-200 p-7">
         <h2 className="text-xl font-bold text-slate-900">{copy.accessHeading}</h2>
         <p className="mt-3 max-w-3xl text-[15px] leading-7 text-slate-600">{copy.accessText}</p>
-        <Link href="/billing" className="mt-5 inline-block rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+        <p className="mt-4 text-xl font-semibold">{PRICE_LABEL} / {lang === 'zh' ? '30 天 · 不自动续费' : '30 days · No automatic renewal'}</p>
+        <Link href={href('/pricing')} className="mt-5 inline-block rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
           {copy.accessCta}
         </Link>
       </section>

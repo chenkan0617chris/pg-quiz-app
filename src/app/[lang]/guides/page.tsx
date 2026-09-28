@@ -11,18 +11,18 @@ type Props = { params: Promise<{ lang: string }> };
 
 const INDEX: Record<Language, { title: string; description: string; h1: string; lede: string; keywords: string[] }> = {
   zh: {
-    title: '笔试解题攻略 | 管道·图形·数字·资料分析',
+    title: '宝洁测评准备与解题攻略 | 管道·数字·记忆',
     description:
-      '四类笔试推理题的完整解题攻略：管道推理、图形推理、数字推理与图表数据分析。每篇讲清题目结构、标准流程、示例推导与常见失分点。',
+      '在线测评准备路线，以及管道推理、图形推理、数字推理、资料分析与顺序记忆攻略。每篇讲清题目结构、标准流程、示例推导与常见失分点。',
     h1: '笔试解题攻略',
     lede:
       '每篇攻略都围绕一个目标：把该题型从"看感觉"变成一套可以重复执行的流程。内容包括题目的底层结构、固定的排查顺序、完整的示例推导，以及最常见的失分点。',
     keywords: ['笔试解题技巧', '推理题攻略', '宝洁笔试技巧', '图形推理技巧', '管道题解法'],
   },
   en: {
-    title: 'Solving Guides — Pipeline, Figure, Numerical, Data',
+    title: 'P&G Assessment Guides: Switch, Numerical and Memory',
     description:
-      'Full solving guides for four reasoning question types: pipeline logic, figure series, numerical reasoning and data interpretation. Each covers the structure, a standard procedure, worked examples and common mistakes.',
+      'An assessment preparation plan and guides for pipeline logic, figure series, numerical reasoning, data interpretation and sequence memory. Each covers the structure, a standard procedure, worked examples and common mistakes.',
     h1: 'Solving guides',
     lede:
       'Every guide has the same goal: to turn a question type from something you eyeball into a procedure you can repeat. Each one covers the structure underneath the question, a fixed checking order, a full worked example, and the mistakes that cost the most marks.',
