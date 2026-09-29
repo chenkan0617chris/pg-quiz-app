@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from './NavigationLink';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useI18n, type DictKey } from '@/lib/i18n';
