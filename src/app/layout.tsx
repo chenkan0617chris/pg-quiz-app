@@ -8,7 +8,6 @@ import './globals.css';
 import { I18nProvider } from '@/lib/i18n';
 import Sidebar from '@/components/Sidebar';
 import AuthProvider from '@/components/AuthProvider';
-import AccountControls from '@/components/AccountControls';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -50,8 +49,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <AuthProvider>
             <div className="flex min-h-screen">
               <Sidebar />
-              <main className="flex-1 px-4 py-8 sm:px-8">
-                <div className="mx-auto w-full max-w-5xl"><AccountControls />{children}
+              <main className="min-w-0 flex-1 px-5 pb-8 pt-24 sm:px-8 md:pt-10 lg:px-10">
+                <div className="mx-auto w-full max-w-5xl">{children}
                   <footer className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-slate-200 pt-6 text-sm text-slate-600">
                     <Link href={localePath(lang, '/guides')}>{lang === 'zh' ? '解题攻略' : 'Solving guides'}</Link>
                     <Link href={localePath(lang, '/pricing')}>{lang === 'zh' ? '会员价格与免费体验' : 'Pricing and free access'}</Link>

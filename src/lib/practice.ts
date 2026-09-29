@@ -1,10 +1,10 @@
 import { MEMORY_POINTS } from './memory-layout';
-import { randomInt } from 'node:crypto';
+import { createHash, randomInt } from 'node:crypto';
 import { FIGURE_RULES, transformFigure, solveFigure, type FigureRule } from './figure';
 import { apply, invert, isPermutation } from './engine';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
-type PipelineQuestion = {kind:'pipeline';version:1|2;input:number[];output:number[];answer:number[];boxes?:(number[]|null)[];difficulty?:Difficulty};
+type PipelineQuestion = {kind:'pipeline';version:1|2;input:number[];output:number[];answer:number[];boxes?:(number[]|null)[];options?:number[][];difficulty?:Difficulty};
 type NumericalQuestion = {kind:'numerical';version:1;target:number;answer:number[]};
 type DataQuestion = {kind:'data';version:1;metric:'growth'|'share'|'ratio';rows:{label:string;before:number;after:number}[];focus:number;options:number[];answer:number[]};
 type FigureQuestion = {kind:'figure';version:1;frames:number[];options:number[];rule:FigureRule;answer:number[]};
@@ -23,6 +23,19 @@ function nonIdentity() {
   let p:number[];
   do { p=shuffle([1,2,3,4]); } while(p.every((v,i)=>v===i+1));
   return p;
+}
+
+/** Stable choices also upgrade saved version-1/2 questions without changing their answers. */
+function pipelineOptions(q:PipelineQuestion):number[][] {
+  if(q.options)return q.options.map(option=>[...option]);
+  const pool:number[][]=[];
+  for(let a=1;a<=4;a++)for(let b=1;b<=4;b++)for(let c=1;c<=4;c++)for(let d=1;d<=4;d++){
+    const option=[a,b,c,d];if(isPermutation(option)&&option.join('')!==q.answer.join(''))pool.push(option);
+  }
+  const seed=JSON.stringify([q.input,q.output,q.boxes]);
+  const rank=(option:number[],salt:string)=>createHash('sha256').update(seed+salt+option.join('')).digest('hex');
+  const distractors=pool.sort((a,b)=>rank(a,'pick').localeCompare(rank(b,'pick'))).slice(0,2);
+  return [[...q.answer],...distractors].sort((a,b)=>rank(a,'order').localeCompare(rank(b,'order')));
 }
 
 export function generateQuestion(kind:PracticeQuestion['kind'],difficulty:Difficulty='easy'):PracticeQuestion {
@@ -80,7 +93,7 @@ export function dataValue(q:Pick<DataQuestion,'metric'|'rows'|'focus'>) {
 export function publicQuestion(q:PracticeQuestion) {
   if(q.kind==='memory')return {kind:q.kind,version:q.version,difficulty:q.difficulty,sequence:[...q.answer]};
   if(q.kind==='figure')return {kind:q.kind,version:q.version,frames:q.frames,options:q.options};
-  if(q.kind==='pipeline') return {kind:q.kind,version:q.version,input:q.input,output:q.output,boxes:q.boxes??[null],difficulty:q.difficulty??'easy'};
+  if(q.kind==='pipeline') return {kind:q.kind,version:q.version,input:q.input,output:q.output,boxes:q.boxes??[null],difficulty:q.difficulty??'easy',options:pipelineOptions(q)};
   if(q.kind==='data') return {kind:q.kind,version:q.version,metric:q.metric,rows:q.rows,focus:q.focus,options:q.options};
   return {kind:q.kind,version:q.version,target:q.target,expression:'a × b + c',distinct:true,min:1,max:9};
 }

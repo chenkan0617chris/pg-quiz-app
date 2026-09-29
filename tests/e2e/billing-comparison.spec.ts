@@ -23,11 +23,11 @@ for (const zh of [false, true]) {
         await expect(page.locator('article').getByText(zh ? '当前方案' : 'Current plan', { exact: false })).toHaveCount(0);
       }
       if (status === 'loading') await expect(current).toBeVisible();
-      const newQuestions = page.getByRole('row').filter({ has: page.getByRole('rowheader', { name: zh ? '五类练习持续生成新题' : 'Generate new questions in all five types', exact: true }) });
+      const newQuestions = page.getByRole('row').filter({ has: page.getByRole('rowheader', { name: zh ? '四类练习持续生成新题' : 'Generate new questions in all four types', exact: true }) });
       await expect(newQuestions.getByRole('cell').nth(0)).toHaveText(zh ? '×不包含' : '×Not included');
       await expect(newQuestions.getByRole('cell').nth(1)).toHaveText(zh ? '✓包含' : '✓Included');
       await expect(page.getByText(zh ? '模拟考试与模拟卷' : 'Mock exams & practice papers', { exact: true })).toBeVisible();
-      await expect(page.getByText(zh ? '尚未开放，不包含在当前购买权益中。具体上线时间与方案归属以未来公告为准。' : 'Not available yet and not included in this purchase. Availability and plan eligibility will be announced later.')).toBeVisible();
+      await expect(page.getByText(zh ? '会员可使用三项限时模拟考、全屏考场与逐题成绩报告。非会员可查看功能预览，已有报告在会员到期后保留。' : 'Members get three timed challenges, fullscreen exams and question reports. Free users can preview the experience; existing reports remain available after membership expires.')).toBeVisible();
       const buy = page.getByRole('button', { name: zh ? '购买 30 天会员' : 'Buy 30-day access', exact: true });
       if (status === 'paid') await expect(buy).toHaveCount(0);
       else if (status === 'loading' || status === 'failed') await expect(buy).toBeDisabled();

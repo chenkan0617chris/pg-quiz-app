@@ -13,6 +13,9 @@ const LEGACY_PATHS: Record<string, string> = {
   '/series': '/series',
   '/numerical': '/numerical',
   '/practice': '/practice',
+  '/exams': '/exams',
+  '/grid': '/grid',
+  '/peak': '/peak',
   '/data-interpretation': '/practice',
 };
 

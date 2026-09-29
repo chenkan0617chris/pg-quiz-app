@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { isLanguage } from '@/lib/language';
 import { pageMetadata } from '@/lib/seo';
 import { TOOLS } from '@/content/tools';
@@ -21,7 +21,8 @@ export default async function Page({ params,searchParams }: Props) {
   const { lang } = await params;
   if (!isLanguage(lang)) notFound();
   const {kind}=await searchParams;
-  const initialKind=kind==='numerical'||kind==='figure'||kind==='data'||kind==='memory'?kind:'pipeline';
+  if(kind==='memory')redirect(`/${lang}/memory`);
+  const initialKind=kind==='numerical'||kind==='figure'||kind==='data'?kind:'pipeline';
   return (
     <ToolShell lang={lang} path={PATH} copy={TOOLS.practice[lang]}>
       <Solver initialKind={initialKind} />

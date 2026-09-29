@@ -57,9 +57,11 @@ export async function submitPractice(userId:string,id:string,answer:number[]) {
   return result(winner as Row);
 }
 
-export async function practiceHistory(userId:string) {
+export async function practiceHistory(userId:string,scope:'all'|'bank'|'memory'='all') {
   const sql=database();
-  const rows=await sql`SELECT * FROM practice_attempts WHERE user_id=${userId} AND submitted_at IS NOT NULL ORDER BY submitted_at DESC LIMIT 50`;
+  const rows=await sql`SELECT * FROM practice_attempts WHERE user_id=${userId} AND submitted_at IS NOT NULL
+    AND (${scope}='all' OR (${scope}='memory' AND question->>'kind'='memory') OR (${scope}='bank' AND question->>'kind'<>'memory'))
+    ORDER BY submitted_at DESC LIMIT 50`;
   return rows.map(row=>result(row as Row));
 }
 

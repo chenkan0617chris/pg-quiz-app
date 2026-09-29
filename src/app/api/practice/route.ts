@@ -12,12 +12,14 @@ const schema=z.discriminatedUnion('action',[
   z.object({action:z.literal('submit'),id:z.uuid(),answer:practiceAnswerSchema}),
 ]);
 const reply=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store'}});
-export async function GET() {
+export async function GET(request:Request) {
   const {userId}=await auth();
   if(!userId)return reply({error:'Unauthorized'},401);
+  const scope=new URL(request.url).searchParams.get('scope')??'all';
+  if(scope!=='all'&&scope!=='bank'&&scope!=='memory')return reply({error:'Invalid scope'},400);
   try {
     if(!await allowRequest(userId,'history',60))return reply({error:'Too many requests'},429);
-    return reply(await practiceHistory(userId));
+    return reply(await practiceHistory(userId,scope));
   }catch{return reply({error:'Service temporarily unavailable'},503);}
 }
 export async function POST(request:Request) {

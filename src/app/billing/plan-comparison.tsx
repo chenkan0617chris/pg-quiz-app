@@ -19,13 +19,15 @@ export default function PlanComparison({ zh, enabled, busy, error, account, sign
   const badge = <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">✓ {t('当前方案', 'Current plan')}</span>;
   const rows: { name: string; free: string | boolean; member: string | boolean }[] = [
     { name: t('四类解题攻略', 'Four solving guides'), free: true, member: true },
-    { name: t('五类固定练习样题', 'Fixed samples across five practice types'), free: t(`每类 ${FREE_SAMPLES_PER_KIND} 道`, `${FREE_SAMPLES_PER_KIND} per type`), member: true },
+    { name: t('四类固定练习样题', 'Fixed samples across four practice types'), free: t(`每类 ${FREE_SAMPLES_PER_KIND} 道`, `${FREE_SAMPLES_PER_KIND} per type`), member: true },
     { name: t('作答记录与答案解析', 'Attempt history & explanations'), free: true, member: true },
     { name: t('免费样题错题重练', 'Retry free sample questions'), free: true, member: true },
     { name: t('管道 / 数字 / 图形解题器', 'Pipeline / numerical / figure solvers'), free: t(`每种累计 ${FREE_SOLVES_PER_KIND} 次`, `${FREE_SOLVES_PER_KIND} lifetime uses each`), member: t('不限次数', 'Unlimited') },
     { name: t('记忆训练', 'Memory training'), free: t(`累计 ${FREE_MEMORY_ROUNDS} 轮`, `${FREE_MEMORY_ROUNDS} lifetime rounds`), member: t('不限轮数', 'Unlimited') },
-    { name: t('五类练习持续生成新题', 'Generate new questions in all five types'), free: false, member: true },
+    { name: t('四类练习持续生成新题', 'Generate new questions in all four types'), free: false, member: true },
     { name: t('生成题难度选择', 'Difficulty selection for generated questions'), free: false, member: true },
+    { name: t('全屏限时模拟考试', 'Fullscreen timed mock exams'), free: t('考场与报告预览', 'Exam & report previews'), member: true },
+    { name: t('模拟考历史与逐题成绩', 'Exam history & question reports'), free: t('保留已有报告', 'Keep existing reports'), member: true },
     { name: t('会员生成题错题重练', 'Retry member-generated questions'), free: false, member: true },
   ];
   function value(v: string | boolean) {
@@ -55,7 +57,7 @@ export default function PlanComparison({ zh, enabled, busy, error, account, sign
         <p className="mt-2 text-sm text-slate-600">{t('更多新题，集中备考', 'Fresh questions for focused preparation')}</p>
         <p className="mt-5"><span className="text-4xl font-semibold tracking-tight">{PRICE_LABEL}</span><span className="ml-2 text-sm text-slate-600">AUD / {t('30 天', '30 days')}</span></p>
         <p className="mt-2 text-sm text-slate-500">{t('一次付款 · 不自动续费', 'One-time payment · No auto-renewal')}</p>
-        <p className="mb-6 mt-5 text-sm leading-6 text-slate-600">{t('解题器和记忆训练不限次数，五类练习持续生成新题，并保留未使用的免费额度。', 'Unlimited solvers and memory training, fresh questions across five types, and your unused free credits stay intact.')}</p>
+        <p className="mb-6 mt-5 text-sm leading-6 text-slate-600">{t('解题器和记忆训练不限次数，四类练习持续生成新题，并保留未使用的免费额度。', 'Unlimited solvers and memory training, fresh questions across four types, and your unused free credits stay intact.')}</p>
         {paid ? <Link href="/account" className="mt-auto rounded-xl bg-emerald-700 px-4 py-3 text-center text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700">{t('查看会员有效期', 'View membership expiry')}</Link> : <button disabled={!enabled || busy || loading || (signedIn && !account)} onClick={onBuy} className="mt-auto rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600 disabled:cursor-not-allowed disabled:opacity-50">{busy ? t('正在打开…', 'Opening…') : !enabled ? t('支付即将开放', 'Payments coming soon') : t('购买 30 天会员', 'Buy 30-day access')}</button>}
       </article>
     </div>
@@ -73,7 +75,7 @@ export default function PlanComparison({ zh, enabled, busy, error, account, sign
       </div>
     </div>
     <aside className="mt-5 flex flex-wrap items-start gap-3 rounded-xl border border-dashed border-slate-300 px-5 py-4">
-      <span className="rounded bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">{t('规划中', 'Planned')}</span><div className="flex-1"><h2 className="text-sm font-semibold">{t('模拟考试与模拟卷', 'Mock exams & practice papers')}</h2><p className="mt-1 text-sm leading-6 text-slate-500">{t('尚未开放，不包含在当前购买权益中。具体上线时间与方案归属以未来公告为准。', 'Not available yet and not included in this purchase. Availability and plan eligibility will be announced later.')}</p></div>
+      <span className="rounded bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">{t('会员功能', 'Member feature')}</span><div className="flex-1"><h2 className="text-sm font-semibold">{t('模拟考试与模拟卷', 'Mock exams & practice papers')}</h2><p className="mt-1 text-sm leading-6 text-slate-500">{t('会员可使用三项限时模拟考、全屏考场与逐题成绩报告。非会员可查看功能预览，已有报告在会员到期后保留。', 'Members get three timed challenges, fullscreen exams and question reports. Free users can preview the experience; existing reports remain available after membership expires.')} <Link href="/exams" className="text-indigo-600 underline">{t('查看模拟考中心', 'Explore mock exams')}</Link></p></div>
     </aside>
     <div className="mt-6 space-y-3 text-sm leading-6 text-slate-500">
       <p>{t('会员自付款确认起生效 30 天，不叠加原有试用时间。到期后恢复 Free Plan，未用完的免费次数保留。', 'Membership lasts 30 days from payment confirmation, without adding unused trial days. After expiry, Free Plan resumes with unused credits.')}</p>

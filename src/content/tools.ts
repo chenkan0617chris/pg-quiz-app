@@ -125,18 +125,18 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
 
   practice: {
     zh: {
-      title: '笔试练习题库 | 五大题型分难度在线刷题',
+      title: '笔试练习题库 | 四大题型分难度在线刷题',
       h1: '笔试练习题库',
       label: '练习题库',
       description:
         '管道推理、图形推理、数字推理与图表数据分析练习题库，按简单、中等、困难三档生成题目，每题附逐步解析，答错的题可单独重做。',
       keywords: ['笔试练习题库', '宝洁笔试练习', '推理题在线练习', '图形推理题库', '资料分析练习'],
       intro:
-        '练习题库按规则实时生成题目，覆盖管道推理、图形推理、数字推理、图表数据分析和顺序记忆五种题型，分简单、中等、困难三档。每道题提交后都会给出完整解析：管道题会逐级演示图形如何移动，图形题会指出用的是哪条变换规则，数字题和数据题会写清每一步的计算依据。做错的题会单独保存，可以只重做错题。',
+        '练习题库按规则实时生成题目，覆盖管道推理、图形推理、数字推理、图表数据分析四种题型，管道题支持三档难度。记忆训练请使用「专项训练」中的独立入口。每道题提交后都会给出完整解析：管道题会逐级演示图形如何移动，图形题会指出用的是哪条变换规则，数字题和数据题会写清每一步的计算依据。做错的题会单独保存，可以只重做错题。',
       notes: [
-        '题目是按规则实时生成的，不是固定题库，同一难度可以一直练下去。',
+        '免费用户可反复练习每类 5 道固定样题；会员可持续生成新题。',
         '管道题的三档难度分别对应 1、2、3 个方框。',
-        '答题记录需要登录后才会保存；未登录也可以做题，但不会留下历史记录。',
+        '登录后可开始练习并保存记录；记忆训练记录在独立训练页面查看。',
       ],
       guide: 'data',
     },
@@ -148,11 +148,11 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
         'A practice bank for pipeline logic, figure series, numerical reasoning and data interpretation, generated at easy, medium and hard settings, with a worked explanation on every question and a retry list for the ones you get wrong.',
       keywords: ['aptitude test practice bank', 'P&G assessment practice', 'reasoning questions online', 'figure series practice', 'data interpretation practice'],
       intro:
-        'The practice bank generates questions on demand across all five types — pipeline logic, figure series, numerical reasoning, data interpretation and sequence memory — at easy, medium and hard settings. Every submission comes with a full explanation: pipeline questions animate how the shapes move stage by stage, figure questions name the transformation involved, and numerical and data questions show the reasoning behind each step. Anything you get wrong is saved so you can retry just those.',
+        'The practice bank generates questions on demand across four types — pipeline logic, figure series, numerical reasoning and data interpretation. Pipeline questions offer three difficulty levels. Memory training has its own dedicated page under Skill training. Every submission comes with a full explanation: pipeline questions animate how the shapes move stage by stage, figure questions name the transformation involved, and numerical and data questions show the reasoning behind each step. Anything you get wrong is saved so you can retry just those.',
       notes: [
-        'Questions are generated from the underlying rules rather than drawn from a fixed set, so one difficulty can be practised indefinitely.',
+        'Free users can repeat five fixed samples per type; members can generate new questions.',
         'For pipeline questions, the easy, medium and hard settings correspond to one, two and three boxes.',
-        'Your history is saved once you sign in. You can practise without an account, but nothing is kept.',
+        'Sign in to start practice and save history. Memory rounds are listed on the dedicated training page.',
       ],
       guide: 'data',
     },

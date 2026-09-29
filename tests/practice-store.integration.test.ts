@@ -27,3 +27,19 @@ test('database request limit survives concurrent requests', {skip:!process.env.R
   const allowed=await Promise.all(Array.from({length:8},()=>allowRequest(user,'test',3)));
   assert.equal(allowed.filter(Boolean).length,3);
 });
+
+test('bank and memory histories stay separate without deleting earlier rounds', {skip:!process.env.RUN_DB_TESTS}, async()=>{
+  const user='history_scope_'+randomUUID();
+  const {database}=await import('../src/lib/db');
+  try{
+    const memory=await createPractice(user,'memory');
+    const pipeline=await createPractice(user,'pipeline');
+    assert.ok(memory);assert.ok(pipeline);
+    await submitPractice(user,memory.id,[]);
+    await submitPractice(user,pipeline.id,[1,2,3,4]);
+    assert.equal((await practiceHistory(user)).length,2);
+    const bank=await practiceHistory(user,'bank'),rounds=await practiceHistory(user,'memory');
+    assert.equal(bank.length,1);assert.equal(bank[0].question.kind,'pipeline');
+    assert.equal(rounds.length,1);assert.equal(rounds[0].question.kind,'memory');
+  }finally{await database()`DELETE FROM practice_attempts WHERE user_id=${user}`;}
+});

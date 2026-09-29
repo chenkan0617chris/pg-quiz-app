@@ -8,12 +8,14 @@ type Props = {
   zh: boolean;
   disabled?: boolean;
   review?: boolean;
+  autoPlay?: boolean;
+  preview?: boolean;
   onAnswer?: (answer: number[]) => void;
 };
 
 /** Positions are stable between observation and recall; each round has its own keyed instance. */
-export default function MemoryBoard({ sequence, zh, disabled = false, review = false, onAnswer }: Props) {
-  const [phase, setPhase] = useState<'ready' | 'watch' | 'recall' | 'done'>('ready');
+export default function MemoryBoard({ sequence, zh, disabled = false, review = false, autoPlay = false, preview = false, onAnswer }: Props) {
+  const [phase, setPhase] = useState<'ready' | 'watch' | 'recall' | 'done'>(autoPlay ? 'watch' : 'ready');
   const [tick, setTick] = useState(-1);
   const [answer, setAnswer] = useState<number[]>([]);
 
@@ -66,7 +68,7 @@ export default function MemoryBoard({ sequence, zh, disabled = false, review = f
         </button>;
       })}
     </div>
-    {phase === 'ready' && <button type="button" disabled={disabled} onClick={() => { setTick(-1); setPhase('watch'); }} className="rounded-lg bg-[#cf80bc] px-4 py-2 font-medium text-white disabled:opacity-50">
+    {phase === 'ready' && !preview && <button type="button" disabled={disabled} onClick={() => { setTick(-1); setPhase('watch'); }} className="rounded-lg bg-[#cf80bc] px-4 py-2 font-medium text-white disabled:opacity-50">
       {review ? (zh ? '回看正确顺序' : 'Replay correct sequence') : (zh ? '播放一次，开始记忆' : 'Play once and remember')}
     </button>}
     {review && <p className="text-sm text-slate-600">{zh ? '正确位置顺序：' : 'Correct order: '}{sequence.join(' → ')}</p>}
