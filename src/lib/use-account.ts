@@ -20,10 +20,9 @@ export function useAccount() {
    }catch{if(!controller.signal.aborted)setFailed(true);}
   }
   void refresh();
-  const timer=setInterval(()=>void refresh(),60000);
   window.addEventListener('focus',refresh);
   window.addEventListener('account-updated',refresh);
-  return ()=>{controller.abort();clearInterval(timer);window.removeEventListener('focus',refresh);window.removeEventListener('account-updated',refresh);};
+  return ()=>{controller.abort();window.removeEventListener('focus',refresh);window.removeEventListener('account-updated',refresh);};
  },[userId]);
  return {userId,isLoaded,account:state&&state.userId===userId?state.account:null,failed};
 }
