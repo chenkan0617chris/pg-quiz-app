@@ -103,8 +103,8 @@ export default async function GuidePage({ params }: Props) {
         </nav>
 
         <section className="mb-8 rounded-xl border border-slate-200 p-5">
-          <h2 className="text-lg font-semibold">{lang === 'zh' ? '先记住这个解题方法' : 'The method at a glance'}</h2>
-          <p className="mt-3 text-[15px] leading-7 text-slate-700">{GUIDE_SUMMARIES[lang][slug]}</p>
+          <h2 className="text-lg font-semibold">{guide.sources ? (lang === 'zh' ? '先了解适用范围' : 'Scope at a glance') : (lang === 'zh' ? '先记住这个解题方法' : 'The method at a glance')}</h2>
+          <p className="mt-3 text-[15px] leading-7 text-slate-700">{guide.summary ?? GUIDE_SUMMARIES[lang][slug]}</p>
         </section>
         <GuideIllustration slug={slug} lang={lang}/>
         <Prose blocks={guide.body} />
@@ -118,8 +118,15 @@ export default async function GuidePage({ params }: Props) {
         </section>
         <section className="mt-10 border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold">{PRODUCT_INFO[lang].sourcesTitle}</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600">{PRODUCT_INFO[lang].sourceNote}</p>
-          <p className="mt-3 text-sm"><a className="text-indigo-600 underline" href={OFFICIAL_HIRING_URL}>P&G Careers — Hiring process</a> · <Link className="text-indigo-600 underline" href={localePath(lang, '/about')}>{lang === 'zh' ? '本站题目编写方法' : 'Our question methodology'}</Link></p>
+          <p className="mt-3 text-sm leading-7 text-slate-600">{guide.sources
+            ? (lang === 'zh' ? '以下官方资料于 2026-09-29 核查；公司、地区和年份范围见正文。例题与学习建议由本站编写，并非招聘方真题或背书。' : 'Official sources checked on 2026-09-29. Company, region and year limits are explained above. Examples and study suggestions are our own, not employer questions or endorsements.')
+            : PRODUCT_INFO[lang].sourceNote}</p>
+          <ul className="mt-3 space-y-2 text-sm">
+            {(guide.sources ?? [{ label: 'P&G Careers — Hiring process', url: OFFICIAL_HIRING_URL }]).map((source) => (
+              <li key={source.url}><a className="text-indigo-600 underline" href={source.url}>{source.label}</a></li>
+            ))}
+          </ul>
+          <p className="mt-3 text-sm"><Link className="text-indigo-600 underline" href={localePath(lang, '/about')}>{lang === 'zh' ? '本站题目编写方法' : 'Our question methodology'}</Link></p>
         </section>
       </article>
 

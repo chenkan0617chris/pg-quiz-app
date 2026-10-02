@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: '宝洁笔试题库 P&G Test Prep | 宝洁笔试与在线测评练习',
   description: '宝洁笔试与在线测评练习：管道推理、图形推理、数字推理、图表数据分析。P&G online assessment practice.',
-  applicationName: 'P&G Test Prep',
+  applicationName: 'CK Quiz',
   formatDetection: { telephone: false },
   // Set these in the hosting environment once each webmaster console issues a
   // code; no redeploy of this file is needed to add or rotate one.

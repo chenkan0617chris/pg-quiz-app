@@ -35,7 +35,7 @@ export const UI: Record<Language, {
     openTool: 'Open the tool',
     practice: 'Start practising',
     faqHeading: 'Frequently asked questions',
-    relatedHeading: 'Other question types',
+    relatedHeading: 'Related preparation guides',
     onThisPage: 'On this page',
     disclaimer:
       'This is an independent practice tool. It is not affiliated with, endorsed by, or connected to Procter & Gamble. Every question here is generated from publicly described question formats and is not real test content from any company. P&G and Procter & Gamble are trademarks of their respective owners.',
@@ -44,6 +44,10 @@ export const UI: Record<Language, {
 
 /** The interactive tool that pairs with each guide, used for cross-linking. */
 export const GUIDE_TOOL: Record<GuideSlug, string> = {
+  'company-assessments': '/practice?kind=data',
+  'pwc-assessment': '/practice?kind=data',
+  'deloitte-assessment': '/practice?kind=data',
+  'unilever-assessment': '/practice?kind=data',
   assessment: '/practice',
   memory: '/memory',
   pipeline: '/pipeline',

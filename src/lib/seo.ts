@@ -13,8 +13,8 @@ export const HREFLANG: Record<Language, string> = { zh: 'zh-CN', en: 'en' };
 const OG_LOCALE: Record<Language, string> = { zh: 'zh_CN', en: 'en_US' };
 
 export const SITE_NAME: Record<Language, string> = {
-  zh: '宝洁笔试题库',
-  en: 'P&G Test Prep',
+  zh: 'CK Quiz',
+  en: 'CK Quiz',
 };
 
 /** Prefix a locale-relative path (`/pipeline`, or `''` for the home page). */

@@ -25,9 +25,17 @@ function Icon({name}:{name:IconName}){return <svg aria-hidden="true" className="
 function Brand(){return <><span className="flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-indigo-600 text-white shadow-[0_2px_5px_#4f46e526]"><svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5m8-14-6 7 6 7m-6-7h7"/></svg></span><span className="text-[19px] font-semibold tracking-[-0.6px] text-slate-900">CK<span className="ml-1 font-normal text-slate-500">Quiz</span></span></>;}
 
 type Item={path:string;label:DictKey;icon?:IconName};
-const primary:Item[]=[{path:'',label:'navHome',icon:'home'},{path:'/practice',label:'navPractice',icon:'practice'},{path:'/exams',label:'navExams',icon:'exam'},{path:'/guides',label:'navGuides',icon:'book'}];
 const training:Item[]=[{path:'/memory',label:'navMemory'},{path:'/grid',label:'navGrid'},{path:'/peak',label:'navPeak'}];
 const tools:Item[]=[{path:'/pipeline',label:'navPipeline'},{path:'/numerical',label:'navNumerical'},{path:'/series',label:'navSeries'}];
+type NavigationGroup={icon:'tools'|'training';zh:string;en:string;items:Item[]};
+const navigation:(Item|NavigationGroup)[]=[
+  {path:'',label:'navHome',icon:'home'},
+  {icon:'tools',zh:'解题工具',en:'Solving tools',items:tools},
+  {icon:'training',zh:'专项训练',en:'Skill training',items:training},
+  {path:'/practice',label:'navPractice',icon:'practice'},
+  {path:'/exams',label:'navExams',icon:'exam'},
+  {path:'/guides',label:'navGuides',icon:'book'},
+];
 const row='group flex min-h-10 w-full items-center gap-3 rounded-lg px-3 text-[13px] leading-5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500';
 const selected='bg-white font-semibold text-indigo-700 shadow-[0_1px_4px_#0f172a0b] ring-1 ring-slate-200/80';
 const neutral='font-medium text-slate-600 hover:bg-slate-200/50 hover:text-slate-950';
@@ -80,10 +88,7 @@ export default function Sidebar(){
       <div className="flex shrink-0 items-center justify-between px-6 pb-3 pt-6"><Link href={localePath(lang)} onClick={close} className="flex items-center gap-3" aria-label={zh?'CK Quiz 首页':'CK Quiz home'}><Brand/></Link><button type="button" ref={closeButton} onClick={close} aria-label={zh?'关闭导航菜单':'Close navigation menu'} className="rounded-lg p-2 text-slate-500 hover:bg-slate-200 md:hidden"><Icon name="close"/></button></div>
       <div className="mb-6 shrink-0 px-6"><span className="text-[11px] text-slate-400">{zh?'测评备考工作台':'Assessment workspace'}</span></div>
       <nav aria-label={zh?'学习与练习':'Study and practice'} className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
-        <p className="px-3 pb-2 text-[10px] font-semibold tracking-[0.12em] text-slate-400">{zh?'备考空间':'PREPARATION'}</p><div className="space-y-1">{primary.map(item=>{const target=localePath(lang,item.path),active=pathname===target||(item.path!==''&&pathname.startsWith(target+'/'));return <Link key={item.path} href={target} onClick={close} aria-current={active?'page':undefined} className={`${row} ${active?selected:neutral}`}><Icon name={item.icon!}/><span className="flex-1">{t(item.label)}</span>{item.path==='/exams'&&<span className={`rounded border px-1.5 py-px text-[9px] font-semibold tracking-wide ${active?'border-indigo-200 text-indigo-500':'border-slate-200 text-slate-400'}`}>PRO</span>}{active&&<span className="h-4 w-0.5 rounded bg-indigo-500" aria-hidden="true"/>}</Link>;})}</div>
-        <div className="mb-4 mt-5 border-t border-slate-200/80"/>
-        <p className="px-3 pb-2 text-[10px] font-semibold tracking-[0.12em] text-slate-400">{zh?'能力提升':'SKILLS & TOOLS'}</p>
-        <div className="space-y-1"><NavGroup key={`training:${pathname}`} label={zh?'专项训练':'Skill training'} icon="training" items={training} pathname={pathname} close={close}/><NavGroup key={`tools:${pathname}`} label={zh?'解题工具':'Solving tools'} icon="tools" items={tools} pathname={pathname} close={close}/></div>
+        <p className="px-3 pb-2 text-[10px] font-semibold tracking-[0.12em] text-slate-400">{zh?'备考空间':'PREPARATION'}</p><div className="space-y-1">{navigation.map(item=>{if('items' in item)return <NavGroup key={`${item.icon}:${pathname}`} label={zh?item.zh:item.en} icon={item.icon} items={item.items} pathname={pathname} close={close}/>;const target=localePath(lang,item.path),active=pathname===target||(item.path!==''&&pathname.startsWith(target+'/'));return <Link key={item.path} href={target} onClick={close} aria-current={active?'page':undefined} className={`${row} ${active?selected:neutral}`}><Icon name={item.icon!}/><span className="flex-1">{t(item.label)}</span>{item.path==='/exams'&&<span className={`rounded border px-1.5 py-px text-[9px] font-semibold tracking-wide ${active?'border-indigo-200 text-indigo-500':'border-slate-200 text-slate-400'}`}>PRO</span>}{active&&<span className="h-4 w-0.5 rounded bg-indigo-500" aria-hidden="true"/>}</Link>;})}</div>
       </nav>
       <div className="shrink-0 border-t border-slate-200/80 px-4 pb-4 pt-4">
         <nav aria-label={zh?'账号与订阅':'Account and membership'} className="space-y-1"><p className="px-3 pb-1 text-[10px] font-semibold tracking-[0.12em] text-slate-400">{zh?'账号与会员':'ACCOUNT'}</p>{accountLink('/account',zh?'我的账号':'My account','user')}{accountLink('/billing',zh?'会员与价格':'Membership & pricing','membership')}</nav>

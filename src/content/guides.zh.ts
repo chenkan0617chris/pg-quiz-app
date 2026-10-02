@@ -12,6 +12,8 @@ export type GuideCopy = {
   toolLabel: string;
   body: Block[];
   faq: Faq[];
+  summary?: string;
+  sources?: { label: string; url: string }[];
 };
 
 export const GUIDES_ZH: Record<string, GuideCopy> = {

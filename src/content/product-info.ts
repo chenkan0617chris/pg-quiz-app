@@ -1,6 +1,6 @@
 import type { Language } from '@/lib/language';
 
-export const EDITORIAL_UPDATED = '2026-09-28';
+export const EDITORIAL_UPDATED = '2026-09-29';
 export const PUBLISHER_NAME = 'CKAutoFlow';
 export const OFFICIAL_HIRING_URL = 'https://www.pgcareers.com/us/en/hiring-process';
 
@@ -16,7 +16,7 @@ export const PRODUCT_INFO: Record<Language, {
   aboutDescription: '了解 CKAutoFlow 独立练习工具的题目生成方法、求解器范围和资料来源。本站提供原创练习，不提供宝洁真实试题或通过考试保证。',
   trial: '每个账号每种解题器各有 10 次免费机会，不每日重置；每种练习题型开放 5 道固定样题与完整解析；记忆训练累计免费 10 轮，每开始一轮扣 1 次。已有试用保留至原到期日，无需绑卡。解题攻略和本页信息无需登录即可阅读。',
   access: '一次性购买 30 天使用权。付款确认后立即开始计时，不叠加剩余试用天数，不自动续费。',
-  included: ['顺序记忆：蓝色板上的圆点回忆，支持 3、5、7 个位置；不是完整 Grid 双任务模拟。','管道推理：位置重排、逐级推导与未知方框求解。','图形推理：3×3 方格中的六类变换与候选规律验证。','数字推理：算式填空、数字不重复约束及可行解检查。','图表数据分析练习：增长率、占比、比值与单位换算。','分难度练习、答题记录和错题复练；界面支持中英文。'],
+  included: ['会员模拟考：管道 6 分钟、数字 5 分钟、空间记忆 9 分钟，含全屏考场、考试历史与逐题得分和耗时报告。','空间记忆双任务与 PEAK 工作风格熟悉练习；非会员可预览模拟考场与报告。','顺序记忆：蓝色板上的圆点回忆，支持 3、5、7 个位置；不是完整 Grid 双任务模拟。','管道推理：位置重排、逐级推导与未知方框求解。','图形推理：3×3 方格中的六类变换与候选规律验证。','数字推理：算式填空、数字不重复约束及可行解检查。','图表数据分析练习：增长率、占比、比值与单位换算。','分难度练习、答题记录和错题复练；界面支持中英文。'],
   limits: '需要登录才能使用求解和保存练习记录。已有有效付费使用权时不能重复购买。实际可用支付方式以 Stripe 结账页显示为准。',
   action: '登录并购买 30 天使用权',
   about: ['本站由 CKAutoFlow 维护，面向准备笔试和在线测评的学习者，提供中英文推理练习与解题工具。','本站与 Procter & Gamble（宝洁）无隶属、合作或授权关系。P&G 和宝洁名称用于说明学习场景；本站题目不是官方真题，也不代表某一岗位或年份的考试内容。'],
@@ -32,7 +32,7 @@ export const PRODUCT_INFO: Record<Language, {
   aboutDescription: 'How CKAutoFlow creates independent reasoning practice, what the solvers support and where assessment information comes from. No official test questions or pass guarantees.',
   trial: 'Each account gets 10 lifetime free uses per solver and 5 fixed samples per practice type, with full explanations. Memory training has 10 lifetime free rounds, one credit per start. No daily reset or card required. Existing trials are honoured. Guides are free to read without signing in.',
   access: 'A one-time purchase provides 30 days of access from payment confirmation. Unused trial days are not added. There is no automatic renewal.',
-  included: ['Sequence memory: dot recall with 3, 5 or 7 positions; not a complete dual-task Grid simulation.','Pipeline logic: position permutations, intermediate steps and unknown-box solving.','Figure reasoning: six transformation families on a 3×3 grid and candidate-rule checks.','Numerical reasoning: equation blanks, distinct-digit constraints and valid-solution checks.','Data interpretation practice: growth, shares, ratios and unit conversion.','Difficulty-based practice, answer history and wrong-answer retries, in Chinese and English.'],
+  included: ['Member mock exams: 6-minute Switch, 5-minute Digit and 9-minute Grid presets, fullscreen focus, saved history and per-question scores and timing.','Grid dual-task and PEAK familiarization samples; non-members can preview the exam and reports.','Sequence memory: dot recall with 3, 5 or 7 positions; not a complete dual-task Grid simulation.','Pipeline logic: position permutations, intermediate steps and unknown-box solving.','Figure reasoning: six transformation families on a 3×3 grid and candidate-rule checks.','Numerical reasoning: equation blanks, distinct-digit constraints and valid-solution checks.','Data interpretation practice: growth, shares, ratios and unit conversion.','Difficulty-based practice, answer history and wrong-answer retries, in Chinese and English.'],
   limits: 'Sign-in is required to solve questions and save practice history. Accounts with active paid access cannot buy again. Available payment methods are shown at Stripe checkout.',
   action: 'Sign in and buy 30-day access',
   about: ['CKAutoFlow maintains this independent Chinese and English reasoning practice tool for people preparing for aptitude tests and online assessments.','This site is not affiliated with, endorsed by or partnered with Procter & Gamble. P&G is used to describe the preparation context. Our questions are not official test content or a representation of any role’s current assessment.'],

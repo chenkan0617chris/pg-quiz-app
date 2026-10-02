@@ -6,6 +6,9 @@ import { absolute, localePath, SITE_URL } from '@/lib/seo';
 /** Locale-relative paths, listed once and emitted for every language. */
 const PATHS: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
   { path: '', priority: 1, changeFrequency: 'weekly' },
+  { path: '/exams', priority: 0.9, changeFrequency: 'weekly' },
+  { path: '/grid', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/peak', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/practice', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/pricing', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.5, changeFrequency: 'monthly' },
@@ -27,7 +30,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (['zh', 'en'] as const).map((lang) => ({
       url: absolute(localePath(lang, path)),
       // Do not pretend every rebuild is an editorial update. Omit unknown dates.
-      ...(['', '/pricing', '/about'].includes(path) ? { lastModified: EDITORIAL_UPDATED } : {}),
+      ...(['', '/guides', '/pipeline', '/numerical', '/practice', '/exams'].includes(path) ? { lastModified: '2026-09-29' } : {}),
+      ...(['/pricing', '/about'].includes(path) ? { lastModified: EDITORIAL_UPDATED } : {}),
+      ...(lang === 'zh' && ['', '/pipeline'].includes(path) ? { lastModified: '2026-10-01' } : {}),
       ...(isGuideSlug(path.split('/')[2] ?? '') ? { lastModified: getGuide(lang, path.split('/')[2] as Parameters<typeof getGuide>[1]).updated } : {}),
       changeFrequency,
       priority,

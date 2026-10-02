@@ -2,7 +2,7 @@ import type { GuideCopy } from './guides.zh';
 
 export const GUIDES_EN: Record<string, GuideCopy> = {
   pipeline: {
-    title: 'Switch-Style Practice: Pipeline Logic Explained',
+    title: 'P&G Switch Challenge Practice: Pipeline Logic Guide',
     description:
       'A complete method for pipeline logic questions in P&G-style aptitude tests: how boxes reorder shapes, forward and backward solving, handling several unknown boxes, with worked examples and a solver with 10 free uses.',
     keywords: [
@@ -14,11 +14,11 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
       'P&G reasoning test',
       'pipeline puzzle solver',
     ],
-    h1: 'Switch-style practice: how to solve pipeline logic questions',
+    h1: 'P&G Switch Challenge preparation with pipeline practice',
     lede:
       'If you are looking for P&G Switch Challenge practice, pipeline logic exercises can help you learn position reordering. These original questions do not reproduce an official assessment. Four shapes enter a pipeline, pass through a row of boxes, and leave in a different order. Each box applies one fixed reordering rule, and the question usually hides a box and asks what it must have done. This guide covers the structure underneath the pictures, two reliable solving methods, and what to do when more than one box is unknown.',
     published: '2026-09-15',
-    updated: '2026-09-28',
+    updated: '2026-09-29',
     toolHref: '/pipeline',
     toolLabel: 'Open the pipeline solver',
     body: [

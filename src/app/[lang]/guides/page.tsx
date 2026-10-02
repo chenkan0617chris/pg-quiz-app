@@ -11,7 +11,7 @@ type Props = { params: Promise<{ lang: string }> };
 
 const INDEX: Record<Language, { title: string; description: string; h1: string; lede: string; keywords: string[] }> = {
   zh: {
-    title: '宝洁测评准备与解题攻略 | 管道·数字·记忆',
+    title: '公司测评与解题攻略 | 宝洁·普华永道·德勤·联合利华',
     description:
       '在线测评准备路线，以及管道推理、图形推理、数字推理、资料分析与顺序记忆攻略。每篇讲清题目结构、标准流程、示例推导与常见失分点。',
     h1: '笔试解题攻略',
@@ -20,10 +20,10 @@ const INDEX: Record<Language, { title: string; description: string; h1: string; 
     keywords: ['笔试解题技巧', '推理题攻略', '宝洁笔试技巧', '图形推理技巧', '管道题解法'],
   },
   en: {
-    title: 'P&G Assessment Guides: Switch, Numerical and Memory',
+    title: 'Assessment Guides: P&G, PwC, Deloitte & Unilever',
     description:
       'An assessment preparation plan and guides for pipeline logic, figure series, numerical reasoning, data interpretation and sequence memory. Each covers the structure, a standard procedure, worked examples and common mistakes.',
-    h1: 'Solving guides',
+    h1: 'Assessment preparation and reasoning guides',
     lede:
       'Every guide has the same goal: to turn a question type from something you eyeball into a procedure you can repeat. Each one covers the structure underneath the question, a fixed checking order, a full worked example, and the mistakes that cost the most marks.',
     keywords: ['aptitude test guides', 'reasoning test technique', 'P&G assessment tips', 'figure series technique', 'pipeline logic method'],

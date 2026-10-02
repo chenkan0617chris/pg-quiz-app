@@ -5,6 +5,7 @@ import { pageMetadata } from '@/lib/seo';
 import { TOOLS } from '@/content/tools';
 import ToolShell from '@/components/seo/ToolShell';
 import Solver from './solver';
+import TripleProductTable from '@/components/seo/TripleProductTable';
 
 const PATH = '/numerical';
 
@@ -23,6 +24,7 @@ export default async function Page({ params }: Props) {
   return (
     <ToolShell lang={lang} path={PATH} copy={TOOLS.numerical[lang]}>
       <Solver />
+      <TripleProductTable lang={lang} />
     </ToolShell>
   );
 }

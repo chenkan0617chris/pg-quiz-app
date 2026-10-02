@@ -26,9 +26,9 @@ export type HomeCopy = {
 
 export const HOME: Record<Language, HomeCopy> = {
   zh: {
-    title: '宝洁笔试题库 | 管道·图形·数字推理在线练习',
+    title: '宝洁管道题在线练习与解题工具 | 宝洁笔试题库 - CK Quiz',
     description:
-      '宝洁笔试与在线测评练习平台：管道推理、图形推理、数字推理、图表数据分析、顺序记忆五大题型，提供在线求解器、分难度题库和逐步解析。每种解题器各享 10 次免费机会，并可练习固定样题，无需绑卡。',
+      '宝洁管道题怎么做？先看图形重排例题和正推、逆推步骤，再用在线工具验算或进入管道题模拟练习。另有图形、数字推理与记忆训练。解题说明无需登录；登录后每种解题器各有 10 次免费机会。',
     keywords: [
       '宝洁笔试',
       '宝洁笔试题库',
@@ -40,11 +40,11 @@ export const HOME: Record<Language, HomeCopy> = {
       'P&G 笔试',
       '快消管培生笔试',
     ],
-    h1: '宝洁笔试题库：五大题型在线练习与解题工具',
+    h1: '宝洁笔试题库：管道题在线练习与解题工具',
     lede:
-      '这是一个面向宝洁及同类快消公司校招笔试的练习平台，覆盖管道推理、图形推理、数字推理、图表数据分析和顺序记忆五种题型。管道、图形和数字题配有在线求解器，各题型提供练习与反馈，记忆题支持正确顺序回放。题目全部按公开题型格式生成，可以无限次练习。',
-    primaryCta: { label: '开始练习', href: '/practice' },
-    secondaryCta: { label: '查看解题攻略', href: '/guides' },
+      '宝洁管道题要求你根据输入、输出图形的顺序，找出中间方框的重排规则。你可以在这里学习正推与逆推方法，用管道题工具核对答案，再进入分难度练习。CK Quiz 同时提供数字、图形、资料分析与记忆训练；所有练习均为独立原创，非宝洁官方真题。',
+    primaryCta: { label: '打开管道题解题工具', href: '/pipeline' },
+    secondaryCta: { label: '开始管道题模拟练习', href: '/practice?kind=pipeline' },
     typesHeading: '覆盖的五种题型',
     typesIntro:
       '每种题型都有独立的解题攻略，讲清底层结构、标准流程和常见失分点；攻略旁边就是对应的工具，可以边读边验证。',
@@ -52,11 +52,11 @@ export const HOME: Record<Language, HomeCopy> = {
       { slug: 'memory', name: '记忆力训练', blurb: '记住蓝色板上粉色圆点依次亮起的位置，再按原顺序点击。支持 3、5、7 个位置，提交后可以回看正确顺序。', toolHref: '/memory', toolLabel: '开始记忆训练' },
       {
         slug: 'pipeline',
-        name: '管道推理题',
+        name: '宝洁管道题模拟练习',
         blurb:
           '四个图形穿过一排方框，顺序被重新排列，题目藏起其中一个方框让你反推。本质是排列的复合与求逆，可以通过正推与逆推逐步确定未知规则，再代回验证。',
         toolHref: '/pipeline',
-        toolLabel: '管道题求解器',
+        toolLabel: '宝洁管道题工具',
       },
       {
         slug: 'figure',
@@ -68,7 +68,7 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         slug: 'numerical',
-        name: '数字推理题',
+        name: '宝洁计算题练习',
         blurb:
           '在挖空的算式里填入符合目标结果的数字。关键不是算得快，而是用余数、整除性和奇偶性把候选组合从几百个压到几个。求解器会列出全部可行解。',
         toolHref: '/numerical',
@@ -147,9 +147,9 @@ export const HOME: Record<Language, HomeCopy> = {
   },
 
   en: {
-    title: 'P&G Test Prep — Pipeline, Figure & Numerical Practice',
+    title: 'P&G Assessment Practice: Switch & Digit | CK Quiz',
     description:
-      'Practice for P&G-style online assessments: pipeline logic, figure series, numerical reasoning and data interpretation, with step-by-step solvers, a graded question bank and worked explanations. 10 free uses per solver and fixed practice samples; no card required.',
+      'Prepare with original Switch-style and Digit-style exercises, basic memory training and worked solutions. Try fixed samples after signing in to CK Quiz.',
     keywords: [
       'P&G online assessment',
       'P&G aptitude test practice',
@@ -160,9 +160,9 @@ export const HOME: Record<Language, HomeCopy> = {
       'graduate aptitude test practice',
       'FMCG assessment practice',
     ],
-    h1: 'P&G Test Prep: Four Question Types, Solvers and a Practice Bank',
+    h1: 'P&G assessment practice: Switch-style, numerical and memory training',
     lede:
-      'This is a practice platform for P&G-style graduate assessments and similar FMCG reasoning screens, covering five question types: pipeline logic, figure series, numerical reasoning, data interpretation and sequence memory. Pipeline, figure and numerical questions have dedicated solvers; all five types have practice with feedback, including sequence replay for memory exercises. Questions are generated from publicly described formats, so you can practise without running out.',
+      'CK Quiz provides independent P&G assessment preparation: Switch-style pipeline logic, Digit-style equation practice and basic sequence memory, plus figure reasoning and data interpretation. Learn with original examples, worked solutions and feedback across five practice types. Free access includes fixed samples after signing in; paid access adds generated questions. This is not a complete P&G assessment or Grid Challenge simulation.',
     primaryCta: { label: 'Start practising', href: '/practice' },
     secondaryCta: { label: 'Read the guides', href: '/guides' },
     typesHeading: 'The five question types',

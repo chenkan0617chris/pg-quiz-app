@@ -2,7 +2,7 @@ import type { Language } from '@/lib/language';
 import type { GuideSlug } from './guides';
 
 /** Short answers describe our actual algorithms, not the employer's test specification. */
-export const GUIDE_SUMMARIES: Record<Language, Record<GuideSlug, string>> = {
+export const GUIDE_SUMMARIES: Record<Language, Partial<Record<GuideSlug, string>>> = {
  zh: {
   assessment: '先以招聘通知确认题型和规则，再完成原创样题、复盘错误并尝试新题。本站提供排列、数字、图形、资料分析和基础顺序记忆练习，不提供 PEAK 模拟或完整 Grid 双任务模拟。',
   memory: '顺序记忆同时考查位置与先后次序。先熟悉圆点位置，从 3 个位置开始，观察结束后按原顺序点击；提交后找出第一个记错的位置。基础回忆练习不等同于带干扰任务的 Grid 类测评。',
