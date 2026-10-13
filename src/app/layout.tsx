@@ -7,6 +7,7 @@ import { HREFLANG, SITE_URL, localePath } from '@/lib/seo';
 import './globals.css';
 import { I18nProvider } from '@/lib/i18n';
 import Sidebar from '@/components/Sidebar';
+import { adminIdentity } from '@/lib/admin/auth';
 import AuthProvider from '@/components/AuthProvider';
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [requestHeaders, cookieStore] = await Promise.all([headers(), cookies()]);
+  const [requestHeaders, cookieStore, admin] = await Promise.all([headers(), cookies(), adminIdentity()]);
   // Locale-prefixed URLs are authoritative. Only the few routes outside the
   // prefix (billing, auth) fall back to the stored or negotiated preference.
   const lang =
@@ -48,7 +49,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <I18nProvider lang={lang}>
           <AuthProvider>
             <div className="flex min-h-screen">
-              <Sidebar />
+              <Sidebar isAdmin={admin.allowed} />
               <main className="min-w-0 flex-1 px-5 pb-8 pt-24 sm:px-8 md:pt-10 lg:px-10">
                 <div className="mx-auto w-full max-w-5xl">{children}
                   <footer className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-slate-200 pt-6 text-sm text-slate-600">

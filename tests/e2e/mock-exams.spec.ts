@@ -10,6 +10,8 @@ test.use({ viewport:{width:1280,height:900},isMobile:false,hasTouch:false });
 async function mount(page:Page,component:string,member=false,zh=false){
   const account={status:member?'paid':'expired'};
   const bundle=await build({stdin:{contents:`import React from 'react';import{createRoot}from'react-dom/client';import Component from'./src/components/exam/${component}';createRoot(document.getElementById('root')).render(<Component/>);`,resolveDir:process.cwd(),loader:'tsx'},bundle:true,write:false,format:'iife',jsx:'automatic',define:{'process.env.NODE_ENV':'"production"','process.env':'{}'},plugins:[{name:'test-context',setup(b){
+    b.onResolve({filter:/^@clerk\/nextjs$/},()=>({path:'clerk',namespace:'clerk-fixture'}));
+    b.onLoad({filter:/.*/,namespace:'clerk-fixture'},()=>({contents:`export function useAuth(){return {userId:${member?"'test-user'":"null"}}}`,loader:'js'}));
     b.onResolve({filter:/^@\/lib\/(i18n|use-account)$/},args=>({path:args.path,namespace:'test'}));
     b.onLoad({filter:/.*/,namespace:'test'},args=>({contents:args.path.endsWith('i18n')?`export function useI18n(){return {lang:'${zh?'zh':'en'}',t:(key)=>key}};export function shapeNameKey(){return 'shape'}`:`export function useAccount(){return {userId:${member?"'test-user'":"null"},account:${JSON.stringify(member?account:null)},isLoaded:true,failed:false}}`,loader:'js'}));
     b.onResolve({filter:/\.module\.css$/},args=>({path:args.path,namespace:'css-stub'}));
@@ -17,14 +19,14 @@ async function mount(page:Page,component:string,member=false,zh=false){
   }}]});
   const dir='.next/static/chunks';
   const css=readdirSync(dir).filter(f=>f.endsWith('.css')).map(f=>readFileSync(join(dir,f),'utf8')).join('\n');
-  await page.route('http://exam.test/',route=>route.fulfill({contentType:'text/html',body:`<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${css}</style></head><body><main style="max-width:1100px;margin:auto;padding:20px"><div id="root"></div></main></body></html>`}));
-  await page.goto('http://exam.test/');
+  await page.route('https://exam.test/',route=>route.fulfill({contentType:'text/html',body:`<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${css}</style></head><body><main style="max-width:1100px;margin:auto;padding:20px"><div id="root"></div></main></body></html>`}));
+  await page.goto('https://exam.test/');
   await page.addScriptTag({content:bundle.outputFiles[0].text});
 }
 
 test('guests see both previews and membership link on desktop and mobile',async({page})=>{
   await mount(page,'ExamCenter',false,true);
-  await expect(page.getByRole('heading',{name:'模拟考中心',exact:true})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'宝洁管道题模拟考试与综合测评训练',exact:true})).toBeVisible();
   await expect(page.getByRole('link',{name:/开通会员，解锁完整模拟考/})).toHaveAttribute('href','/billing');
   await page.getByRole('tab',{name:'报告预览'}).click();
   await expect(page.getByText('训练总分',{exact:true})).toBeVisible();
@@ -104,8 +106,8 @@ test('Grid observation expires during a request and remount preserves recall pro
   const bundle=await build({stdin:{contents:`import React,{useState}from'react';import{createRoot}from'react-dom/client';import GridBoard from './src/components/exam/GridBoard';
   const q={kind:'grid',sequence:[7,19,11],spatial:Array.from({length:3},()=>({cells:Array(16).fill(1)}))};
   function App(){const [key,setKey]=useState(0);const [disabled,setDisabled]=useState(false);const [answer,setAnswer]=useState(null);return <><button onClick={()=>setKey(key+1)}>Remount question</button><button onClick={()=>setDisabled(!disabled)}>Toggle pending request</button><GridBoard key={key} storageKey="regression-grid" question={q} zh={false} disabled={disabled} onAnswer={setAnswer}/><output>{JSON.stringify(answer)}</output></>};createRoot(document.getElementById('root')).render(<App/>);`,resolveDir:process.cwd(),loader:'tsx'},bundle:true,write:false,format:'iife',jsx:'automatic',define:{'process.env.NODE_ENV':'"production"'}});
-  await page.route('http://exam.test/',r=>r.fulfill({contentType:'text/html',body:'<div id="root"></div>'}));
-  await page.goto('http://exam.test/');await page.addScriptTag({content:bundle.outputFiles[0].text});
+  await page.route('https://exam.test/',r=>r.fulfill({contentType:'text/html',body:'<div id="root"></div>'}));
+  await page.goto('https://exam.test/');await page.addScriptTag({content:bundle.outputFiles[0].text});
   await page.getByRole('button',{name:'Begin observation'}).click();
   await page.getByRole('button',{name:'Toggle pending request'}).click();
   await expect(page.getByRole('button',{name:'Symmetric',exact:true})).toBeVisible({timeout:2000});
@@ -118,4 +120,17 @@ test('Grid observation expires during a request and remount preserves recall pro
   await page.getByRole('button',{name:'Position 19',exact:true}).click();
   await page.getByRole('button',{name:'Position 11',exact:true}).click();
   await expect(page.locator('output')).toHaveText('[7,19,11,1,1,1]');
+});
+
+
+test('signed-in PEAK reports one start and completion without personal answers',async({page})=>{
+  const events:Record<string,unknown>[]=[];
+  await page.route('**/api/activity',async route=>{events.push(route.request().postDataJSON());await route.fulfill({status:204});});
+  await mount(page,'PeakTraining',true);
+  for(const fieldset of await page.locator('fieldset').all())await fieldset.getByRole('radio').first().check();
+  await page.getByRole('button',{name:/Complete & reflect/}).click();
+  await expect.poll(()=>events.length).toBe(2);
+  expect(events.map(event=>event.action)).toEqual(['started','completed']);
+  expect(events[0].sessionId).toBe(events[1].sessionId);
+  for(const event of events){expect(event.tool).toBe('training:peak');expect(Object.keys(event).sort()).toEqual(['action','sessionId','tool']);}
 });

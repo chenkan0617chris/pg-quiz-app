@@ -51,7 +51,7 @@ function NavGroup({label,icon,items,pathname,close}:{label:string;icon:IconName;
   </div>;
 }
 
-export default function Sidebar(){
+export default function Sidebar({isAdmin=false}:{isAdmin?:boolean}){
   const pathname=usePathname();
   const {lang,t,toggle}=useI18n(),zh=lang==='zh';
   const [mobileOpen,setMobileOpen]=useState(false);
@@ -91,7 +91,7 @@ export default function Sidebar(){
         <p className="px-3 pb-2 text-[10px] font-semibold tracking-[0.12em] text-slate-400">{zh?'备考空间':'PREPARATION'}</p><div className="space-y-1">{navigation.map(item=>{if('items' in item)return <NavGroup key={`${item.icon}:${pathname}`} label={zh?item.zh:item.en} icon={item.icon} items={item.items} pathname={pathname} close={close}/>;const target=localePath(lang,item.path),active=pathname===target||(item.path!==''&&pathname.startsWith(target+'/'));return <Link key={item.path} href={target} onClick={close} aria-current={active?'page':undefined} className={`${row} ${active?selected:neutral}`}><Icon name={item.icon!}/><span className="flex-1">{t(item.label)}</span>{item.path==='/exams'&&<span className={`rounded border px-1.5 py-px text-[9px] font-semibold tracking-wide ${active?'border-indigo-200 text-indigo-500':'border-slate-200 text-slate-400'}`}>PRO</span>}{active&&<span className="h-4 w-0.5 rounded bg-indigo-500" aria-hidden="true"/>}</Link>;})}</div>
       </nav>
       <div className="shrink-0 border-t border-slate-200/80 px-4 pb-4 pt-4">
-        <nav aria-label={zh?'账号与订阅':'Account and membership'} className="space-y-1"><p className="px-3 pb-1 text-[10px] font-semibold tracking-[0.12em] text-slate-400">{zh?'账号与会员':'ACCOUNT'}</p>{accountLink('/account',zh?'我的账号':'My account','user')}{accountLink('/billing',zh?'会员与价格':'Membership & pricing','membership')}</nav>
+        <nav aria-label={zh?'账号与订阅':'Account and membership'} className="space-y-1"><p className="px-3 pb-1 text-[10px] font-semibold tracking-[0.12em] text-slate-400">{zh?'账号与会员':'ACCOUNT'}</p>{isAdmin&&accountLink('/admin',zh?'用户使用后台':'Admin dashboard','user')}{accountLink('/account',zh?'我的账号':'My account','user')}{accountLink('/billing',zh?'会员与价格':'Membership & pricing','membership')}</nav>
         <div className="mx-2 mb-3 mt-4 border-t border-slate-200/80"/><AccountControls onNavigate={close}/>
         <div className="mt-3 flex items-center justify-between px-3"><span className="text-[10px] tracking-wide text-slate-400">CKAutoFlow</span><button type="button" onClick={()=>{close();toggle();}} aria-label={zh?'切换为 English':'Switch to 中文'} className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-[11px] font-medium text-slate-500 hover:bg-slate-200/60 hover:text-slate-800"><Icon name="language"/><span>{zh?'EN':'中文'}</span></button></div>
       </div>

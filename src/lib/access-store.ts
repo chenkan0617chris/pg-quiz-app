@@ -34,8 +34,11 @@ export async function initializeAccess(userId:string,registeredAt:number) {
 /** Atomic cap shared by all server instances. Paid/legacy access never consumes it. */
 export async function consumeFreeSolve(userId:string,kind:SolverKind) {
   const sql=database();
-  const [row]=await sql`INSERT INTO solver_usage(user_id,kind,used) VALUES (${userId},${kind},1)
+  const [row]=await sql`WITH allowance AS (INSERT INTO solver_usage(user_id,kind,used) VALUES (${userId},${kind},1)
     ON CONFLICT (user_id,kind) DO UPDATE SET used=solver_usage.used+1
-    WHERE solver_usage.used < ${FREE_SOLVES_PER_KIND} RETURNING used`;
+    WHERE solver_usage.used < ${FREE_SOLVES_PER_KIND} RETURNING used),
+    logged AS (INSERT INTO usage_events(user_id,tool,action,free_credits,source)
+      SELECT ${userId},${`solver:${kind}`},'solved',1,'server' FROM allowance RETURNING id)
+    SELECT used FROM allowance CROSS JOIN logged`;
   return row ? FREE_SOLVES_PER_KIND-Number(row.used) : null;
 }

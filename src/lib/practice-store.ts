@@ -33,11 +33,11 @@ export async function createPractice(userId:string,kind:PracticeQuestion['kind']
       INSERT INTO memory_usage(user_id,used) VALUES (${userId},1)
       ON CONFLICT(user_id) DO UPDATE SET used=memory_usage.used+1
       WHERE memory_usage.used < ${FREE_MEMORY_ROUNDS} RETURNING used
-    ) INSERT INTO practice_attempts(id,user_id,question,sample_key)
-      SELECT ${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey} FROM allowance RETURNING id`;
+    ) INSERT INTO practice_attempts(id,user_id,question,sample_key,free_credits)
+      SELECT ${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey},1 FROM allowance RETURNING id`;
     if(!rows.length)throw new PracticeAccessError('Memory allowance exhausted');
   } else {
-    await sql`INSERT INTO practice_attempts(id,user_id,question,sample_key) VALUES (${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey})`;
+    await sql`INSERT INTO practice_attempts(id,user_id,question,sample_key,free_credits) VALUES (${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey},0)`;
   }
   return {id,question:publicQuestion(question),sampleKey};
 }
