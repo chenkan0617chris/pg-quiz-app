@@ -3,23 +3,21 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { database } from '../src/lib/db';
 import { initializeAccess,readAccess } from '../src/lib/access-store';
-test('buying during a trial starts 30 paid days immediately without adding remaining trial days',{skip:!process.env.RUN_DB_TESTS},async()=>{
+test('buying during a trial grants lifetime access immediately',{skip:!process.env.RUN_DB_TESTS},async()=>{
  const sql=database();const uid='payment_trial_test_'+randomUUID();const order=randomUUID();
  try{
   await initializeAccess(uid,Date.now());
   await sql`UPDATE user_access SET trial_eligible=true WHERE user_id=${uid}`;
   const trial=await readAccess(uid);
   assert.equal(trial?.status,'trial');
-  await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${order},${uid},true,699,'aud')`;
-  const before=Date.now();
+  await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${order},${uid},true,1990,'cny')`;
   await sql`SELECT fulfill_quiz_payment(${order}::uuid,${'cs_'+order},${'pi_'+order},true)`;
-  const after=Date.now();
   const access=await readAccess(uid);
   assert.equal(access?.status,'paid');
-  const expiry=Date.parse(access!.paidUntil!);
-  assert.ok(expiry>=before+30*86400000-1000&&expiry<=after+30*86400000+1000,'paid access must expire 30 days after fulfillment, excluding unused trial');
+  assert.equal(access?.lifetime,true);
+  assert.equal(access?.paidUntil,null);
   await sql`SELECT fulfill_quiz_payment(${order}::uuid,${'cs_'+order},${'pi_'+order},true)`;
-  assert.equal((await readAccess(uid))?.paidUntil,access!.paidUntil,'duplicate webhook must not restart the 30 days');
+  assert.equal((await readAccess(uid))?.lifetime,true,'duplicate webhook preserves lifetime access');
  }finally{
   await sql`DELETE FROM payment_orders WHERE user_id=${uid}`;
   await sql`DELETE FROM user_access WHERE user_id=${uid}`;
@@ -37,7 +35,8 @@ test('payment fulfillment is idempotent, refunds revoke, and sandbox cannot gran
  await Promise.all(Array.from({length:3},()=>sql`SELECT fulfill_quiz_payment(${liveOrder}::uuid,${'cs_'+liveOrder},${'pi_'+liveOrder},true)`));
  const granted=await readAccess(uid);
  assert.equal(granted?.status,'paid');
- assert.ok(Math.abs(new Date(granted!.paidUntil!).getTime()-Date.now()-30*86400000)<60000);
+ assert.equal(granted?.lifetime,true);
+ assert.equal(granted?.paidUntil,null);
  await sql`SELECT refund_quiz_payment(${'pi_'+liveOrder},true)`;
  assert.equal((await readAccess(uid))?.status,'expired');
  await sql`SELECT fulfill_quiz_payment(${liveOrder}::uuid,${'cs_'+liveOrder},${'pi_'+liveOrder},true)`;

@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { isCurrentPrice, matchesOrderPayment } from '../src/lib/payment-product';
-test('new checkout uses AUD 6.99 and replaces previous prices', () => {
- assert.equal(isCurrentPrice({amount:699,currency:'aud'}),true);
+test('new checkout uses CNY 19.90 and replaces previous prices', () => {
+ assert.equal(isCurrentPrice({amount:1990,currency:'cny'}),true);
+ assert.equal(isCurrentPrice({amount:699,currency:'aud'}),false);
  assert.equal(isCurrentPrice({amount:499,currency:'aud'}),false);
  assert.equal(isCurrentPrice({amount:300,currency:'cny'}),false);
  assert.equal(isCurrentPrice({amount:990,currency:'aud'}),false);
@@ -11,7 +12,7 @@ test('new checkout uses AUD 6.99 and replaces previous prices', () => {
  assert.equal(isCurrentPrice({amount:2990,currency:'cny'}),false);
 });
 test('fulfillment validates the stored order, including legacy CNY payments', () => {
- for (const price of [{amount:699,currency:'aud'},{amount:499,currency:'aud'},{amount:300,currency:'cny'},{amount:990,currency:'aud'},{amount:50,currency:'aud'},{amount:999,currency:'usd'},{amount:2990,currency:'cny'}]) {
+ for (const price of [{amount:1990,currency:'cny'},{amount:699,currency:'aud'},{amount:499,currency:'aud'},{amount:300,currency:'cny'},{amount:990,currency:'aud'},{amount:50,currency:'aud'},{amount:999,currency:'usd'},{amount:2990,currency:'cny'}]) {
   const order={...price,user_id:'user_test',livemode:true};
   const session={amount_total:price.amount,currency:price.currency,client_reference_id:'user_test',livemode:true,mode:'payment'};
   assert.equal(matchesOrderPayment(order,session),true);

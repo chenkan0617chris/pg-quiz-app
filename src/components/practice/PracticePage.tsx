@@ -68,7 +68,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
       <section className="rounded-xl border border-gray-200 p-5 shadow-sm sm:p-7">
         {!fullAccess&&<div className="mb-5 rounded-lg bg-indigo-50 p-4 text-sm text-indigo-900">
           <p>{zh?'免费练习：四类题型各 5 道固定样题，可反复练习。会员可生成新题。':'Free practice: 5 repeatable samples for each of four question types. Members can generate new questions.'}</p>
-          <Link href="/billing" className="mt-2 inline-block font-medium underline">{zh?'解锁会员':'Unlock full access'} · {PRICE_LABEL} / {zh?'30 天':'30 days'}</Link>
+          <Link href="/billing" className="mt-2 inline-block font-medium underline">{zh?'解锁会员':'Unlock full access'} · {PRICE_LABEL} / {zh?'永久':'Lifetime'}</Link>
         </div>}
         <div className="mb-6 flex flex-wrap gap-3">
           <label className="sr-only" htmlFor="practice-kind">{zh?'题型':'Question type'}</label>

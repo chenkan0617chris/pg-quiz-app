@@ -22,7 +22,7 @@ export function useSolveRequest<T>(path:string) {
       return await response.json() as T;
     } catch (e) {
       setError(e instanceof Error && e.message === 'expired'
-        ? (lang==='zh'?'免费次数已用完，或该练习需要会员。请前往「会员与价格」解锁 30 天使用权。':'Free uses are exhausted or this practice requires paid access. Visit Membership & pricing to unlock 30 days.')
+        ? (lang==='zh'?'免费次数已用完，或该练习需要会员。请前往「会员与价格」解锁 永久使用权。':'Free uses are exhausted or this practice requires paid access. Visit Membership & pricing to unlock lifetime access.')
         : e instanceof Error && e.message === 'limit'
         ? (lang==='zh'?'操作太频繁，请一分钟后再试。':'Too many requests. Try again in a minute.')
         : e instanceof Error && e.message === 'input'

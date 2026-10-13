@@ -19,7 +19,7 @@ export default async function Pricing({params}:Props){
   <h1 className="text-3xl font-bold">{zh?'会员价格与免费体验':'Pricing and free access'}</h1>
   <p className="mt-5 leading-7 text-slate-600">{c.trial}</p>
   <section className="mt-8 rounded-2xl border border-slate-200 p-6">
-   <h2 className="text-2xl font-bold">{PRICE_LABEL} / {zh?'30 天':'30 days'}</h2>
+   <h2 className="text-2xl font-bold">{PRICE_LABEL} / {zh?'永久':'Lifetime'}</h2>
    <p className="mt-4 leading-7">{c.access}</p>
    <ul className="mt-5 list-disc space-y-2 pl-5">{c.included.map(item=><li key={item}>{item}</li>)}</ul>
    <p className="mt-5 text-sm leading-6 text-slate-600">{c.limits}</p>

@@ -139,7 +139,7 @@ export default async function HomePage({ params }: Props) {
       <section className="mt-12 rounded-2xl border border-slate-200 p-7">
         <h2 className="text-xl font-bold text-slate-900">{copy.accessHeading}</h2>
         <p className="mt-3 max-w-3xl text-[15px] leading-7 text-slate-600">{copy.accessText}</p>
-        <p className="mt-4 text-xl font-semibold">{PRICE_LABEL} / {lang === 'zh' ? '30 天 · 不自动续费' : '30 days · No automatic renewal'}</p>
+        <p className="mt-4 text-xl font-semibold">{PRICE_LABEL} / {lang === 'zh' ? '永久 · 不自动续费' : 'Lifetime · No automatic renewal'}</p>
         <Link href={href('/pricing')} className="mt-5 inline-block rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
           {copy.accessCta}
         </Link>

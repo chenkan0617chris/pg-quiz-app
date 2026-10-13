@@ -34,7 +34,7 @@ export async function POST(request:Request){
   if(!order)return Response.json({error:'Please retry checkout'},{status:409});
   const session=await stripe.checkout.sessions.create({
    mode:'payment',adaptive_pricing:{enabled:false},locale:'auto',integration_identifier:'quiz_checkout_qztrialx',
-   line_items:[{price_data:{currency:PRICE_CURRENCY,unit_amount:PRICE_AMOUNT,product_data:{name:'Quiz 30-day access / 30 天使用权',description:'One-time purchase, no automatic renewal / 一次购买，不自动续费'}},quantity:1}],
+   line_items:[{price_data:{currency:PRICE_CURRENCY,unit_amount:PRICE_AMOUNT,product_data:{name:'Quiz lifetime access / 永久会员',description:'All features, one-time payment / 全部功能，一次付款永久使用'}},quantity:1}],
    client_reference_id:userId,metadata:{order_id:order.id},payment_intent_data:{metadata:{order_id:order.id}},
    success_url:origin+'/billing?result=processing',cancel_url:origin+'/billing?result=cancelled',
   },{idempotencyKey:'quiz-order-'+order.id});

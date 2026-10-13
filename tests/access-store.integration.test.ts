@@ -12,6 +12,7 @@ test('database preserves trial start across retries and concurrent initializatio
  for(const attempt of attempts)assert.deepEqual(attempt,initial);
  assert.equal(await readAccess(`${id}_other`),null);
  const fresh=await initializeAccess(`${id}_fresh`,Date.now());
- assert.equal(fresh.status,'expired');
+ assert.equal(fresh.status,'trial');
+ assert.ok(Math.abs(Date.parse(fresh.trialEndsAt)-Date.now()-86400000)<5000);
  assert.deepEqual(fresh.solverRemaining,{pipeline:10,numerical:10,figure:10});
 });

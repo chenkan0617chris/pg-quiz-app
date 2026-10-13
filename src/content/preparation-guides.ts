@@ -44,7 +44,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
      'Before the real assessment, follow the invitation and official preparation instructions. No practice score here predicts a passing threshold.'
     ]},
     {type:'h2',text:'5. Decide whether you need more practice'},
-    {type:'p',text:'After signing in, each solver has 10 free uses per account and each practice type has 5 fixed samples with explanations. Memory training has 10 lifetime free rounds, one credit per start. Repeating samples helps learn the interface. If you need unfamiliar questions and continued solving, see the current 30-day access option in the pricing link below. Buying access is optional and does not guarantee an assessment result.'},
+    {type:'p',text:'After a 24-hour full-feature trial from registration, each solver has 10 free uses per account and each practice type has 5 fixed samples with explanations. Memory training has 10 lifetime free rounds, one credit per start. Repeating samples helps learn the interface. If you need unfamiliar questions and continued solving, see the current lifetime access option in the pricing link below. Buying access is optional and does not guarantee an assessment result.'},
    ],
    faq:[
     {q:'Is the P&G assessment the same for everyone?',a:'No. P&G says assessment types depend on the role and other factors. Use your invitation and official guidance; do not assume another applicant’s experience is your exact test.'},
@@ -139,7 +139,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
      '正式测评前再次阅读官方要求，本站练习分数不对应招聘方的通过线。'
     ]},
     {type:'h2',text:'5. 根据实际需要决定是否继续练习'},
-    {type:'p',text:'登录后，每个账号每种解题器有 10 次免费机会，每种练习题型有 5 道固定样题与完整解析；记忆训练累计免费 10 轮。固定样题适合熟悉操作；需要更多陌生题目和持续求解时，可查看下方价格入口中的 30 天会员。购买并非开始学习的前提，也不保证测评结果。'},
+    {type:'p',text:'注册后先享 24 小时全功能试用，期间不扣次数。试用到期未购买，每个账号每种解题器有 10 次免费机会，每种练习题型有 5 道固定样题与完整解析；记忆训练累计免费 10 轮。固定样题适合熟悉操作；需要更多陌生题目和持续求解时，可查看下方价格入口中的 永久会员。购买并非开始学习的前提，也不保证测评结果。'},
    ],
    faq:[
     {q:'宝洁所有岗位都用相同的测评吗？',a:'不是。官方说明测评类型与岗位等因素有关，应以自己的招聘通知为准。'},

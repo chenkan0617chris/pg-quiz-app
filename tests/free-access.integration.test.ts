@@ -43,15 +43,15 @@ test('free practice never generates fresh questions or retries premium history',
   await assert.rejects(createPractice(id,'pipeline',undefined,'easy',false,100));
  }finally{await sql`DELETE FROM practice_attempts WHERE user_id=${id}`;}
 });
-test('legacy registrations retain trial, new registrations get quotas only',options,async()=>{
+test('new registrations receive a 24-hour trial and old registrations cannot restart it',options,async()=>{
  const sql=database();const id='legacy_test_'+randomUUID();
  try{
   const [policy]=await sql`SELECT legacy_trial_cutoff FROM access_policy WHERE id=1`;
   const cutoff=new Date(policy.legacy_trial_cutoff).getTime();
   const old=await initializeAccess(id,cutoff-1000);
-  assert.equal(old.status,cutoff-1000+7*86400000>Date.now()?'trial':'expired');
+  assert.equal(old.status,cutoff-1000+86400000>Date.now()?'trial':'expired');
   const fresh=await initializeAccess(id+'_new',Math.max(Date.now(),cutoff));
-  assert.equal(fresh.status,'expired');
+  assert.equal(fresh.status,'trial');
   assert.equal(fresh.solverRemaining.pipeline,10);
  }finally{await sql`DELETE FROM user_access WHERE user_id IN (${id},${id+'_new'})`;}
 });
