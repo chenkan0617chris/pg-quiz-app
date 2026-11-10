@@ -1,18 +1,20 @@
 import { database } from './db';
 import { accessStatus } from './access-status';
-import { FREE_MEMORY_ROUNDS, FREE_SOLVES_PER_KIND, SOLVER_KINDS, type SolverKind, type SolverRemaining } from './access-policy';
+import { FREE_MEMORY_ROUNDS, FREE_PRACTICE_PER_KIND, FREE_SOLVES_PER_KIND, PRACTICE_KINDS, SOLVER_KINDS, type PracticeKind, type PracticeRemaining, type SolverKind, type SolverRemaining } from './access-policy';
 
 export async function readAccess(userId:string) {
   const sql=database();
   const [row]=await sql`SELECT trial_ends_at, trial_eligible, paid_until, paid_lifetime, now() AS checked_at,
     (SELECT used FROM memory_usage WHERE user_id=${userId}) AS memory_used,
-    (SELECT jsonb_object_agg(kind,used) FROM solver_usage WHERE user_id=${userId}) AS usage
+    (SELECT jsonb_object_agg(kind,used) FROM solver_usage WHERE user_id=${userId}) AS usage,
+    (SELECT jsonb_object_agg(kind,used) FROM practice_usage WHERE user_id=${userId}) AS practice
     FROM user_access WHERE user_id=${userId}`;
   if(!row)return null;
   return {
     status:accessStatus(row.trial_eligible?new Date(row.trial_ends_at).getTime():0,row.paid_until?new Date(row.paid_until).getTime():null,new Date(row.checked_at).getTime(),row.paid_lifetime),
     memoryRemaining:FREE_MEMORY_ROUNDS-Number(row.memory_used??0),
     solverRemaining:Object.fromEntries(SOLVER_KINDS.map(kind=>[kind,FREE_SOLVES_PER_KIND-Number(row.usage?.[kind]??0)])) as SolverRemaining,
+    practiceRemaining:Object.fromEntries(PRACTICE_KINDS.map(kind=>[kind,FREE_PRACTICE_PER_KIND-Number(row.practice?.[kind]??0)])) as PracticeRemaining,
     trialEndsAt:new Date(row.trial_ends_at).toISOString(),
     lifetime: Boolean(row.paid_lifetime),
     paidUntil:row.paid_until?new Date(row.paid_until).toISOString():null,
@@ -41,4 +43,13 @@ export async function consumeFreeSolve(userId:string,kind:SolverKind) {
       SELECT ${userId},${`solver:${kind}`},'solved',1,'server' FROM allowance RETURNING id)
     SELECT used FROM allowance CROSS JOIN logged`;
   return row ? FREE_SOLVES_PER_KIND-Number(row.used) : null;
+}
+
+/** Atomic lifetime cap for free generated practice. Returns false when the allowance is used up. */
+export async function consumeFreePractice(userId:string,kind:PracticeKind) {
+  const sql=database();
+  const rows=await sql`INSERT INTO practice_usage(user_id,kind,used) VALUES (${userId},${kind},1)
+    ON CONFLICT (user_id,kind) DO UPDATE SET used=practice_usage.used+1
+    WHERE practice_usage.used < ${FREE_PRACTICE_PER_KIND} RETURNING used`;
+  return rows.length>0;
 }

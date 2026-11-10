@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {generateQuestion,publicQuestion,gradeAnswer} from '../src/lib/practice';
-import {freePracticeQuestion} from '../src/lib/free-practice';
 import {newExam,transitionExam} from '../src/lib/exam';
 test('all pipeline levels have three distinct choices with exactly one correct answer',()=>{
  for(const difficulty of ['easy','medium','hard'] as const)for(let i=0;i<40;i++){
@@ -12,11 +11,6 @@ test('all pipeline levels have three distinct choices with exactly one correct a
   assert.equal(view.options.filter(x=>gradeAnswer(q,x)).length,1);
   assert.deepEqual(publicQuestion(q),view);
  }
-});
-test('free pipeline bank covers all three levels with stable choices',()=>{
- const levels=new Set<number>();
- for(let i=0;i<5;i++){const q=freePracticeQuestion('pipeline',i);const v=publicQuestion(q);if(v.kind!=='pipeline')throw Error();levels.add(v.boxes.length);assert.equal(v.options.length,3);assert.equal(v.options.filter(x=>gradeAnswer(q,x)).length,1);}
- assert.deepEqual([...levels].sort(),[1,2,3]);
 });
 test('exam introduces multi-stage pipelines even after incorrect answers',()=>{
  let s=transitionExam(newExam('test',0),{action:'begin',section:0},1);

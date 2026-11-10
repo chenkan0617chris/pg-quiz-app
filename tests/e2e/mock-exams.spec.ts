@@ -11,8 +11,8 @@ async function mount(page:Page,component:string,member=false,zh=false){
   const account={status:member?'paid':'expired'};
   const bundle=await build({stdin:{contents:`import React from 'react';import{createRoot}from'react-dom/client';import Component from'./src/components/exam/${component}';createRoot(document.getElementById('root')).render(<Component/>);`,resolveDir:process.cwd(),loader:'tsx'},bundle:true,write:false,format:'iife',jsx:'automatic',define:{'process.env.NODE_ENV':'"production"','process.env':'{}'},plugins:[{name:'test-context',setup(b){
     b.onResolve({filter:/^@clerk\/nextjs$/},()=>({path:'clerk',namespace:'clerk-fixture'}));
-    b.onLoad({filter:/.*/,namespace:'clerk-fixture'},()=>({contents:`export function useAuth(){return {userId:${member?"'test-user'":"null"}}}`,loader:'js'}));
-    b.onResolve({filter:/^@\/lib\/(i18n|use-account)$/},args=>({path:args.path,namespace:'test'}));
+    b.onLoad({filter:/.*/,namespace:'clerk-fixture'},()=>({contents:`export function useAuth(){return {userId:${member?"'test-user'":"null"},isLoaded:true,isSignedIn:${member}}};export function useClerk(){return {openSignIn:async()=>{}}}`,loader:'js'}));
+    b.onResolve({filter:/^(@\/lib\/|\.\/)(i18n|use-account)$/},args=>({path:args.path,namespace:'test'}));
     b.onLoad({filter:/.*/,namespace:'test'},args=>({contents:args.path.endsWith('i18n')?`export function useI18n(){return {lang:'${zh?'zh':'en'}',t:(key)=>key}};export function shapeNameKey(){return 'shape'}`:`export function useAccount(){return {userId:${member?"'test-user'":"null"},account:${JSON.stringify(member?account:null)},isLoaded:true,failed:false}}`,loader:'js'}));
     b.onResolve({filter:/\.module\.css$/},args=>({path:args.path,namespace:'css-stub'}));
     b.onLoad({filter:/.*/,namespace:'css-stub'},()=>({contents:'export default {}',loader:'js'}));
@@ -85,12 +85,34 @@ test('member completes all sections, fullscreen recovery preserves answers and r
   await page.screenshot({path:'test-results/mock-exam-report.png',fullPage:true});
 });
 
-test('Grid fixed sample interleaves judgements and scores recall separately',async({page})=>{
+test('Grid preview sample interleaves judgements and scores recall separately',async({page})=>{
   await mount(page,'GridTraining');
   await page.getByRole('button',{name:'Begin observation'}).click();
   for(const label of ['Symmetric','Not symmetric','Symmetric'])await page.getByRole('button',{name:label,exact:true}).click();
   for(const position of [7,19,11])await page.getByRole('button',{name:`Position ${position}`,exact:true}).click();
   await expect(page.getByRole('heading',{name:'Round score · 6/6'})).toBeVisible();
+});
+
+test('Grid training serves a new random round each time',async({page})=>{
+  const rounds=[
+    {kind:'grid',sequence:[3,14,22],spatial:[{cells:Array(16).fill(1),symmetric:true},{cells:Array(16).fill(0),symmetric:true},{cells:Array(16).fill(1),symmetric:true}]},
+    {kind:'grid',sequence:[5,9,17,25],spatial:Array.from({length:4},()=>({cells:Array(16).fill(1),symmetric:true}))},
+  ];
+  const commands:unknown[]=[];
+  await page.route('**/api/grid',route=>{commands.push(route.request().postDataJSON());return route.fulfill({json:rounds[commands.length-1]});});
+  await mount(page,'GridTraining',true);
+  await page.getByRole('button',{name:'Start random training'}).click();
+  await page.getByRole('button',{name:'Begin observation'}).click();
+  for(let i=0;i<3;i++)await page.getByRole('button',{name:'Symmetric',exact:true}).click();
+  for(const position of [3,14,22])await page.getByRole('button',{name:`Position ${position}`,exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Round score · 6/6'})).toBeVisible();
+  await page.getByRole('button',{name:'4 positions'}).click();
+  await page.getByRole('button',{name:'Next round (new)'}).click();
+  await page.getByRole('button',{name:'Begin observation'}).click();
+  for(let i=0;i<4;i++)await page.getByRole('button',{name:'Symmetric',exact:true}).click();
+  for(const position of [5,9,17,25])await page.getByRole('button',{name:`Position ${position}`,exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Round score · 8/8'})).toBeVisible();
+  expect(commands).toEqual([{action:'start',difficulty:'easy'},{action:'start',difficulty:'medium'}]);
 });
 
 test('PEAK requires responses then gives reflections, not hiring scores',async({page})=>{

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import type { Account } from '@/lib/use-account';
 import { PRICE_LABEL } from '@/lib/payment-product';
-import { FREE_MEMORY_ROUNDS, FREE_SAMPLES_PER_KIND, FREE_SOLVES_PER_KIND } from '@/lib/access-policy';
+import { FREE_MEMORY_ROUNDS, FREE_PRACTICE_PER_KIND, FREE_SOLVES_PER_KIND } from '@/lib/access-policy';
 
 type Props = {
   zh: boolean; enabled: boolean; busy: boolean; error: string;
@@ -19,13 +19,13 @@ export default function PlanComparison({ zh, enabled, busy, error, account, sign
   const badge = <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">✓ {t('当前方案', 'Current plan')}</span>;
   const rows: { name: string; free: string | boolean; member: string | boolean }[] = [
     { name: t('四类解题攻略', 'Four solving guides'), free: true, member: true },
-    { name: t('四类固定练习样题', 'Fixed samples across four practice types'), free: t(`每类 ${FREE_SAMPLES_PER_KIND} 道`, `${FREE_SAMPLES_PER_KIND} per type`), member: true },
+    { name: t('四类练习随机新题', 'Random new questions in four practice types'), free: t(`每类累计 ${FREE_PRACTICE_PER_KIND} 道`, `${FREE_PRACTICE_PER_KIND} lifetime per type`), member: t('不限题量', 'Unlimited') },
     { name: t('作答记录与答案解析', 'Attempt history & explanations'), free: true, member: true },
-    { name: t('免费样题错题重练', 'Retry free sample questions'), free: true, member: true },
+    { name: t('做过的题免费重练', 'Retry questions you have done'), free: true, member: true },
     { name: t('管道 / 数字 / 图形解题器', 'Pipeline / numerical / figure solvers'), free: t(`每种累计 ${FREE_SOLVES_PER_KIND} 次`, `${FREE_SOLVES_PER_KIND} lifetime uses each`), member: t('不限次数', 'Unlimited') },
     { name: t('记忆训练', 'Memory training'), free: t(`累计 ${FREE_MEMORY_ROUNDS} 轮`, `${FREE_MEMORY_ROUNDS} lifetime rounds`), member: t('不限轮数', 'Unlimited') },
-    { name: t('四类练习持续生成新题', 'Generate new questions in all four types'), free: false, member: true },
-    { name: t('生成题难度选择', 'Difficulty selection for generated questions'), free: false, member: true },
+    { name: t('空间记忆（Grid）随机训练', 'Random Grid memory training'), free: t(`累计 ${FREE_PRACTICE_PER_KIND} 轮`, `${FREE_PRACTICE_PER_KIND} lifetime rounds`), member: t('不限轮数', 'Unlimited') },
+    { name: t('生成题难度选择', 'Difficulty selection for generated questions'), free: true, member: true },
     { name: t('全屏限时模拟考试', 'Fullscreen timed mock exams'), free: t('考场与报告预览', 'Exam & report previews'), member: true },
     { name: t('模拟考历史与逐题成绩', 'Exam history & question reports'), free: t('保留已有报告', 'Keep existing reports'), member: true },
     { name: t('会员生成题错题重练', 'Retry member-generated questions'), free: false, member: true },
@@ -49,7 +49,7 @@ export default function PlanComparison({ zh, enabled, busy, error, account, sign
         <p className="mt-2 text-sm text-slate-600">{t('24 小时全功能试用，到期保留免费权益', '24-hour full trial, then free allowances')}</p>
         <p className="mt-5"><span className="text-4xl font-semibold tracking-tight">¥0</span><span className="ml-2 text-sm text-slate-500">CNY</span></p>
         <p className="mt-2 text-sm text-slate-500">{t('无需付款 · 无需绑卡', 'No payment · No card required')}</p>
-        <p className="mb-6 mt-5 text-sm leading-6 text-slate-600">{t('注册起 24 小时内全部应用不限次数；到期未购买，保留每种解题器 10 次、记忆训练 10 轮和固定样题。', 'All apps are unlimited for 24 hours from registration. Afterwards, keep 10 uses per solver, 10 memory rounds and fixed samples.')}</p>
+        <p className="mb-6 mt-5 text-sm leading-6 text-slate-600">{t('注册起 24 小时内全部应用不限次数；到期未购买，保留每种解题器 10 次、记忆训练 10 轮和每类 10 道随机练习题。', 'All apps are unlimited for 24 hours from registration. Afterwards, keep 10 uses per solver, 10 memory rounds and 10 random practice questions per type.')}</p>
         <Link href={signedIn ? '/practice' : '/sign-in'} className="mt-auto rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600">{signedIn ? t('开始练习', 'Start practicing') : t('登录免费体验', 'Sign in to try for free')}</Link>
       </article>
       <article aria-label="Member Plan" className={`flex flex-col rounded-2xl border p-6 ${paid ? 'border-emerald-500 bg-emerald-50/40 ring-1 ring-emerald-500' : 'border-indigo-200 bg-indigo-50/50'}`}>

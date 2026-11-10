@@ -44,11 +44,11 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
      'Before the real assessment, follow the invitation and official preparation instructions. No practice score here predicts a passing threshold.'
     ]},
     {type:'h2',text:'5. Decide whether you need more practice'},
-    {type:'p',text:'After a 24-hour full-feature trial from registration, each solver has 10 free uses per account and each practice type has 5 fixed samples with explanations. Memory training has 10 lifetime free rounds, one credit per start. Repeating samples helps learn the interface. If you need unfamiliar questions and continued solving, see the current 7-day access option in the pricing link below. Buying access is optional and does not guarantee an assessment result.'},
+    {type:'p',text:'After a 24-hour full-feature trial from registration, each solver has 10 free uses per account and each practice type has 10 random new questions with explanations. Memory training has 10 lifetime free rounds, one credit per start. If you need unlimited unfamiliar questions and continued solving, see the current 7-day access option in the pricing link below. Buying access is optional and does not guarantee an assessment result.'},
    ],
    faq:[
     {q:'Is the P&G assessment the same for everyone?',a:'No. P&G says assessment types depend on the role and other factors. Use your invitation and official guidance; do not assume another applicant’s experience is your exact test.'},
-    {q:'Do I need to pay to start practising?',a:'No. The guides are public. After signing in, you can use 10 free solves per solver and 5 fixed samples per practice type. Memory training is limited to 10 lifetime free rounds. Paid access provides more generated practice and continued solving.'},
+    {q:'Do I need to pay to start practising?',a:'No. The guides are public. After signing in, you can use 10 free solves per solver and 10 random new questions per practice type. Memory training is limited to 10 lifetime free rounds. Paid access provides more generated practice and continued solving.'},
     {q:'Does this site include official P&G questions?',a:'No. Exercises are original and the site is independent of P&G. We do not provide a full official simulation, PEAK answers or a pass guarantee.'},
     {q:'How should I use the memory trainer?',a:'Learn to recall ordered positions, then gradually increase sequence length. This trainer does not include the intervening reasoning tasks found in some dual-task memory assessments.'}
    ]
@@ -76,7 +76,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
      'After a mistake, identify the first position where your sequence diverged. Review the correct sequence after submitting.',
      'Try describing the path spatially or rehearsing position numbers during practice. Keep the approach that helps you reproduce unfamiliar sequences accurately.',
      'Move to five positions when three feels reliable; try seven after that. This is a suggested progression, not a validated passing standard.',
-     'Use new sequences to check progress. Recalling a fixed sample from repetition is useful familiarisation, but not an independent measure of working memory.'
+     'Use new sequences to check progress. Every round is a new random order, so progress reflects working memory rather than a memorised answer.'
     ]},
     {type:'h2',text:'4. Avoid common practice mistakes'},
     {type:'ul',items:[
@@ -87,7 +87,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
      'Assuming simple dot recall reproduces every employer’s memory assessment.'
     ]},
     {type:'h2',text:'5. What is available in this trainer'},
-    {type:'p',text:'Free accounts get 10 lifetime memory rounds across five fixed samples, with feedback. Each start, including a retry, uses one credit; reviewing a completed round does not. Paid access lets you generate new sequences and select 3, 5 or 7 positions. The board supports touch, mouse and keyboard navigation. Playback accepts no answers; after you complete the sequence and submit, the explanation lets you replay the correct order.'},
+    {type:'p',text:'Free accounts get 10 lifetime memory rounds, each a new random sequence with 3, 5 or 7 positions. Each start uses one credit; reviewing a completed round does not. Paid access is unlimited. The board supports touch, mouse and keyboard navigation. Playback accepts no answers; after you complete the sequence and submit, the explanation lets you replay the correct order.'},
    ],
    faq:[
     {q:'Is this a full P&G Grid Challenge simulator?',a:'No. It is a sequence-recall trainer. It does not include intervening symmetry or rotation tasks and does not reproduce an employer’s adaptive scoring.'},
@@ -104,7 +104,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
    keywords:['宝洁在线测评准备','宝洁笔试练习','宝洁管道题','宝洁数字题','宝洁记忆力测试'],
    h1:'宝洁在线测评怎么准备：先确认题型，再针对性练习',
    lede:'先阅读招聘通知中的测评要求，理解对应题型的规则，再通过练习和反馈发现问题。本文提供一条可执行的准备路径，并说明本站练习的覆盖范围；它不是宝洁真实考题合集，也不是通过考试的保证。',
-   published:'2026-09-28',updated:'2026-09-28',toolHref:'/practice',toolLabel:'体验固定练习样题',
+   published:'2026-09-28',updated:'2026-09-28',toolHref:'/practice',toolLabel:'体验随机练习题',
    body:[
     {type:'h2',text:'1. 先确认你实际收到的测评要求'},
     {type:'p',text:'P&G 官方将在线测评列在申请与面试之间，并说明测评类型会因岗位等因素而变化。请以自己的邀请邮件为准，确认完成时间、设备要求及需要的无障碍安排。不要把另一位求职者的经历当成自己必定遇到的全部题型。'},
@@ -139,11 +139,11 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
      '正式测评前再次阅读官方要求，本站练习分数不对应招聘方的通过线。'
     ]},
     {type:'h2',text:'5. 根据实际需要决定是否继续练习'},
-    {type:'p',text:'注册后先享 24 小时全功能试用，期间不扣次数。试用到期未购买，每个账号每种解题器有 10 次免费机会，每种练习题型有 5 道固定样题与完整解析；记忆训练累计免费 10 轮。固定样题适合熟悉操作；需要更多陌生题目和持续求解时，可查看下方价格入口中的 7 天会员。购买并非开始学习的前提，也不保证测评结果。'},
+    {type:'p',text:'注册后先享 24 小时全功能试用，期间不扣次数。试用到期未购买，每个账号每种解题器有 10 次免费机会，每种练习题型累计 10 道随机新题与完整解析；记忆训练累计免费 10 轮。需要不限量的陌生题目和持续求解时，可查看下方价格入口中的 7 天会员。购买并非开始学习的前提，也不保证测评结果。'},
    ],
    faq:[
     {q:'宝洁所有岗位都用相同的测评吗？',a:'不是。官方说明测评类型与岗位等因素有关，应以自己的招聘通知为准。'},
-    {q:'开始练习必须付费吗？',a:'不必。攻略无需登录即可阅读；登录后有每种解题器 10 次免费机会，以及每种练习题型 5 道固定样题；记忆训练累计免费 10 轮。会员提供更多生成题与持续求解。'},
+    {q:'开始练习必须付费吗？',a:'不必。攻略无需登录即可阅读；登录后有每种解题器 10 次免费机会，以及每种练习题型累计 10 道随机新题；记忆训练累计免费 10 轮。会员提供更多生成题与持续求解。'},
     {q:'本站提供宝洁真题吗？',a:'不提供。本站题目为原创练习，与宝洁无隶属关系，也没有完整官方模拟、PEAK 答案或通过保证。'},
     {q:'记忆训练应该怎么用？',a:'从较短的圆点顺序开始，逐渐增加长度。本站目前不包含观察圆点期间穿插其他推理任务的双任务训练。'}
    ]
@@ -171,16 +171,16 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
      '出错后找出从第几个位置开始偏离，并在提交后回看正确顺序。',
      '练习时可尝试记空间路径或默念位置编号，选择对陌生顺序更有效的方法。',
      '3 个位置稳定后尝试 5 个，再尝试 7 个。这是练习建议，不是经过验证的通过标准。',
-     '用新的顺序检验进步。反复记住同一道固定样题有助于熟悉界面，但不是独立的记忆能力测量。'
+     '用新的顺序检验进步。每轮都是新的随机顺序，才能真正检验记忆能力，而不是背熟某一道题。'
     ]},
     {type:'h2',text:'4. 常见错误'},
-    {type:'ul',items:['只记住出现过哪些位置，没有记住顺序。','观察还没结束就急着点击。','每轮使用不同的编号方式。','把背熟固定样题误认为对所有陌生顺序都有提升。','把简单圆点回忆当成所有招聘方记忆测评的完整替代。']},
+    {type:'ul',items:['只记住出现过哪些位置，没有记住顺序。','观察还没结束就急着点击。','每轮使用不同的编号方式。','把背熟某一轮的顺序误认为对所有陌生顺序都有提升。','把简单圆点回忆当成所有招聘方记忆测评的完整替代。']},
     {type:'h2',text:'5. 当前训练器能做什么'},
-    {type:'p',text:'免费账号可选择 5 道固定记忆样题，累计免费开始 10 轮，重练也计一次；查看历史解析不扣次数。会员可生成新顺序，选择 3、5、7 个位置。支持触屏、鼠标和键盘导航；播放阶段不能作答，完成点击并提交后可回看正确顺序。'},
+    {type:'p',text:'免费账号累计可开始 10 轮，每轮都是新的随机顺序，可选择 3、5、7 个位置；查看历史解析不扣次数。会员不限轮数。支持触屏、鼠标和键盘导航；播放阶段不能作答，完成点击并提交后可回看正确顺序。'},
    ],
    faq:[
     {q:'这是完整的宝洁 Grid Challenge 模拟吗？',a:'不是。本站提供基础顺序回忆，不含中间穿插的对称或旋转判断，也不复刻招聘方的自适应评分。'},
-    {q:'记忆力练习可以免费用吗？',a:'可以。登录后有 5 道固定样题，共可免费开始 10 轮，重练也计一次，查看历史解析不扣次数；会员可生成新题和选择难度。'},
+    {q:'记忆力练习可以免费用吗？',a:'可以。登录后共可免费开始 10 轮，每轮都是新的随机顺序，查看历史解析不扣次数；会员不限轮数。'},
     {q:'点击顺序会影响判分吗？',a:'会。完整顺序必须一致，只选对位置但顺序不同仍会判错。'},
     {q:'练习成绩好能保证测评通过吗？',a:'不能。本站原创练习没有经过招聘测评通过率或录用结果预测验证。'}
    ]

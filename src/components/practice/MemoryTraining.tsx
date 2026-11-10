@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
 import { useAccount } from '@/lib/use-account';
 import { useSolveRequest } from '@/lib/solve-request';
-import { FREE_MEMORY_ROUNDS, FREE_SAMPLES_PER_KIND, hasFullAccess } from '@/lib/access-policy';
+import { FREE_MEMORY_ROUNDS, hasFullAccess } from '@/lib/access-policy';
 import type { Difficulty, PublicQuestion } from '@/lib/practice';
 import MemoryBoard from './MemoryBoard';
 
@@ -38,8 +38,7 @@ function Training({access}:{access:ReturnType<typeof useAccount>}){
     return ()=>controller.abort();
   },[userId,revision]);
   async function start(){
-    const sampleIndex=(FREE_MEMORY_ROUNDS-(account?.memoryRemaining??FREE_MEMORY_ROUNDS))%FREE_SAMPLES_PER_KIND;
-    const next=await run({action:'start',kind:'memory',difficulty,sampleIndex});
+    const next=await run({action:'start',kind:'memory',difficulty});
     if(next){setRound(next);setResult(null);setAnswer(null);}
   }
   async function submit(values:number[]){
@@ -51,13 +50,13 @@ function Training({access}:{access:ReturnType<typeof useAccount>}){
   return <div className="space-y-7">
     <section className="rounded-2xl border border-slate-200 p-5 sm:p-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-5"><div><h2 className="font-semibold">{zh?'顺序记忆':'Sequence recall'}</h2><p className="mt-1 text-xs text-slate-500">{zh?'观察 → 记忆 → 按顺序点击':'Observe → remember → recall in order'}</p></div><span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs text-slate-500">{member?(zh?'会员训练':'Member training'):account?(zh?`剩余 ${account.memoryRemaining} 轮免费训练`:`${account.memoryRemaining} free rounds left`):(zh?`${FREE_MEMORY_ROUNDS} 轮免费体验`:`${FREE_MEMORY_ROUNDS} free rounds`)}</span></div>
-      {member&&!active&&<fieldset className="mb-5 flex flex-wrap gap-2"><legend className="mb-2 text-xs text-slate-500">{zh?'本轮难度':'Round difficulty'}</legend>{(['easy','medium','hard'] as const).map((level,i)=><button type="button" key={level} aria-pressed={difficulty===level} disabled={busy} onClick={()=>setDifficulty(level)} className={`rounded-lg border px-4 py-2 text-sm ${difficulty===level?'border-indigo-300 bg-indigo-50 font-medium text-indigo-700':'border-slate-200 text-slate-500'}`}>{[3,5,7][i]} {zh?'个位置':'positions'}</button>)}</fieldset>}
+      {!active&&<fieldset className="mb-5 flex flex-wrap gap-2"><legend className="mb-2 text-xs text-slate-500">{zh?'本轮难度':'Round difficulty'}</legend>{(['easy','medium','hard'] as const).map((level,i)=><button type="button" key={level} aria-pressed={difficulty===level} disabled={busy} onClick={()=>setDifficulty(level)} className={`rounded-lg border px-4 py-2 text-sm ${difficulty===level?'border-indigo-300 bg-indigo-50 font-medium text-indigo-700':'border-slate-200 text-slate-500'}`}>{[3,5,7][i]} {zh?'个位置':'positions'}</button>)}</fieldset>}
       {round?<MemoryBoard key={`${round.id}:${result?'review':'play'}`} sequence={round.question.sequence} zh={zh} review={!!result} autoPlay={!result} disabled={busy} onAnswer={values=>void submit(values)}/>:<MemoryBoard sequence={[2,7,4]} zh={zh} disabled preview/>}
       {error&&<p role="alert" className="my-4 text-sm text-rose-700">{error}</p>}
       {failed&&!account&&<p role="alert" className="my-4 text-sm text-amber-700">{zh?'暂时无法读取训练额度，请重试。':'Could not load training access. Please retry.'} <button onClick={()=>window.dispatchEvent(new Event('account-updated'))} className="underline">{zh?'重试':'Retry'}</button></p>}
       {result&&<div role="status" className={`my-5 rounded-xl p-5 ${result.correct?'bg-emerald-50 text-emerald-900':'bg-amber-50 text-amber-900'}`}><h3 className="font-semibold">{result.correct?(zh?'顺序全部正确':'Sequence complete — well done'):(zh?'这一轮还差一点':'Not quite this round')}</h3><p className="mt-2 text-sm">{zh?'你记住的顺序：':'Your sequence: '}{result.answer.join(' → ')}</p><p className="mt-2 text-sm">{zh?'正确顺序：':'Correct sequence: '}{result.referenceAnswer.join(' → ')}</p><p className="mt-2 text-xs">{zh?'可以回看正确顺序，或开始下一轮继续训练。':'Replay the correct sequence, or start another round.'}</p></div>}
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-5">
-        <p className="max-w-md text-xs leading-6 text-slate-500">{member?(zh?'会员可持续生成新序列。完成点击后自动保存成绩。':'Members get newly generated sequences. Results save automatically after recall.'):(zh?'免费训练累计 10 轮，使用预设序列；每开始一轮扣 1 次，不每日重置。':'10 lifetime free rounds using preset sequences. Each start uses one round; no daily reset.')}</p>
+        <p className="max-w-md text-xs leading-6 text-slate-500">{member?(zh?'每轮都是新生成的随机序列，不限轮数。完成点击后自动保存成绩。':'Every round is a newly generated sequence, with no limit. Results save automatically after recall.'):(zh?`免费训练累计 ${FREE_MEMORY_ROUNDS} 轮，每轮都是新的随机序列；每开始一轮扣 1 次，不每日重置。`:`${FREE_MEMORY_ROUNDS} lifetime free rounds, each a new random sequence. Each start uses one round; no daily reset.`)}</p>
         {active?(answer&&!busy?<button onClick={()=>void submit(answer)} className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white">{zh?'重新提交本轮':'Retry submission'}</button>:<span role="status" className="text-sm text-indigo-600">{busy?(zh?'正在保存…':'Saving…'):(zh?'请完成本轮回忆':'Complete this round')}</span>):exhausted?<Link href="/billing" className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white">{zh?'免费轮数已用完 · 开通会员':'Free rounds used · unlock membership'}</Link>:<button disabled={busy||!ready||(!!userId&&!account)} onClick={()=>void start()} className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">{busy?(zh?'准备中…':'Preparing…'):result?(zh?'开始下一轮':'Start next round'):(zh?'开始记忆训练':'Start memory training')}</button>}
       </div>
     </section>

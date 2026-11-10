@@ -22,7 +22,7 @@ test('admin history preserves atomic quotas, paid events, deduplication and user
     const session=randomUUID();
     await Promise.all(Array.from({length:3},()=>recordTrainingActivity(id,'training:grid','completed',session)));
     await recordFullAccessSolve(other,'figure');
-    const memory=await createPractice(id,'memory',undefined,'easy',false,0);
+    const memory=await createPractice(id,'memory',undefined,'easy',false);
     assert.ok(memory);
     await submitPractice(id,memory.id,[]);
     const [usage]=await userUsage([id]);

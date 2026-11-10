@@ -25,9 +25,9 @@ for (const zh of [false, true]) {
         await expect(page.locator('article').getByText(zh ? '当前方案' : 'Current plan', { exact: false })).toHaveCount(0);
       }
       if (status === 'loading') await expect(current).toBeVisible();
-      const newQuestions = page.getByRole('row').filter({ has: page.getByRole('rowheader', { name: zh ? '四类练习持续生成新题' : 'Generate new questions in all four types', exact: true }) });
-      await expect(newQuestions.getByRole('cell').nth(0)).toHaveText(zh ? '×不包含' : '×Not included');
-      await expect(newQuestions.getByRole('cell').nth(1)).toHaveText(zh ? '✓包含' : '✓Included');
+      const newQuestions = page.getByRole('row').filter({ has: page.getByRole('rowheader', { name: zh ? '四类练习随机新题' : 'Random new questions in four practice types', exact: true }) });
+      await expect(newQuestions.getByRole('cell').nth(0)).toHaveText(zh ? '每类累计 10 道' : '10 lifetime per type');
+      await expect(newQuestions.getByRole('cell').nth(1)).toHaveText(zh ? '不限题量' : 'Unlimited');
       await expect(page.getByText(zh ? '模拟考试与模拟卷' : 'Mock exams & practice papers', { exact: true })).toBeVisible();
       await expect(page.getByText(zh ? '试用用户与付费会员均可使用三项限时模拟考、全屏考场与逐题成绩报告。试用到期后仍保留已有报告。' : 'Trial users and paid members get all three timed challenges, fullscreen exams and question reports. Existing reports remain available after the trial ends.')).toBeVisible();
       const buy = page.getByRole('button', { name: zh ? '购买 7 天会员' : 'Buy 7-day access', exact: true });

@@ -9,11 +9,10 @@ test('memory lifetime allowance caps concurrent starts, preserves access and sco
  const sql=database();const id='memory_quota_test_'+randomUUID();const other=id+'_other';
  try{
   await initializeAccess(id,Date.now());await initializeAccess(other,Date.now());
-  await assert.rejects(createPractice(id,'memory',undefined,'easy',false,99));
   assert.equal((await readAccess(id))?.memoryRemaining,10);
-  const first=await createPractice(id,'memory',undefined,'easy',false,0);assert.ok(first);
+  const first=await createPractice(id,'memory',undefined,'easy',false);assert.ok(first);
   assert.equal(await createPractice(id,'memory',randomUUID(),'easy',false),null);
-  const batch=await Promise.allSettled(Array.from({length:14},()=>createPractice(id,'memory',undefined,'easy',false,1)));
+  const batch=await Promise.allSettled(Array.from({length:14},()=>createPractice(id,'memory',undefined,'easy',false)));
   assert.equal(batch.filter(r=>r.status==='fulfilled').length,9);
   assert.equal(batch.filter(r=>r.status==='rejected'&&r.reason instanceof PracticeAccessError).length,5);
   assert.equal((await readAccess(id))?.memoryRemaining,0);
@@ -38,6 +37,7 @@ test('memory lifetime allowance caps concurrent starts, preserves access and sco
  }finally{
   await sql`DELETE FROM practice_attempts WHERE user_id IN (${id},${other})`;
   await sql`DELETE FROM memory_usage WHERE user_id IN (${id},${other})`;
+  await sql`DELETE FROM practice_usage WHERE user_id IN (${id},${other})`;
   await sql`DELETE FROM user_access WHERE user_id IN (${id},${other})`;
  }
 });

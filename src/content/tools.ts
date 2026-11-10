@@ -134,7 +134,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       intro:
         '这份独立宝洁题库提供管道题模拟练习和计算题等原创训练，题目并非官方真题。练习题库按规则实时生成题目，覆盖管道推理、图形推理、数字推理、图表数据分析四种题型，管道题支持三档难度。记忆训练请使用「专项训练」中的独立入口。每道题提交后都会给出完整解析：管道题会逐级演示图形如何移动，图形题会指出用的是哪条变换规则，数字题和数据题会写清每一步的计算依据。做错的题会单独保存，可以只重做错题。',
       notes: [
-        '免费用户可反复练习每类 5 道固定样题；会员可持续生成新题。',
+        '每道题都随机生成：免费用户每类累计 10 道新题，会员不限题量。',
         '管道题的三档难度分别对应 1、2、3 个方框。',
         '登录后可开始练习并保存记录；记忆训练记录在独立训练页面查看。',
       ],
@@ -150,7 +150,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       intro:
         'The practice bank generates questions on demand across four types — pipeline logic, figure series, numerical reasoning and data interpretation. Pipeline questions offer three difficulty levels. Memory training has its own dedicated page under Skill training. Every submission comes with a full explanation: pipeline questions animate how the shapes move stage by stage, figure questions name the transformation involved, and numerical and data questions show the reasoning behind each step. Anything you get wrong is saved so you can retry just those.',
       notes: [
-        'Free users can repeat five fixed samples per type; members can generate new questions.',
+        'Every question is randomly generated: free users get 10 new questions per type, members are unlimited.',
         'For pipeline questions, the easy, medium and hard settings correspond to one, two and three boxes.',
         'Sign in to start practice and save history. Memory rounds are listed on the dedicated training page.',
       ],

@@ -121,7 +121,7 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     accessHeading: '免费体验与会员价格',
     accessText:
-      '注册后先享 24 小时全功能免费试用，期间不扣次数。试用到期未购买，每个账号的管道、图形和数字解题器各有 10 次免费机会，独立累计，不每日重置；每种练习题型开放 5 道固定样题；记忆训练累计免费 10 轮，其他样题可重复作答并查看解析。购买会员后可在 7 天内继续使用解题器、生成更多新题，一次付款，不自动续费。',
+      '注册后先享 24 小时全功能免费试用，期间不扣次数。试用到期未购买，每个账号的管道、图形和数字解题器各有 10 次免费机会，独立累计，不每日重置；每种练习题型累计 10 道随机新题，记忆训练累计免费 10 轮，做过的题可重练并查看解析。购买会员后可在 7 天内继续使用解题器、不限量生成新题，一次付款，不自动续费。',
     accessCta: '查看免费体验与会员',
     faqHeading: '常见问题',
     faq: [
@@ -143,7 +143,7 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         q: '免费机会如何计算，需要绑卡吗？',
-        a: '无需绑卡。每个账号每种解题器各有 10 次免费机会，输入校验失败不扣次数，成功求解（包括没有找到可行解）计一次，不每日重置。记忆训练累计免费 10 轮，每开始一轮扣 1 次；其他固定样题可以反复练习。已有的 7 天试用保留至原到期时间。',
+        a: '无需绑卡。每个账号每种解题器各有 10 次免费机会，输入校验失败不扣次数，成功求解（包括没有找到可行解）计一次，不每日重置。记忆训练累计免费 10 轮，每开始一轮扣 1 次；其他题型每类累计 10 道随机新题，做过的题可以免费重练。已有的 7 天试用保留至原到期时间。',
       },
     ],
   },
@@ -151,7 +151,7 @@ export const HOME: Record<Language, HomeCopy> = {
   en: {
     title: 'P&G Assessment Practice: Switch & Digit | CK Quiz',
     description:
-      'Prepare with original Switch-style and Digit-style exercises, basic memory training and worked solutions. Try fixed samples after signing in to CK Quiz.',
+      'Prepare with original Switch-style and Digit-style exercises, basic memory training and worked solutions. Try free random questions after signing in to CK Quiz.',
     keywords: [
       'P&G online assessment',
       'P&G aptitude test practice',
@@ -164,7 +164,7 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     h1: 'P&G assessment practice: Switch-style, numerical and memory training',
     lede:
-      'CK Quiz provides independent P&G assessment preparation: Switch-style pipeline logic, Digit-style equation practice and basic sequence memory, plus figure reasoning and data interpretation. Learn with original examples, worked solutions and feedback across five practice types. Free access includes fixed samples after signing in; paid access adds generated questions. This is not a complete P&G assessment or Grid Challenge simulation.',
+      'CK Quiz provides independent P&G assessment preparation: Switch-style pipeline logic, Digit-style equation practice and basic sequence memory, plus figure reasoning and data interpretation. Learn with original examples, worked solutions and feedback across five practice types. Free access includes random generated questions after signing in; paid access adds generated questions. This is not a complete P&G assessment or Grid Challenge simulation.',
     primaryCta: { label: 'Start practising', href: '/practice' },
     secondaryCta: { label: 'Read the guides', href: '/guides' },
     typesHeading: 'The five question types',
@@ -241,7 +241,7 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     accessHeading: 'Free access and pricing',
     accessText:
-      'Registration includes a 24-hour trial of every feature without consuming credits. After the trial, each account gets 10 lifetime free uses of each solver and 5 fixed samples per practice type, with full explanations. Memory training has 10 lifetime free rounds, one credit per start. Allowances do not reset daily. Buy 7-day access for continued solving and new generated questions. One-time payment, no automatic renewal.',
+      'Registration includes a 24-hour trial of every feature without consuming credits. After the trial, each account gets 10 lifetime free uses of each solver and 10 random new questions per practice type, with full explanations. Memory training has 10 lifetime free rounds, one credit per start. Allowances do not reset daily. Buy 7-day access for continued solving and new generated questions. One-time payment, no automatic renewal.',
     accessCta: 'See free access and pricing',
     faqHeading: 'Frequently asked questions',
     faq: [
@@ -263,7 +263,7 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         q: 'How do free uses work, and is a card required?',
-        a: 'No card is required. Each account gets 10 free uses per solver, with no daily reset. Invalid inputs do not count; a completed solve counts even when no solution is found. Memory has 10 lifetime free rounds; other fixed samples can be repeated. Existing seven-day trials are honoured until their original expiry.',
+        a: 'No card is required. Each account gets 10 free uses per solver, with no daily reset. Invalid inputs do not count; a completed solve counts even when no solution is found. Memory has 10 lifetime free rounds; other practice types get 10 random new questions each, and questions you have done can be retried. Existing seven-day trials are honoured until their original expiry.',
       },
     ],
   },

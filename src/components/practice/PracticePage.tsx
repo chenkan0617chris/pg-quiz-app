@@ -5,7 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useI18n } from '@/lib/i18n';
 import { useSolveRequest } from '@/lib/solve-request';
 import { useAccount } from '@/lib/use-account';
-import { FREE_SAMPLES_PER_KIND,hasFullAccess } from '@/lib/access-policy';
+import { FREE_PRACTICE_PER_KIND,hasFullAccess } from '@/lib/access-policy';
 import { PRICE_LABEL } from '@/lib/payment-product';
 import Link from 'next/link';
 import PipelineQuestionBoard from './PipelineQuestionBoard';
@@ -30,9 +30,10 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
   const zh=lang==='zh';
   const [kind,setKind]=useState<Question['kind']>(initialKind);
   const [difficulty,setDifficulty]=useState<Difficulty>('medium');
-  const [sampleIndex,setSampleIndex]=useState(0);
   const {account}=useAccount();
   const fullAccess=!!account&&hasFullAccess(account.status);
+  const remaining=account?.practiceRemaining?.[kind];
+  const exhausted=!!account&&!fullAccess&&(remaining??0)<=0;
   const [exercise,setExercise]=useState<Exercise|null>(null);
   const [digits,setDigits]=useState<string[]>([]);
   const [result,setResult]=useState<Result|null>(null);
@@ -53,7 +54,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
   },[isSignedIn,userId,revision]);
 
   async function start(retry?:Result) {
-    const next=await run({action:'start',kind:retry?.question.kind??kind,difficulty,sampleIndex,...(retry?{retryId:retry.id}:{})});
+    const next=await run({action:'start',kind:retry?.question.kind??kind,difficulty,...(retry?{retryId:retry.id}:{})});
     if(next){setKind(next.question.kind);if(next.question.kind==='pipeline')setDifficulty(next.question.difficulty);setExercise(next);setDigits(Array(next.question.kind==='pipeline'?4:(next.question.kind==='data'||next.question.kind==='figure')?1:3).fill(''));setResult(null);}
   }
   async function submit(e:React.FormEvent) {
@@ -67,7 +68,8 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
     <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
       <section className="rounded-xl border border-gray-200 p-5 shadow-sm sm:p-7">
         {!fullAccess&&<div className="mb-5 rounded-lg bg-indigo-50 p-4 text-sm text-indigo-900">
-          <p>{zh?'免费练习：四类题型各 5 道固定样题，可反复练习。会员可生成新题。':'Free practice: 5 repeatable samples for each of four question types. Members can generate new questions.'}</p>
+          <p>{zh?`免费练习：每道题都是随机生成的新题，四类题型各 ${FREE_PRACTICE_PER_KIND} 道，做过的题可免费重练。会员不限题量。`:`Free practice: every question is newly generated, ${FREE_PRACTICE_PER_KIND} per question type; questions you have done can be retried for free. Members get unlimited questions.`}</p>
+          {account&&<p className="mt-1 font-medium">{zh?`当前题型剩余 ${remaining} 道新题`:`${remaining} new questions left for this type`}</p>}
           <Link href="/billing" className="mt-2 inline-block font-medium underline">{zh?'解锁会员':'Unlock full access'} · {PRICE_LABEL} / {zh?'7 天':'7 days'}</Link>
         </div>}
         <div className="mb-6 flex flex-wrap gap-3">
@@ -78,9 +80,9 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
             <option value="data">{zh?'图表与数据分析':'Data interpretation'}</option>
             <option value="numerical">{zh?'数字运算':'Numerical reasoning'}</option>
           </select>
-          {fullAccess&&kind==='pipeline' && <label className="flex items-center gap-2 text-sm">{zh?'难度':'Difficulty'}<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)} className="rounded-lg border px-3 py-2"><option value="easy">{(zh?'基础 · 1 级':'Basic · 1 stage')}</option><option value="medium">{(zh?'进阶 · 2 级':'Intermediate · 2 stages')}</option><option value="hard">{(zh?'挑战 · 3 级':'Advanced · 3 stages')}</option></select></label>}
-          {!fullAccess&&<label className="flex items-center gap-2 text-sm">{zh?'固定样题':'Sample'}<select value={sampleIndex} onChange={e=>setSampleIndex(Number(e.target.value))} className="rounded-lg border px-3 py-2">{Array.from({length:FREE_SAMPLES_PER_KIND},(_,i)=><option key={i} value={i}>{zh?'样题':'Sample'} {i+1}</option>)}</select></label>}
-          <button disabled={busy||!ready||(!!isSignedIn&&!account)} onClick={()=>start()} className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white disabled:opacity-50">{busy?'…':fullAccess?(zh?'开始 / 换一题':'Start / New question'):(zh?'练习所选样题':'Start selected sample')}</button>
+          {kind==='pipeline' && <label className="flex items-center gap-2 text-sm">{zh?'难度':'Difficulty'}<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)} className="rounded-lg border px-3 py-2"><option value="easy">{(zh?'基础 · 1 级':'Basic · 1 stage')}</option><option value="medium">{(zh?'进阶 · 2 级':'Intermediate · 2 stages')}</option><option value="hard">{(zh?'挑战 · 3 级':'Advanced · 3 stages')}</option></select></label>}
+          {exhausted?<Link href="/billing" className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white">{zh?'本题型免费题已用完 · 开通会员':'Free questions used · unlock membership'}</Link>
+          :<button disabled={busy||!ready||(!!isSignedIn&&!account)} onClick={()=>start()} className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white disabled:opacity-50">{busy?'…':zh?'开始 / 换一题':'Start / New question'}</button>}
         </div>
         {error && <p role="alert" className="mb-4 text-red-600">{error}</p>}
         {!exercise || !isSignedIn ? <div className="rounded-lg bg-slate-50 p-6 text-sm leading-7 text-slate-600">
@@ -97,7 +99,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
             <p className="font-bold">{result.correct?(zh?'回答正确':'Correct'):(zh?'再接再厉':'Not quite')}</p>
             <p className="mt-2">{zh?'你的答案：':'Your answer: '}{(result.question.kind==='data'||result.question.kind==='figure')?String.fromCharCode(64+result.answer[0]):result.answer.join(', ')}</p>
             <Lesson key={result.id} explanation={result.explanation} question={result.question}/>
-            <button type="button" onClick={()=>start()} disabled={busy} className="mt-4 font-semibold underline">{zh?'下一题':'Next question'} →</button>
+            {!exhausted&&<button type="button" onClick={()=>start()} disabled={busy} className="mt-4 font-semibold underline">{zh?'下一题':'Next question'} →</button>}
           </div>}
         </form>}
       </section>

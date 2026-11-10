@@ -25,23 +25,30 @@ test('free solver allowances are atomic, independent, durable and isolated',opti
   await sql`DELETE FROM user_access WHERE user_id IN (${id},${other})`;
  }
 });
-test('free practice never generates fresh questions or retries premium history',options,async()=>{
+test('free practice generates random questions within a per-kind lifetime cap',options,async()=>{
  const sql=database();const id='samples_test_'+randomUUID();
  try {
-  const a=await createPractice(id,'pipeline',undefined,'hard',false,1);
-  const b=await createPractice(id,'pipeline',undefined,'medium',false,1);
-  assert.ok(a&&b);assert.deepEqual(a.question,b.question);
-  assert.equal(a.sampleKey,'pipeline:1');
-  await submitPractice(id,a.id,[1,2,3,4]);
-  const retry=await createPractice(id,'pipeline',a.id,'hard',false);
-  assert.deepEqual(retry?.question,a.question);
+  await initializeAccess(id,Date.now());
+  const batch=await Promise.allSettled(Array.from({length:14},()=>createPractice(id,'pipeline',undefined,'hard',false)));
+  const made=batch.flatMap(r=>r.status==='fulfilled'&&r.value?[r.value]:[]);
+  assert.equal(made.length,10);
+  assert.equal(batch.filter(r=>r.status==='rejected'&&r.reason instanceof PracticeAccessError).length,4);
+  assert.ok(new Set(made.map(x=>JSON.stringify(x.question))).size>=8);
+  assert.equal((await readAccess(id))?.practiceRemaining.pipeline,0);
+  assert.equal((await readAccess(id))?.practiceRemaining.figure,10);
+  // A question the free account already received can be redone without using a credit.
+  await submitPractice(id,made[0].id,[1,2,3,4]);
+  const retry=await createPractice(id,'pipeline',made[0].id,'hard',false);
+  assert.deepEqual(retry?.question,made[0].question);
   const paid=await createPractice(id,'pipeline',undefined,'hard',true);
-  assert.ok(paid);assert.equal(paid.sampleKey,null);
-  assert.equal(paid.question.kind==='pipeline'&&paid.question.boxes.length,3);
+  assert.ok(paid);assert.equal(paid.question.kind==='pipeline'&&paid.question.boxes.length,3);
   await submitPractice(id,paid.id,[1,2,3,4]);
   await assert.rejects(createPractice(id,'pipeline',paid.id,'easy',false),PracticeAccessError);
-  await assert.rejects(createPractice(id,'pipeline',undefined,'easy',false,100));
- }finally{await sql`DELETE FROM practice_attempts WHERE user_id=${id}`;}
+ }finally{
+  await sql`DELETE FROM practice_attempts WHERE user_id=${id}`;
+  await sql`DELETE FROM practice_usage WHERE user_id=${id}`;
+  await sql`DELETE FROM user_access WHERE user_id=${id}`;
+ }
 });
 test('new registrations receive a 24-hour trial and old registrations cannot restart it',options,async()=>{
  const sql=database();const id='legacy_test_'+randomUUID();

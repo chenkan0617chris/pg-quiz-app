@@ -1,8 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { database } from './db';
 import { generateQuestion,gradeAnswer,publicQuestion,explainQuestion,type Difficulty,type PracticeQuestion } from './practice';
-import { FREE_MEMORY_ROUNDS } from './access-policy';
-import { freePracticeQuestion } from './free-practice';
+import { FREE_MEMORY_ROUNDS, FREE_PRACTICE_PER_KIND } from './access-policy';
 
 export class PracticeAccessError extends Error {}
 
@@ -12,21 +11,24 @@ function result(row:Row) {
     referenceAnswer:row.question.answer,explanation:explainQuestion(row.question,row.answer??[]),submittedAt:row.submitted_at};
 }
 
-export async function createPractice(userId:string,kind:PracticeQuestion['kind'],retryId?:string,difficulty:Difficulty='easy',fullAccess=true,sampleIndex=0) {
+export async function createPractice(userId:string,kind:PracticeQuestion['kind'],retryId?:string,difficulty:Difficulty='easy',fullAccess=true) {
   const sql=database();
   let question:PracticeQuestion;
   let sampleKey:string|null=null;
   if(retryId) {
     const [old]=await sql`SELECT question,sample_key FROM practice_attempts WHERE id=${retryId} AND user_id=${userId} AND submitted_at IS NOT NULL`;
     if(!old) return null;
+    // Free accounts may redo questions they were given for free; memory rounds always use a credit.
     if(!fullAccess&&!old.sample_key)throw new PracticeAccessError('Paid practice requires membership');
     sampleKey=old.sample_key;
     question=old.question as PracticeQuestion;
-  } else if(!fullAccess) {
-    question=freePracticeQuestion(kind,sampleIndex);
-    sampleKey=`${kind}:${sampleIndex}`;
-  } else question=generateQuestion(kind,difficulty);
+  } else {
+    question=generateQuestion(kind,difficulty);
+    // Marks free-generated rows so the owner can retry them without membership.
+    if(!fullAccess)sampleKey=`free:${kind}`;
+  }
   const id=randomUUID();
+  const payload=JSON.stringify(question);
   if(!fullAccess && question.kind==='memory') {
     // One statement: reserve a lifetime credit and create the round, or do neither.
     const rows=await sql`WITH allowance AS (
@@ -34,12 +36,20 @@ export async function createPractice(userId:string,kind:PracticeQuestion['kind']
       ON CONFLICT(user_id) DO UPDATE SET used=memory_usage.used+1
       WHERE memory_usage.used < ${FREE_MEMORY_ROUNDS} RETURNING used
     ) INSERT INTO practice_attempts(id,user_id,question,sample_key,free_credits)
-      SELECT ${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey},1 FROM allowance RETURNING id`;
+      SELECT ${id},${userId},${payload}::jsonb,${sampleKey},1 FROM allowance RETURNING id`;
     if(!rows.length)throw new PracticeAccessError('Memory allowance exhausted');
+  } else if(!fullAccess && !retryId) {
+    const rows=await sql`WITH allowance AS (
+      INSERT INTO practice_usage(user_id,kind,used) VALUES (${userId},${question.kind},1)
+      ON CONFLICT(user_id,kind) DO UPDATE SET used=practice_usage.used+1
+      WHERE practice_usage.used < ${FREE_PRACTICE_PER_KIND} RETURNING used
+    ) INSERT INTO practice_attempts(id,user_id,question,sample_key,free_credits)
+      SELECT ${id},${userId},${payload}::jsonb,${sampleKey},1 FROM allowance RETURNING id`;
+    if(!rows.length)throw new PracticeAccessError('Practice allowance exhausted');
   } else {
-    await sql`INSERT INTO practice_attempts(id,user_id,question,sample_key,free_credits) VALUES (${id},${userId},${JSON.stringify(question)}::jsonb,${sampleKey},0)`;
+    await sql`INSERT INTO practice_attempts(id,user_id,question,sample_key,free_credits) VALUES (${id},${userId},${payload}::jsonb,${sampleKey},0)`;
   }
-  return {id,question:publicQuestion(question),sampleKey};
+  return {id,question:publicQuestion(question)};
 }
 
 export async function submitPractice(userId:string,id:string,answer:number[]) {
