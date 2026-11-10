@@ -22,6 +22,7 @@ export default function Lesson({explanation:ex,question:q}:{explanation:Explanat
   if(ex.kind==='memory')return <MemoryBoard sequence={ex.sequence} zh={zh} review/>;
   if(ex.kind==='figure')return <div className="mt-5 space-y-4 rounded-xl border bg-white p-5 text-slate-700"><h3 className="font-bold">{zh?'图形规律解析':'Figure explanation'}</h3><p>{zh?'正确选项：':'Correct option: '}{String.fromCharCode(64+ex.choice)}</p><p>{ruleNames[ex.rule][lang]}</p><p className="text-sm">{zh?'逐幅检验同一变换，再把它应用到第五幅。下面最后一幅就是预测结果。':'Check the same transformation between every pair, then apply it to figure 5. The final figure below is the predicted answer.'}</p><div className="flex flex-wrap gap-3">{ex.frames.map((mask,i)=><Figure key={i} mask={mask} label={`${i+1}${i===5?' ✓':''}`}/>)}</div></div>;
   if(ex.kind==='numerical')return <div className="mt-5 space-y-2 rounded-xl border bg-white p-5 text-slate-700">
+    <p className="rounded-lg bg-emerald-50 px-4 py-3 font-semibold text-emerald-900">{zh?'标准答案：':'Answer: '}<span className="font-mono">{ex.digits[0]} × {ex.digits[1]} + {ex.digits[2]} = {ex.target}</span></p>
     <h3 className="font-bold">{zh?'解题步骤':'Worked solution'}</h3>
     <p>{zh?'先乘后加。先选两个不同数字，使乘积与目标的差是 1–9，且不与前两个数字重复。':'Multiply before adding. Choose two distinct digits whose product leaves a remainder from 1–9, different from both digits.'}</p>
     <p>① {ex.digits[0]} × {ex.digits[1]} = {ex.product}</p>

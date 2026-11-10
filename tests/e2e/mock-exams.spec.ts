@@ -117,11 +117,15 @@ test('Grid training serves a new random round each time',async({page})=>{
 
 test('PEAK requires responses then gives reflections, not hiring scores',async({page})=>{
   await mount(page,'PeakTraining');
-  await expect(page.getByRole('button',{name:'Complete & reflect (0/5)'})).toBeDisabled();
-  for(const group of await page.locator('fieldset').all())await group.getByRole('radio').nth(3).check();
-  await page.getByRole('button',{name:'Complete & reflect (5/5)'}).click();
-  await expect(page.getByRole('heading',{name:'Familiarization complete · 5 / 5'})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Complete & reflect (0/18)'})).toBeDisabled();
+  const first=await page.locator('legend').allTextContents();
+  for(const group of await page.locator('fieldset').all())await group.getByRole('radio').nth(1).check();
+  await page.getByRole('button',{name:'Complete & reflect (18/18)'}).click();
+  await expect(page.getByRole('heading',{name:'Round complete · 18 / 18'})).toBeVisible();
   await expect(page.getByText(/This is not a personality score/)).toBeVisible();
+  await page.getByRole('button',{name:'Next set'}).click();
+  await expect(page.getByRole('button',{name:'Complete & reflect (0/18)'})).toBeDisabled();
+  expect(await page.locator('legend').allTextContents()).not.toEqual(first);
 });
 
 test('Grid observation expires during a request and remount preserves recall progress',async({page})=>{
