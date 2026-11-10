@@ -149,11 +149,16 @@ export const HOME: Record<Language, HomeCopy> = {
   },
 
   en: {
-    title: 'P&G Assessment Practice: Switch & Digit | CK Quiz',
+    title: 'P&G Assessment Practice: Switch, Digit, Grid & PEAK | CK Quiz',
     description:
-      'Prepare with original Switch-style and Digit-style exercises, basic memory training and worked solutions. Try free random questions after signing in to CK Quiz.',
+      'Free P&G assessment practice: Switch Challenge and Digit Challenge solvers, Grid Challenge memory training, PEAK question formats and timed mock tests with worked answers.',
     keywords: [
+      'P&G assessment test practice',
       'P&G online assessment',
+      'P&G Switch Challenge practice',
+      'P&G Digit Challenge practice',
+      'P&G Grid Challenge practice',
+      'P&G PEAK assessment',
       'P&G aptitude test practice',
       'P&G test prep',
       'pipeline logic questions',
@@ -162,9 +167,9 @@ export const HOME: Record<Language, HomeCopy> = {
       'graduate aptitude test practice',
       'FMCG assessment practice',
     ],
-    h1: 'P&G assessment practice: Switch-style, numerical and memory training',
+    h1: 'P&G assessment test practice: Switch, Digit, Grid and PEAK',
     lede:
-      'CK Quiz provides independent P&G assessment preparation: Switch-style pipeline logic, Digit-style equation practice and basic sequence memory, plus figure reasoning and data interpretation. Learn with original examples, worked solutions and feedback across five practice types. Free access includes random generated questions after signing in; paid access adds generated questions. This is not a complete P&G assessment or Grid Challenge simulation.',
+      'CK Quiz is independent P&G online assessment preparation: Switch Challenge practice with a step-by-step solver, Digit Challenge equation practice, Grid Challenge dot-memory training, PEAK Performance Assessment question formats and timed mock tests, plus figure reasoning and data interpretation. Every question is original and comes with a worked solution. Sign in for 24 hours of full access, then keep a free allowance for each type. Not affiliated with Procter & Gamble.',
     primaryCta: { label: 'Start practising', href: '/practice' },
     secondaryCta: { label: 'Read the guides', href: '/guides' },
     typesHeading: 'The five question types',

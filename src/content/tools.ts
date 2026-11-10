@@ -36,14 +36,14 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'pipeline',
     },
     en: {
-      title: 'Pipeline Logic Solver — Step-by-Step Practice',
-      h1: 'Pipeline logic solver',
-      label: 'Pipeline logic',
+      title: 'P&G Switch Challenge Practice & Solver | CK Quiz',
+      h1: 'P&G Switch Challenge practice: step-by-step solver',
+      label: 'Switch Challenge',
       description:
-        'Enter the pipeline boxes and the input and output order to solve for an unknown box. Shows every intermediate sequence and the shape flow, so you can check your own forward and backward working.',
-      keywords: ['pipeline logic solver', 'shape reordering calculator', 'P&G pipeline question tool', 'permutation solver'],
+        'Practise the P&G Switch Challenge: enter the symbols and boxes, solve the unknown code and see every intermediate step. Includes a worked example, method and FAQ.',
+      keywords: ['P&G Switch Challenge practice', 'Switch Challenge', 'P&G Switch Challenge solver', 'P&G interactive assessment', 'pipeline logic solver'],
       intro:
-        'Enter the input order, each box and the output order from your question, and the solver works out the unknown box while displaying every intermediate sequence. The point is not only the answer: stepping through the stages lets you confirm you have not reversed the direction of the forward or backward pass, which is where most marks are lost on this question type.',
+        'The Switch Challenge is the symbol-reordering game in the P&G Interactive Assessment, also called pipeline logic. Enter the input order, each box and the output order from your question, and the solver works out the unknown box while displaying every intermediate sequence. The point is not only the answer: stepping through the stages lets you confirm you have not reversed the direction of the forward or backward pass, which is where most marks are lost on this question type.',
       notes: [
         'A box is written as four digits meaning "the new position n takes whatever was in old position x". So 3142 means the new first position takes the old third.',
         'With a single unknown box you can leave the candidate options blank and the solver returns the unique answer directly. With two or more unknown boxes, candidates are required.',
@@ -106,14 +106,14 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'numerical',
     },
     en: {
-      title: 'Numerical Equation Solver — Fill the Blanks',
-      h1: 'Numerical equation solver',
-      label: 'Numerical reasoning',
+      title: 'P&G Digit Challenge Practice & Equation Solver | CK Quiz',
+      h1: 'P&G Digit Challenge practice: equation solver',
+      label: 'Digit Challenge',
       description:
-        'Build an equation with blanks and set a target. The solver lists every digit combination that satisfies it, with support for 1-9 or 0-9 ranges and a distinct-digits constraint.',
-      keywords: ['numerical reasoning solver', 'equation blank calculator', 'digit combination solver', 'aptitude maths tool'],
+        'Practise the P&G Digit Challenge: fill equation blanks with distinct digits, see every valid answer, and learn a fast elimination method with worked examples.',
+      keywords: ['P&G Digit Challenge practice', 'Digit Challenge', 'P&G Digit Challenge solver', 'P&G numerical test', 'equation blank calculator'],
       intro:
-        'Use the builder to reconstruct the equation from your question, mark the blanks and set the target, and the solver lists every digit combination that works. Seeing the full set of solutions is more useful than receiving one answer: it shows you which kinds of combination are worth trying first, which is exactly what makes the difference under time pressure.',
+        'The Digit Challenge is the equation game in the P&G Interactive Assessment. Use the builder to reconstruct the equation from your question, mark the blanks and set the target, and the solver lists every digit combination that works. Seeing the full set of solutions is more useful than receiving one answer: it shows you which kinds of combination are worth trying first, which is exactly what makes the difference under time pressure.',
       notes: [
         'Choose the digit range 1-9 or 0-9 and switch the no-repeats constraint on or off. Both directly change the search space, so match them to your question.',
         'Standard operator precedence applies: multiplication and division before addition and subtraction, brackets first.',
@@ -141,8 +141,8 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'data',
     },
     en: {
-      title: 'Practice Bank — Four Question Types, Three Levels',
-      h1: 'Practice bank',
+      title: 'P&G Assessment Practice Questions with Answers | CK Quiz',
+      h1: 'P&G assessment practice questions',
       label: 'Practice',
       description:
         'A practice bank for pipeline logic, figure series, numerical reasoning and data interpretation, generated at easy, medium and hard settings, with a worked explanation on every question and a retry list for the ones you get wrong.',

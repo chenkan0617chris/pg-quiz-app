@@ -111,6 +111,26 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
+      {lang === 'en' && (
+        <section className="mt-12" aria-labelledby="pg-sections">
+          <h2 id="pg-sections" className="text-xl font-bold text-slate-900">Practice for each P&amp;G online assessment section</h2>
+          <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+            {[
+              { href: '/pipeline', name: 'P&G Switch Challenge practice', text: 'Work out the hidden four-digit code that reorders a row of symbols, with a solver that shows every step.' },
+              { href: '/numerical', name: 'P&G Digit Challenge practice', text: 'Fill equation blanks with distinct digits and see every valid answer, plus a fast elimination method.' },
+              { href: '/grid', name: 'P&G Grid Challenge practice', text: 'Remember dot positions in order while answering symmetry questions in between.' },
+              { href: '/peak', name: 'P&G PEAK Performance Assessment practice', text: 'Get used to rating, forced-choice and workplace scenario questions before the real questionnaire.' },
+              { href: '/exams', name: 'P&G online assessment mock test', text: 'Rehearse Switch, Digit and Grid style rounds under a timer and review a per-question report.' },
+            ].map((item) => (
+              <li key={item.href} className="rounded-xl border border-slate-200 p-5">
+                <Link href={href(item.href)} className="font-semibold text-indigo-600 hover:underline">{item.name}</Link>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{item.text}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section className="mt-12">
         <h2 className="text-xl font-bold text-slate-900">{copy.howHeading}</h2>
         <ol className="mt-6 grid gap-5 sm:grid-cols-3">

@@ -43,7 +43,7 @@ export default function GridTraining(){
   }
 
   return <div className="space-y-6">
-    <h1 className="text-3xl font-bold">{zh?'空间记忆训练':'Grid memory training'}</h1>
+    <h1 className="text-3xl font-bold">{zh?'空间记忆训练':'P&G Grid Challenge practice: dot memory training'}</h1>
     <p className="max-w-3xl text-sm leading-7 text-slate-600">{zh?'这类题同时考查工作记忆和空间判断。与普通圆点记忆不同，你需要在干扰任务之后仍然记住位置与顺序。每一轮都是新生成的随机题，可以一直练下去。':'Train working memory and spatial judgement together. Keep the dot sequence in mind while completing interference tasks. Every round is newly generated, so you can keep practising.'}</p>
     <section onClickCapture={question?activity.start:undefined} className="rounded-2xl border border-slate-200 p-5 sm:p-8">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-5">

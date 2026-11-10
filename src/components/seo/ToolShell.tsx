@@ -5,6 +5,7 @@ import { GUIDE_LABELS, GUIDE_PRACTICE, getGuide } from '@/content/guides';
 import type { ToolCopy } from '@/content/tools';
 import { UI } from '@/content/site';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import EnglishTestContent from '@/components/seo/EnglishTestContent';
 
 /**
  * Server-rendered frame around each interactive solver. The tools themselves
@@ -60,6 +61,9 @@ export default function ToolShell({
           <Link className="underline" href={localePath(lang, '/exams')}>{lang === 'zh' ? '进入宝洁管道题模拟考试' : 'Explore timed mock exams'}</Link>
         </p>
       </section>}
+
+      {lang === 'en' && path === '/pipeline' && <EnglishTestContent page="pipeline" />}
+      {lang === 'en' && path === '/numerical' && <EnglishTestContent page="numerical" />}
 
       <section className="mt-12 border-t border-slate-200 pt-8">
         <h2 className="text-lg font-bold text-slate-900">{lang === 'zh' ? '使用说明与限制' : 'How to use it, and what it does not do'}</h2>
