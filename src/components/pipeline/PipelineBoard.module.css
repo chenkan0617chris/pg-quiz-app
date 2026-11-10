@@ -125,3 +125,51 @@
   .digits { font-size: 18px; letter-spacing: 0.1em; }
   .candidate { width: calc(100% - 8px); }
 }
+
+/* Practice questions: the solver's candidate boxes, made selectable. */
+.choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: calc(100% - 12px);
+  min-width: 0;
+  min-height: 64px;
+  margin-inline: auto;
+  padding: 6px 0;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  background: #91d5f6;
+  color: #416378;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.choice:hover { background: #7fcbf2; }
+
+.choice:has(:focus-visible) {
+  outline: 2px solid #204fc1;
+  outline-offset: 2px;
+}
+
+.choiceSelected,
+.choiceSelected:hover {
+  border-color: #fff;
+  background: #204fc1;
+  color: #fff;
+  box-shadow: 0 0 0 2px #204fc1;
+}
+
+.choiceRadio {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #fff;
+  cursor: inherit;
+}
+
+.choice:not(.choiceSelected) .choiceRadio { accent-color: #204fc1; }
+
+@media (max-width: 380px) {
+  .choice { width: calc(100% - 8px); }
+}

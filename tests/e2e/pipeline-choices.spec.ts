@@ -12,5 +12,5 @@ for(const level of ['easy','medium','hard'] as const)test(`pipeline ${level}: se
  await expect(page.getByRole('textbox')).toHaveCount(0);
  await page.getByRole('radio').nth(1).check();await expect(page.locator('output')).toHaveText(question.options[1].join(''));
  await page.getByRole('radio').nth(2).check();await expect(page.getByRole('radio').nth(1)).not.toBeChecked();
- for(const box of question.boxes.filter(Boolean))await expect(page.getByText(box!.join(''),{exact:true})).toBeVisible();
+ for(const [i,box] of question.boxes.entries())if(box)await expect(page.locator('[data-pipeline-stage]').nth(i)).toHaveText(box.join(''));
 });
