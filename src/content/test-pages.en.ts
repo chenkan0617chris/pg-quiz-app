@@ -34,8 +34,10 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
     name: 'Switch Challenge',
     sections: [
       {
-        heading: 'What is the P&G Switch Challenge?',
+        heading: 'What is the Switch Challenge?',
         paragraphs: [
+          'The Switch Challenge is one of the gamified tests in Aon\'s smartPredict assessment (formerly cut-e scales sx), alongside the Digit, Grid and Motion challenges. P&G uses it in its Interactive Assessment, which is why it is often called the P&G Switch Challenge, but it is an Aon test that other employers can use too.',
+          'Outside P&G, prep providers list Deloitte, KPMG, EY, Morgan Stanley, UBS, Johnson & Johnson, Capgemini, Vodafone and Siemens among employers that use Aon (formerly cut-e) assessments for some roles. Employers change tests by role, country and year, so check your own invitation; the skill trained here is the same whichever company sends it.',
           'The Switch Challenge is one of the short cognitive games in the P&G Interactive Assessment, which P&G describes as an online test of about 30 minutes that some roles require. In each question a row of four symbols passes through a hidden operator and comes out in a new order. Your job is to pick the four-digit code that describes the reordering, as fast and as accurately as you can.',
           'Candidates commonly report a fixed time window of around six minutes with as many questions as you can answer, and difficulty that rises as you keep getting questions right. Later questions chain two or more operators, so you have to work out one unknown box while another box has already changed the order.',
         ],
@@ -67,6 +69,10 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
         a: 'Candidates usually report a time window of about six minutes in which you answer as many questions as you can. P&G itself describes the whole Interactive Assessment as taking about 30 minutes; check the instructions on your own invitation, because the format can vary by role.',
       },
       {
+        q: 'Which companies use the Switch Challenge?',
+        a: 'The Switch Challenge is an Aon (cut-e) test. P&G uses it in its Interactive Assessment, and prep providers report Aon assessments at employers such as Deloitte, KPMG, EY, Morgan Stanley and Capgemini for some roles. Employers change tools by role and year, so check your own invitation.',
+      },
+      {
         q: 'What does a code like 3142 mean in the Switch Challenge?',
         a: 'Each digit says which old position fills that new position. 3142 means the new first slot takes old position 3, the second takes old position 1, the third takes old position 4 and the fourth takes old position 2.',
       },
@@ -89,8 +95,9 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
     name: 'Digit Challenge',
     sections: [
       {
-        heading: 'What is the P&G Digit Challenge?',
+        heading: 'What is the Digit Challenge?',
         paragraphs: [
+          'The Digit Challenge is one of the gamified tests in Aon\'s smartPredict assessment. P&G uses it in its Interactive Assessment, so many candidates know it as the P&G Digit Challenge, but other employers that use Aon assessments can include it too.',
           'The Digit Challenge is the numerical game in the P&G Interactive Assessment. Each question shows an equation with blanks, such as _ × _ + _ = 47, and you fill the blanks with single digits so that the equation is true. Candidates commonly report that a digit can be used only once per equation, that there is a time window of around five minutes, and that equations get longer as you progress.',
           'It is less about arithmetic speed than about narrowing the search: the target, parity, divisibility and the largest possible product tell you which digits are worth trying first.',
         ],
@@ -138,8 +145,9 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
     name: 'Grid Challenge',
     sections: [
       {
-        heading: 'What is the P&G Grid Challenge?',
+        heading: 'What is the Grid Challenge?',
         paragraphs: [
+          'The Grid Challenge is one of the gamified tests in Aon\'s smartPredict assessment, and the working-memory game in the P&G Interactive Assessment. Practising it helps whichever employer sends the invitation.',
           'The Grid Challenge is the working-memory game in the P&G Interactive Assessment. You see a dot appear in a grid, then answer a quick distractor question, such as whether a pattern is symmetrical, then see the next dot. At the end you click the dot positions in the order they appeared. Candidates commonly report a small number of rounds whose sequences get longer.',
           'The difficulty is not the symmetry question on its own but holding the sequence in memory while your attention is pulled away.',
         ],
@@ -223,7 +231,7 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
     name: 'P&G Online Assessment',
     sections: [
       {
-        heading: 'A timed rehearsal of the P&G online assessment games',
+        heading: 'A timed rehearsal of the Aon and P&G online assessment games',
         paragraphs: [
           'The mock exams put Switch-style, Digit-style and Grid-style rounds together under a timer, closer to how the real Interactive Assessment feels than practising one question type at a time. After each exam you get a report showing your score and time for every question.',
           'P&G describes the Interactive Assessment as about 30 minutes of short cognitive games, required for some roles. The questions here are original and generated; they are not official P&G questions.',

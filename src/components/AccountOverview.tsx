@@ -2,26 +2,26 @@
 import Link from 'next/link';
 import type { Account } from '@/lib/use-account';
 import { FREE_MEMORY_ROUNDS, FREE_PRACTICE_PER_KIND, FREE_SOLVES_PER_KIND, hasFullAccess } from '@/lib/access-policy';
-import { PRICE_LABEL } from '@/lib/payment-product';
+import { priceFor } from '@/lib/payment-product';
 
 export default function AccountOverview({account,zh}:{account:Account;zh:boolean}){
  const full=hasFullAccess(account.status);const paid=account.status==='paid';
  const until=paid?account.paidUntil:account.status==='trial'?account.trialEndsAt:null;
  const rows=[
-  {name:zh?'管道解题器':'Pipeline solver',remaining:account.solverRemaining.pipeline,limit:FREE_SOLVES_PER_KIND},
-  {name:zh?'数字解题器':'Numerical solver',remaining:account.solverRemaining.numerical,limit:FREE_SOLVES_PER_KIND},
+  {name:zh?'管道解题器':'Switch Challenge solver',remaining:account.solverRemaining.pipeline,limit:FREE_SOLVES_PER_KIND},
+  {name:zh?'数字解题器':'Digit Challenge solver',remaining:account.solverRemaining.numerical,limit:FREE_SOLVES_PER_KIND},
   {name:zh?'图形解题器':'Figure solver',remaining:account.solverRemaining.figure,limit:FREE_SOLVES_PER_KIND},
   {name:zh?'记忆力训练':'Sequence memory',remaining:account.memoryRemaining,limit:FREE_MEMORY_ROUNDS},
-  {name:zh?'空间记忆训练':'Grid memory training',remaining:account.practiceRemaining?.grid??FREE_PRACTICE_PER_KIND,limit:FREE_PRACTICE_PER_KIND},
-  {name:zh?'管道推理练习题':'Pipeline practice',remaining:account.practiceRemaining?.pipeline??FREE_PRACTICE_PER_KIND,limit:FREE_PRACTICE_PER_KIND},
-  {name:zh?'数字运算练习题':'Numerical practice',remaining:account.practiceRemaining?.numerical??FREE_PRACTICE_PER_KIND,limit:FREE_PRACTICE_PER_KIND},
+  {name:zh?'空间记忆训练':'Grid Challenge training',remaining:account.practiceRemaining?.grid??FREE_PRACTICE_PER_KIND,limit:FREE_PRACTICE_PER_KIND},
+  {name:zh?'管道推理练习题':'Switch Challenge practice',remaining:account.practiceRemaining?.pipeline??FREE_PRACTICE_PER_KIND,limit:FREE_PRACTICE_PER_KIND},
+  {name:zh?'数字运算练习题':'Digit Challenge practice',remaining:account.practiceRemaining?.numerical??FREE_PRACTICE_PER_KIND,limit:FREE_PRACTICE_PER_KIND},
   {name:zh?'图形推理练习题':'Figure practice',remaining:account.practiceRemaining?.figure??FREE_PRACTICE_PER_KIND,limit:FREE_PRACTICE_PER_KIND},
   {name:zh?'资料分析练习题':'Data practice',remaining:account.practiceRemaining?.data??FREE_PRACTICE_PER_KIND,limit:FREE_PRACTICE_PER_KIND},
  ];
- const kinds=[['pipeline','管道推理','Pipeline'],['numerical','数字运算','Numerical'],['figure','图形推理','Figure'],['data','资料分析','Data'],['memory','记忆训练','Memory']];
+ const kinds=[['pipeline','管道推理','Switch'],['numerical','数字运算','Digit'],['figure','图形推理','Figure'],['data','资料分析','Data'],['memory','记忆训练','Memory']];
  return <>
   <div className="mb-8 overflow-hidden rounded-2xl border border-indigo-200 bg-white">
-   <div className="flex flex-wrap items-start justify-between gap-6 bg-indigo-950 px-6 py-7 text-white sm:px-8"><div><p className="text-xs uppercase tracking-widest text-indigo-200">{zh?'当前套餐':'Current plan'}</p><h2 className="mt-2 text-3xl font-semibold">{paid?'Member Plan':full?'Free Trial':'Free Plan'}</h2><p className="mt-2 text-sm text-indigo-100">{paid?(account.lifetime?(zh?'永久完整使用权 · 无需续费':'Lifetime full access · No renewal'):(zh?'有效期内使用全部功能 · 不自动续费':'Full access until expiry · No auto-renewal')):full?(zh?'全功能免费试用，不消耗免费额度':'Free trial of every feature; credits stay intact'):(zh?'每项免费额度独立计数，累计使用，不每日重置。':'Separate lifetime allowances. No daily reset.')}</p></div><div className="text-sm">{account.lifetime?<p className="font-semibold">{zh?'永久有效':'Never expires'}</p>:until?<><p className="text-indigo-200">{zh?'有效期至':'Access until'}</p><p className="mt-2 font-medium tabular-nums">{new Date(until).toLocaleString(zh?'zh-CN':'en-AU')}</p></>:<Link href="/billing" className="inline-flex rounded-lg bg-white px-5 py-3 font-semibold text-indigo-950">{zh?'升级会员':'Upgrade'} · {PRICE_LABEL}</Link>}</div></div>
+   <div className="flex flex-wrap items-start justify-between gap-6 bg-indigo-950 px-6 py-7 text-white sm:px-8"><div><p className="text-xs uppercase tracking-widest text-indigo-200">{zh?'当前套餐':'Current plan'}</p><h2 className="mt-2 text-3xl font-semibold">{paid?'Member Plan':full?'Free Trial':'Free Plan'}</h2><p className="mt-2 text-sm text-indigo-100">{paid?(account.lifetime?(zh?'永久完整使用权 · 无需续费':'Lifetime full access · No renewal'):(zh?'有效期内使用全部功能 · 不自动续费':'Full access until expiry · No auto-renewal')):full?(zh?'全功能免费试用，不消耗免费额度':'Free trial of every feature; credits stay intact'):(zh?'每项免费额度独立计数，累计使用，不每日重置。':'Separate lifetime allowances. No daily reset.')}</p></div><div className="text-sm">{account.lifetime?<p className="font-semibold">{zh?'永久有效':'Never expires'}</p>:until?<><p className="text-indigo-200">{zh?'有效期至':'Access until'}</p><p className="mt-2 font-medium tabular-nums">{new Date(until).toLocaleString(zh?'zh-CN':'en-AU')}</p></>:<Link href="/billing" className="inline-flex rounded-lg bg-white px-5 py-3 font-semibold text-indigo-950">{zh?'升级会员':'Upgrade'} · {priceFor(zh?'zh':'en').label}</Link>}</div></div>
    <div className="grid gap-4 px-6 py-5 text-sm sm:grid-cols-2 sm:px-8"><p><span className="mb-1 block font-semibold text-slate-900">{zh?'解题器与记忆训练':'Solvers & memory'}</span><span className="text-slate-600">{full?(zh?'有效期内不限次数，不消耗免费额度。':'Unlimited during access; free credits stay intact.'):(zh?'每种解题器各 10 次，记忆训练共 10 轮。':'10 uses per solver and 10 memory rounds.')}</span></p><p><span className="mb-1 block font-semibold text-slate-900">{zh?'练习题库与学习记录':'Practice & learning history'}</span><span className="text-slate-600">{full?(zh?'可生成新题、选择难度，查看解析和错题。':'Generate new questions, select supported difficulties and review answers.'):(zh?'每题型累计 10 道随机新题，做过的题可免费重练。':'10 random new questions per type; retry questions you have done for free.')}</span></p></div>
   </div>
   <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-lg font-semibold text-slate-950">{zh?'免费额度':'Free allowances'}</h2><p className="mt-1 text-sm text-slate-500">{full?(zh?'以下是保留的免费额度，试用到期后仍可使用。':'These credits remain available after trial access ends.'):(zh?'开始一轮记忆训练扣 1 次；查看历史解析不扣次数。':'Starting a memory round uses one credit; reviewing history does not.')}</p>

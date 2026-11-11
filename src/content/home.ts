@@ -149,10 +149,14 @@ export const HOME: Record<Language, HomeCopy> = {
   },
 
   en: {
-    title: 'P&G Assessment Practice: Switch, Digit, Grid & PEAK | CK Quiz',
+    title: 'Switch, Digit & Grid Challenge Practice: Aon, P&G | CK Quiz',
     description:
-      'Free P&G assessment practice: Switch Challenge and Digit Challenge solvers, Grid Challenge memory training, PEAK question formats and timed mock tests with worked answers.',
+      'Free practice for Aon-style online assessments used by P&G and other large employers: Switch and Digit Challenge solvers, Grid Challenge training, P&G PEAK formats and timed mock tests.',
     keywords: [
+      'Switch Challenge practice',
+      'Aon assessment practice',
+      'Digit Challenge practice',
+      'Grid Challenge practice',
       'P&G assessment test practice',
       'P&G online assessment',
       'P&G Switch Challenge practice',
@@ -167,9 +171,9 @@ export const HOME: Record<Language, HomeCopy> = {
       'graduate aptitude test practice',
       'FMCG assessment practice',
     ],
-    h1: 'P&G assessment test practice: Switch, Digit, Grid and PEAK',
+    h1: 'Online assessment practice: Switch, Digit and Grid Challenges for Aon, P&G and more',
     lede:
-      'CK Quiz is independent P&G online assessment preparation: Switch Challenge practice with a step-by-step solver, Digit Challenge equation practice, Grid Challenge dot-memory training, PEAK Performance Assessment question formats and timed mock tests, plus figure reasoning and data interpretation. Every question is original and comes with a worked solution. Sign in for 24 hours of full access, then keep a free allowance for each type. Not affiliated with Procter & Gamble.',
+      'CK Quiz is independent preparation for gamified online assessments, starting with the Aon tests that P&G and many other large employers use: Switch Challenge practice with a step-by-step solver, Digit Challenge equation practice, Grid Challenge dot-memory training, PEAK Performance Assessment question formats and timed mock tests, plus figure reasoning and data interpretation. Every question is original and comes with a worked solution. Sign in for 24 hours of full access, then keep a free allowance for each type. Not affiliated with Aon, Procter & Gamble or any employer.',
     primaryCta: { label: 'Start practising', href: '/practice' },
     secondaryCta: { label: 'Read the guides', href: '/guides' },
     typesHeading: 'The five question types',
@@ -179,11 +183,11 @@ export const HOME: Record<Language, HomeCopy> = {
       { slug: 'memory', name: 'Sequence memory', blurb: 'Watch pink dots light up on a blue board, then repeat their order. Practise 3, 5 or 7 positions and replay the correct sequence after submitting.', toolHref: '/memory', toolLabel: 'Train your memory' },
       {
         slug: 'pipeline',
-        name: 'Pipeline logic',
+        name: 'Switch Challenge (pipeline logic)',
         blurb:
           'Four shapes pass through a row of boxes and come out reordered, with one box hidden for you to deduce. Underneath it is composition and inversion of permutations, and forward and backward reasoning lets you determine the unknown rule and check it against the full sequence.',
         toolHref: '/pipeline',
-        toolLabel: 'Pipeline solver',
+        toolLabel: 'Switch Challenge solver',
       },
       {
         slug: 'figure',
@@ -195,11 +199,11 @@ export const HOME: Record<Language, HomeCopy> = {
       },
       {
         slug: 'numerical',
-        name: 'Numerical reasoning',
+        name: 'Digit Challenge (numerical)',
         blurb:
           'Fill the blanks in an equation so it reaches a target. The skill is not calculating quickly but using remainders, divisibility and parity to cut hundreds of candidates down to a few. The solver lists every valid solution.',
         toolHref: '/numerical',
-        toolLabel: 'Numerical solver',
+        toolLabel: 'Digit Challenge solver',
       },
       {
         slug: 'data',

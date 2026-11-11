@@ -21,15 +21,15 @@ type Entry = { zh: string; en: string } | { zh: (...a: never[]) => string; en: (
 
 export const DICT = {
   // ---- app / nav ----
-  appName: { zh: '宝洁笔试题库', en: 'P&G Test Prep' },
-  navPipeline: { zh: '管道推理', en: 'Pipeline Logic' },
+  appName: { zh: '宝洁笔试题库', en: 'CK Quiz' },
+  navPipeline: { zh: '管道题 Switch', en: 'Switch Challenge' },
   navSeries: { zh: '图形推理', en: 'Figure Series' },
   navMemory: { zh: '记忆力训练', en: 'Sequence memory' },
-  navNumerical: { zh: '数字推理', en: 'Numerical' },
+  navNumerical: { zh: '数字题 Digit', en: 'Digit Challenge' },
   navData: { zh: '图表与数据分析', en: 'Data Interpretation' },
   navPractice: { zh: '练习题库', en: 'Practice' },
   navExams: { zh: '模拟考中心', en: 'Mock exams' },
-  navGrid: { zh: '空间记忆', en: 'Grid memory' },
+  navGrid: { zh: '空间记忆 Grid', en: 'Grid Challenge' },
   navPeak: { zh: 'PEAK 工作风格', en: 'PEAK work style' },
   navHome: { zh: '首页', en: 'Home' },
   navGuides: { zh: '解题攻略', en: 'Guides' },
@@ -41,7 +41,7 @@ export const DICT = {
   language: { zh: '中文', en: 'English' },
 
   // ---- pipeline page ----
-  title: { zh: '管道题', en: 'Pipeline' },
+  title: { zh: '管道题', en: 'Switch Challenge' },
   subtitle: {
     zh: '输入管道方框、输入/输出图形顺序以及候选项，系统将算出缺失的方框。',
     en: 'Enter the boxes, the input/output shape order, and the candidate options. The solver computes the missing box.',
@@ -126,7 +126,7 @@ export const DICT = {
   },
 
   // ---- numerical page ----
-  numTitle: { zh: '数字推理', en: 'Numerical' },
+  numTitle: { zh: '数字推理', en: 'Digit Challenge' },
   numSubtitle: {
     zh: '搭出算式并填入目标结果，系统会算出每个空格应填的个位数字（默认不重复）。',
     en: 'Build the equation and enter the target. The solver finds the single digit for every blank (no repeats by default).',

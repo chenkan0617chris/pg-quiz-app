@@ -1,9 +1,32 @@
-export const PRICE_AMOUNT = 990;
-export const PRICE_CURRENCY = 'cny';
-export const PRICE_LABEL = '¥9.9';
+import type { Language } from './language';
 
-export function isCurrentPrice(order: { amount: number; currency: string }) {
- return order.amount === PRICE_AMOUNT && order.currency === PRICE_CURRENCY;
+export type PricePlan = {
+ /** Smallest currency unit, as Stripe and payment_orders store it. */
+ amount: number;
+ currency: 'cny' | 'usd';
+ /** Shown on pages and buttons. */
+ label: string;
+ /** ISO code shown next to the price. */
+ code: 'CNY' | 'USD';
+};
+
+/**
+ * Seven-day access is priced by site language: Chinese pages keep CNY 9.90 so
+ * Alipay and WeChat Pay stay available; English pages charge USD 14.99.
+ * Both grant 168 hours (migration 017).
+ */
+export const PRICES: Record<Language, PricePlan> = {
+ zh: { amount: 990, currency: 'cny', label: '¥9.9', code: 'CNY' },
+ en: { amount: 1499, currency: 'usd', label: 'US$14.99', code: 'USD' },
+};
+
+export function priceFor(lang: Language): PricePlan {
+ return PRICES[lang];
+}
+
+/** True when an existing pending order already carries this plan's price. */
+export function isCurrentPrice(order: { amount: number; currency: string }, plan: PricePlan) {
+ return order.amount === plan.amount && order.currency === plan.currency;
 }
 
 export function matchesOrderPayment(

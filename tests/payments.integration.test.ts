@@ -28,6 +28,7 @@ test('buying during a trial grants seven days immediately without adding unused 
 });
 test('payment fulfillment is idempotent, refunds revoke, and sandbox cannot grant live access',{skip:!process.env.RUN_DB_TESTS},async()=>{
  const sql=database();const uid='payment_test_'+randomUUID();
+ try{
  await initializeAccess(uid,Date.now()-8*86400000);
  const testOrder=randomUUID();
  await sql`INSERT INTO payment_orders(id,user_id,livemode) VALUES (${testOrder},${uid},false)`;
@@ -45,4 +46,26 @@ test('payment fulfillment is idempotent, refunds revoke, and sandbox cannot gran
  await sql`SELECT fulfill_quiz_payment(${liveOrder}::uuid,${'cs_'+liveOrder},${'pi_'+liveOrder},true)`;
  assert.equal((await readAccess(uid))?.status,'expired');
  await assert.rejects(sql`SELECT fulfill_quiz_payment(${testOrder}::uuid,'wrong','wrong',true)`);
+ }finally{
+  await sql`DELETE FROM payment_orders WHERE user_id=${uid}`;
+  await sql`DELETE FROM user_access WHERE user_id=${uid}`;
+ }
+});
+test('USD 14.99 English checkout grants seven days and refunds revoke it',{skip:!process.env.RUN_DB_TESTS},async()=>{
+ const sql=database();const uid='payment_usd_test_'+randomUUID();const order=randomUUID();
+ try{
+  await initializeAccess(uid,Date.now()-8*86400000);
+  await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${order},${uid},true,1499,'usd')`;
+  await sql`SELECT fulfill_quiz_payment(${order}::uuid,${'cs_'+order},${'pi_'+order},true)`;
+  const access=await readAccess(uid);
+  assert.equal(access?.status,'paid');
+  assert.equal(access?.lifetime,false);
+  assert.ok(Math.abs(Date.parse(access!.paidUntil!)-Date.now()-7*86400000)<5000);
+  await sql`SELECT refund_quiz_payment(${'pi_'+order},true)`;
+  assert.equal((await readAccess(uid))?.status,'expired');
+  await assert.rejects(sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${randomUUID()},${uid},true,1500,'usd')`);
+ }finally{
+  await sql`DELETE FROM payment_orders WHERE user_id=${uid}`;
+  await sql`DELETE FROM user_access WHERE user_id=${uid}`;
+ }
 });

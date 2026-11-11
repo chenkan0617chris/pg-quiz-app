@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'P&G Test Prep — pipeline, figure, numerical and data reasoning practice';
+export const alt = 'CK Quiz — Switch, Digit and Grid Challenge practice for online assessments';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -36,15 +36,15 @@ export default function Image() {
               fontWeight: 700,
             }}
           >
-            P
+            CK
           </div>
           <div style={{ fontSize: '30px', color: '#c7d2fe' }}>quiz.ckautoflow.com</div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ fontSize: '76px', fontWeight: 700, lineHeight: 1.1 }}>P&amp;G Test Prep</div>
+          <div style={{ fontSize: '76px', fontWeight: 700, lineHeight: 1.1 }}>CK Quiz</div>
           <div style={{ marginTop: '24px', fontSize: '34px', color: '#c7d2fe', lineHeight: 1.4 }}>
-            Pipeline logic · Figure series · Numerical reasoning · Data interpretation
+            Switch · Digit · Grid Challenge · Figure series · Data interpretation
           </div>
         </div>
 

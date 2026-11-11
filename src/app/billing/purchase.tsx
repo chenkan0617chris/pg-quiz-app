@@ -12,7 +12,7 @@ export default function Purchase({enabled}:{enabled:boolean}){
   if(!isSignedIn){await clerk.openSignIn();return;}
   setBusy(true);setError('');
   try{
-   const response=await fetch('/api/checkout',{method:'POST'});
+   const response=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lang})});
    if(response.status===401){await clerk.openSignIn();return;}
    if(!response.ok){setError(response.status===409?(zh?'当前付费使用权仍有效，或付款正在确认，请稍后刷新账户状态。':'Paid access is still active or payment is processing. Please refresh shortly.'):(zh?'暂时无法付款，请稍后重试。':'Checkout is currently unavailable.'));return;}
    const {url}=await response.json();

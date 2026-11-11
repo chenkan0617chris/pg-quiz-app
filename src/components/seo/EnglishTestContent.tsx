@@ -31,8 +31,8 @@ export default function EnglishTestContent({ page }: { page: TestPageKey }) {
 
       <FaqSection heading={copy.faqHeading} items={copy.faq} />
 
-      <nav aria-label="Other P&G assessment sections" className="mt-10 rounded-xl bg-slate-50 p-5">
-        <h2 className="text-sm font-semibold text-slate-900">Practise the other P&G assessment sections</h2>
+      <nav aria-label="Other assessment games" className="mt-10 rounded-xl bg-slate-50 p-5">
+        <h2 className="text-sm font-semibold text-slate-900">Practise the other Aon and P&amp;G assessment games</h2>
         <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           {others.map((key) => (
             <li key={key}>
@@ -44,6 +44,11 @@ export default function EnglishTestContent({ page }: { page: TestPageKey }) {
           <li>
             <Link href={localePath('en', '/guides/assessment')} className="text-indigo-600 hover:underline">
               P&amp;G assessment preparation guide
+            </Link>
+          </li>
+          <li>
+            <Link href={localePath('en', '/guides/company-assessments')} className="text-indigo-600 hover:underline">
+              Which companies use these tests
             </Link>
           </li>
         </ul>

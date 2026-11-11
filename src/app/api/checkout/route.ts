@@ -1,4 +1,5 @@
-import { PRICE_AMOUNT,PRICE_CURRENCY,isCurrentPrice } from '@/lib/payment-product';
+import { isCurrentPrice,priceFor } from '@/lib/payment-product';
+import { isLanguage } from '@/lib/language';
 import { auth } from '@clerk/nextjs/server';
 import { randomUUID } from 'node:crypto';
 import { getAccess } from '@/lib/access';
@@ -12,6 +13,8 @@ export async function POST(request:Request){
  if(request.headers.get('origin')!==origin)return Response.json({error:'Invalid origin'},{status:403});
  try{
   if(!await allowRequest(userId,'checkout',5))return Response.json({error:'Too many requests'},{status:429});
+  const body=await request.json().catch(()=>null) as {lang?:string}|null;
+  const plan=priceFor(isLanguage(body?.lang)?body.lang:'zh');
   const access=await getAccess(userId);
   if(access.status==='paid')return Response.json({error:'Your paid access is still active'},{status:409});
   const stripe=stripeClient();
@@ -19,9 +22,9 @@ export async function POST(request:Request){
   const sql=database();
   let order;
   for(let attempt=0;attempt<3;attempt++){
-   [order]=await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${randomUUID()},${userId},${live},${PRICE_AMOUNT},${PRICE_CURRENCY})
+   [order]=await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${randomUUID()},${userId},${live},${plan.amount},${plan.currency})
     ON CONFLICT (user_id,livemode) WHERE status='pending' DO UPDATE SET user_id=excluded.user_id RETURNING id,session_id,amount,currency`;
-   const current=isCurrentPrice(order as {amount:number;currency:string});
+   const current=isCurrentPrice(order as {amount:number;currency:string},plan);
    if(order.session_id){
     const existing=await stripe.checkout.sessions.retrieve(order.session_id);
     if(existing.status==='open'&&current&&existing.url)return Response.json({url:existing.url},{headers:{'Cache-Control':'no-store'}});
@@ -34,7 +37,7 @@ export async function POST(request:Request){
   if(!order)return Response.json({error:'Please retry checkout'},{status:409});
   const session=await stripe.checkout.sessions.create({
    mode:'payment',adaptive_pricing:{enabled:false},locale:'auto',integration_identifier:'quiz_checkout_qztrialx',
-   line_items:[{price_data:{currency:PRICE_CURRENCY,unit_amount:PRICE_AMOUNT,product_data:{name:'Quiz 7-day access / 7 天会员',description:'All features, one-time payment / 全部功能，一次付款使用 7 天'}},quantity:1}],
+   line_items:[{price_data:{currency:plan.currency,unit_amount:plan.amount,product_data:{name:'Quiz 7-day access / 7 天会员',description:'All features, one-time payment / 全部功能，一次付款使用 7 天'}},quantity:1}],
    client_reference_id:userId,metadata:{order_id:order.id},payment_intent_data:{metadata:{order_id:order.id}},
    success_url:origin+'/billing?result=processing',cancel_url:origin+'/billing?result=cancelled',
   },{idempotencyKey:'quiz-order-'+order.id});

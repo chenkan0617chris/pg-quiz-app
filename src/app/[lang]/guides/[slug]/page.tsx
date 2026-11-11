@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { isLanguage } from '@/lib/language';
 import { absolute, localePath, pageMetadata, SITE_URL } from '@/lib/seo';
 import { GUIDE_LABELS, GUIDE_SLUGS, GUIDE_PRACTICE, getGuide, isGuideSlug } from '@/content/guides';
-import { PRICE_LABEL } from '@/lib/payment-product';
+import { priceFor } from '@/lib/payment-product';
 import { GUIDE_SUMMARIES } from '@/content/guide-summaries';
 import { PUBLISHER_NAME, PRODUCT_INFO, OFFICIAL_HIRING_URL } from '@/content/product-info';
 import { UI } from '@/content/site';
@@ -113,7 +113,7 @@ export default async function GuidePage({ params }: Props) {
           <p className="mt-3 text-sm leading-7">{lang==='zh'?'注册后享 24 小时全功能试用，期间不扣次数；试用到期后，每种题型累计 10 道随机新题（记忆训练累计免费 10 轮），每种解题器各有 10 次免费机会，不每日重置。需要更多新题和持续求解时，可购买 7 天会员。':'After the 24-hour full-feature trial, get 10 random new questions per practice type (10 lifetime memory rounds) and use each solver 10 times for free, with no daily reset. Paid access unlocks new generated questions and continued solving with 7-day access.'}</p>
           <div className="mt-4 flex flex-wrap gap-4 text-sm">
             <Link className="rounded-lg bg-indigo-600 px-4 py-2 text-white" href={localePath(lang,GUIDE_PRACTICE[slug])}>{lang==='zh'?'练习这一题型':'Practise this topic'}</Link>
-            <Link className="py-2 text-indigo-700 underline" href={localePath(lang,'/pricing')}>{PRICE_LABEL} / {lang==='zh'?'7 天 · 查看包含内容':'7 days · See what is included'}</Link>
+            <Link className="py-2 text-indigo-700 underline" href={localePath(lang,'/pricing')}>{priceFor(lang).label} / {lang==='zh'?'7 天 · 查看包含内容':'7 days · See what is included'}</Link>
           </div>
         </section>
         <section className="mt-10 border-t border-slate-200 pt-6">

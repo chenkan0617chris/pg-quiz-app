@@ -6,7 +6,7 @@ import { useI18n } from '@/lib/i18n';
 import { useSolveRequest } from '@/lib/solve-request';
 import { useAccount } from '@/lib/use-account';
 import { FREE_PRACTICE_PER_KIND,hasFullAccess } from '@/lib/access-policy';
-import { PRICE_LABEL } from '@/lib/payment-product';
+import { priceFor } from '@/lib/payment-product';
 import Link from 'next/link';
 import PipelineQuestionBoard from './PipelineQuestionBoard';
 
@@ -70,15 +70,15 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
         {!fullAccess&&<div className="mb-5 rounded-lg bg-indigo-50 p-4 text-sm text-indigo-900">
           <p>{zh?`免费练习：每道题都是随机生成的新题，四类题型各 ${FREE_PRACTICE_PER_KIND} 道，做过的题可免费重练。会员不限题量。`:`Free practice: every question is newly generated, ${FREE_PRACTICE_PER_KIND} per question type; questions you have done can be retried for free. Members get unlimited questions.`}</p>
           {account&&<p className="mt-1 font-medium">{zh?`当前题型剩余 ${remaining} 道新题`:`${remaining} new questions left for this type`}</p>}
-          <Link href="/billing" className="mt-2 inline-block font-medium underline">{zh?'解锁会员':'Unlock full access'} · {PRICE_LABEL} / {zh?'7 天':'7 days'}</Link>
+          <Link href="/billing" className="mt-2 inline-block font-medium underline">{zh?'解锁会员':'Unlock full access'} · {priceFor(lang).label} / {zh?'7 天':'7 days'}</Link>
         </div>}
         <div className="mb-6 flex flex-wrap gap-3">
           <label className="sr-only" htmlFor="practice-kind">{zh?'题型':'Question type'}</label>
           <select id="practice-kind" value={kind} onChange={e=>setKind(e.target.value as typeof kind)} className="rounded-lg border border-gray-300 px-3 py-2">
-            <option value="pipeline">{zh?'管道推理':'Pipeline logic'}</option>
+            <option value="pipeline">{zh?'管道题（Switch）':'Switch Challenge'}</option>
             <option value="figure">{zh?'图形推理':'Figure reasoning'}</option>
             <option value="data">{zh?'图表与数据分析':'Data interpretation'}</option>
-            <option value="numerical">{zh?'数字运算':'Numerical reasoning'}</option>
+            <option value="numerical">{zh?'数字题（Digit）':'Digit Challenge'}</option>
           </select>
           {kind==='pipeline' && <label className="flex items-center gap-2 text-sm">{zh?'难度':'Difficulty'}<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)} className="rounded-lg border px-3 py-2"><option value="easy">{(zh?'基础 · 1 级':'Basic · 1 stage')}</option><option value="medium">{(zh?'进阶 · 2 级':'Intermediate · 2 stages')}</option><option value="hard">{(zh?'挑战 · 3 级':'Advanced · 3 stages')}</option></select></label>}
           {exhausted?<Link href="/billing" className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white">{zh?'本题型免费题已用完 · 开通会员':'Free questions used · unlock membership'}</Link>
@@ -86,8 +86,8 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
         </div>
         {error && <p role="alert" className="mb-4 text-red-600">{error}</p>}
         {!exercise || !isSignedIn ? <div className="rounded-lg bg-slate-50 p-6 text-sm leading-7 text-slate-600">
-          <p>{zh?'管道推理：根据图形输入、输出顺序，推导变换方框。':'Pipeline: infer the transformation from the input and output shapes.'}</p>
-          <p>{zh?'数字运算：为 a × b + c 填入 1–9 的不同数字。':'Numerical: fill a × b + c using distinct digits from 1–9.'}</p>
+          <p>{zh?'管道推理：根据图形输入、输出顺序，推导变换方框。':'Switch Challenge: find the code that turns the input row of symbols into the output row.'}</p>
+          <p>{zh?'数字运算：为 a × b + c 填入 1–9 的不同数字。':'Digit Challenge: fill a × b + c using distinct digits from 1–9.'}</p>
           <p>{zh?'图形推理：观察连续图形，找出规律并选择下一幅。':'Figure reasoning: infer the pattern and choose the next figure.'}</p>
           <p>{zh?'图表与数据分析：阅读销售图表，练习增长率、占比和比值。':'Data interpretation: read sales charts and practise growth rates, shares and ratios.'}</p>
           <p className="mt-4 font-medium">{zh?'点击开始练习；未登录时会提示登录。题目为规则生成的原创练习。':'Start to practice; sign in when prompted. Questions are original generated exercises.'}</p>
@@ -110,7 +110,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
         {historyError && isSignedIn && <button onClick={()=>setRevision(v=>v+1)} className="text-sm text-red-600">{zh?'记录加载失败，点击重试':'History unavailable. Retry'}</button>}
         {!visibleHistory.length && <p className="text-sm text-gray-400">{zh?'暂无记录':'No submissions yet'}</p>}
         <ul className="space-y-3">{visibleHistory.map(row=><li key={row.id} className="rounded-lg bg-gray-50 p-3 text-sm">
-          <div className="flex justify-between"><span>{row.question.kind==='pipeline'?(zh?'管道推理':'Pipeline'):row.question.kind==='figure'?(zh?'图形推理':'Figure reasoning'):row.question.kind==='data'?(zh?'数据分析':'Data interpretation'):(zh?'数字运算':'Numerical')}</span><span>{row.correct?'✓':'✗'}</span></div>
+          <div className="flex justify-between"><span>{row.question.kind==='pipeline'?(zh?'管道题':'Switch Challenge'):row.question.kind==='figure'?(zh?'图形推理':'Figure reasoning'):row.question.kind==='data'?(zh?'数据分析':'Data interpretation'):(zh?'数字题':'Digit Challenge')}</span><span>{row.correct?'✓':'✗'}</span></div>
           <p className="mt-1 text-xs text-gray-400">{new Date(row.submittedAt).toLocaleString(zh?'zh-CN':'en-US')}</p>
           <button disabled={busy} onClick={()=>{setExercise(row);setResult(row);setDigits(row.answer.map(String));setKind(row.question.kind);window.scrollTo({top:0,behavior:'smooth'});}} className="mr-4 mt-2 text-indigo-600">{zh?'查看题解':'View solution'}</button>
           <button disabled={busy} onClick={()=>start(row)} className="mt-2 text-indigo-600">{zh?'重新练习':'Practice again'}</button>

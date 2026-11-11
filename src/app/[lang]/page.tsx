@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isLanguage, type Language } from '@/lib/language';
 import { absolute, localePath, pageMetadata, SITE_NAME, SITE_URL } from '@/lib/seo';
-import { PRICE_LABEL } from '@/lib/payment-product';
+import { priceFor } from '@/lib/payment-product';
 import { PUBLISHER_NAME } from '@/content/product-info';
 import { HOME } from '@/content/home';
 import { UI } from '@/content/site';
@@ -113,14 +113,14 @@ export default async function HomePage({ params }: Props) {
 
       {lang === 'en' && (
         <section className="mt-12" aria-labelledby="pg-sections">
-          <h2 id="pg-sections" className="text-xl font-bold text-slate-900">Practice for each P&amp;G online assessment section</h2>
+          <h2 id="pg-sections" className="text-xl font-bold text-slate-900">Practice for each Aon / P&amp;G online assessment game</h2>
           <ul className="mt-5 grid gap-4 sm:grid-cols-2">
             {[
-              { href: '/pipeline', name: 'P&G Switch Challenge practice', text: 'Work out the hidden four-digit code that reorders a row of symbols, with a solver that shows every step.' },
-              { href: '/numerical', name: 'P&G Digit Challenge practice', text: 'Fill equation blanks with distinct digits and see every valid answer, plus a fast elimination method.' },
-              { href: '/grid', name: 'P&G Grid Challenge practice', text: 'Remember dot positions in order while answering symmetry questions in between.' },
+              { href: '/pipeline', name: 'Switch Challenge practice', text: 'Work out the hidden four-digit code that reorders a row of symbols, with a solver that shows every step.' },
+              { href: '/numerical', name: 'Digit Challenge practice', text: 'Fill equation blanks with distinct digits and see every valid answer, plus a fast elimination method.' },
+              { href: '/grid', name: 'Grid Challenge practice', text: 'Remember dot positions in order while answering symmetry questions in between.' },
               { href: '/peak', name: 'P&G PEAK Performance Assessment practice', text: 'Get used to rating, forced-choice and workplace scenario questions before the real questionnaire.' },
-              { href: '/exams', name: 'P&G online assessment mock test', text: 'Rehearse Switch, Digit and Grid style rounds under a timer and review a per-question report.' },
+              { href: '/exams', name: 'Switch, Digit & Grid mock test', text: 'Rehearse Switch, Digit and Grid style rounds under a timer and review a per-question report.' },
             ].map((item) => (
               <li key={item.href} className="rounded-xl border border-slate-200 p-5">
                 <Link href={href(item.href)} className="font-semibold text-indigo-600 hover:underline">{item.name}</Link>
@@ -159,7 +159,7 @@ export default async function HomePage({ params }: Props) {
       <section className="mt-12 rounded-2xl border border-slate-200 p-7">
         <h2 className="text-xl font-bold text-slate-900">{copy.accessHeading}</h2>
         <p className="mt-3 max-w-3xl text-[15px] leading-7 text-slate-600">{copy.accessText}</p>
-        <p className="mt-4 text-xl font-semibold">{PRICE_LABEL} / {lang === 'zh' ? '7 天 · 不自动续费' : '7 days · No automatic renewal'}</p>
+        <p className="mt-4 text-xl font-semibold">{priceFor(lang).label} / {lang === 'zh' ? '7 天 · 不自动续费' : '7 days · No automatic renewal'}</p>
         <Link href={href('/pricing')} className="mt-5 inline-block rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
           {copy.accessCta}
         </Link>
@@ -167,8 +167,8 @@ export default async function HomePage({ params }: Props) {
 
       <section className="mt-12 rounded-xl border border-slate-200 p-6">
         <h2 className="text-xl font-bold">{lang === 'zh' ? '也在准备其他公司的笔试？' : 'Preparing for another company’s assessment?'}</h2>
-        <p className="mt-3 text-sm leading-7 text-slate-600">{lang === 'zh' ? '比较宝洁、普华永道、德勤与联合利华的测评范围，按邀请中的题型选择练习。公司间可能考查相近能力，但题目格式不一定相同。' : 'Compare P&G, PwC, Deloitte and Unilever assessment guidance, then choose practice that matches your invitation. Shared reasoning skills do not mean identical tests.'}</p>
-        <Link href={href('/guides/company-assessments')} className="mt-3 inline-block text-sm text-indigo-600 underline">{lang === 'zh' ? '查看公司测评对比与官方来源' : 'Compare company assessments and official sources'}</Link>
+        <p className="mt-3 text-sm leading-7 text-slate-600">{lang === 'zh' ? '管道题、数字题和空间记忆来自 Aon 测评，不只宝洁在用。查看哪些公司会考，并比较宝洁、普华永道、德勤与联合利华的测评范围。' : 'The Switch, Digit and Grid challenges are Aon tests used by P&G and reported at other large employers. See which companies use them and compare P&G, PwC, Deloitte and Unilever guidance.'}</p>
+        <Link href={href('/guides/company-assessments')} className="mt-3 inline-block text-sm text-indigo-600 underline">{lang === 'zh' ? '哪些公司考管道题' : 'Which companies use these tests'}</Link>
       </section>
 
       <FaqSection heading={copy.faqHeading} items={copy.faq} />

@@ -4,14 +4,14 @@ import type { Language } from '@/lib/language';
 export const COMPANY_GUIDES: Record<Language, Record<string, GuideCopy>> = {
   "en": {
     "company-assessments": {
-      "title": "Company Assessment Tests: P&G, PwC, Deloitte and Unilever",
-      "description": "Compare P&G, PwC, Deloitte and Unilever assessment preparation. See which reasoning skills transfer, which formats differ and where to practise.",
+      "title": "Which Companies Use the Switch Challenge? Aon, P&G, PwC, Deloitte",
+      "description": "Which employers use the Aon Switch, Digit and Grid challenges, and how P&G, PwC, Deloitte and Unilever assessments compare. Choose practice that matches your invitation.",
       "keywords": [],
       "h1": "Company Assessment Tests: P&G, PwC, Deloitte and Unilever",
       "lede": "Some employers assess overlapping reasoning skills, but that does not make their tests interchangeable. Start with your invitation, identify the task, and choose practice for that skill. This comparison separates confirmed employer information from our preparation suggestions.",
       "summary": "Some employers assess overlapping reasoning skills, but that does not make their tests interchangeable. Start with your invitation, identify the task, and choose practice for that skill. This comparison separates confirmed employer information from our preparation suggestions.",
       "published": "2026-09-29",
-      "updated": "2026-09-29",
+      "updated": "2026-11-11",
       "toolHref": "/practice?kind=data",
       "toolLabel": "Practise data interpretation",
       "body": [
@@ -30,6 +30,22 @@ export const COMPANY_GUIDES: Record<Language, Record<string, GuideCopy>> = {
             "Deloitte UK early careers: the official page names numerical and verbal reasoning alongside behavioural assessment. Prioritise reading data and interpreting the question.",
             "Unilever UK apprenticeships: the 2025 early-careers brochure describes numerical, verbal and situational judgement assessments. That dated UK source does not establish the format for every current global programme.",
             "Nestlé UK & Ireland: the Academy page confirms an online-assessment stage. It does not establish that applicants receive P&G-style Switch, Digit or Grid tasks."
+          ]
+        },
+        {
+          "type": "h2",
+          "text": "Who uses the Switch, Digit and Grid challenges?"
+        },
+        {
+          "type": "p",
+          "text": "The Switch, Digit and Grid challenges are Aon tests: Aon (which acquired cut-e in 2017) sells them as gamified challenges in its smartPredict assessment, and P&G uses them in its Interactive Assessment. Prep providers also list Deloitte, KPMG, EY, Morgan Stanley, UBS, Johnson & Johnson, Capgemini, Vodafone and Siemens among employers that use Aon or cut-e assessments for some roles. Those lists are not confirmed by the employers and do not say which games each one uses, so treat them as a reason to check your invitation, not as a promise."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "If your invitation names Aon, cut-e or smartPredict, practise the Switch, Digit and Grid challenges here.",
+            "If it names SHL, Talent Q or Cappfinity, expect more traditional numerical, verbal and inductive questions; data interpretation and figure series practice are the closest matches here.",
+            "The same Switch skill, reading a code as where each new slot comes from, applies whichever company sends the test."
           ]
         },
         {
@@ -87,6 +103,10 @@ export const COMPANY_GUIDES: Record<Language, Record<string, GuideCopy>> = {
         }
       ],
       "sources": [
+        {
+          "label": "Aon — switchChallenge practice tasks (factsheet)",
+          "url": "https://assessment.aon.com/aon.assessment/media/files/factsheets/Practice-Tasks_switchChallenge.pdf"
+        },
         {
           "label": "P&G Careers — Interactive Assessment Overview",
           "url": "https://www.pgcareers.com/us/en/interactive-assessments"
@@ -328,14 +348,14 @@ export const COMPANY_GUIDES: Record<Language, Record<string, GuideCopy>> = {
   },
   "zh": {
     "company-assessments": {
-      "title": "公司笔试测评对比：宝洁、普华永道、德勤与联合利华",
-      "description": "对比宝洁、普华永道、德勤与联合利华测评中的推理能力，区分相同能力与不同题型，按官方来源和地区选择练习。",
+      "title": "哪些公司考管道题？宝洁、德勤、普华永道与联合利华笔试对比",
+      "description": "管道题（Switch）、数字题和空间记忆来自 Aon 测评，除宝洁外还有哪些公司在用？对比宝洁、普华永道、德勤与联合利华笔试题型，按邀请选择练习。",
       "keywords": [],
       "h1": "公司笔试测评对比：宝洁、普华永道、德勤与联合利华",
       "lede": "其他公司确实也考查推理能力，但能力相近不等于题目或游戏完全相同。先根据测评邀请确认题型，再选择对应练习。本篇将官方确认的信息与本站的备考建议分开说明。",
       "summary": "其他公司确实也考查推理能力，但能力相近不等于题目或游戏完全相同。先根据测评邀请确认题型，再选择对应练习。本篇将官方确认的信息与本站的备考建议分开说明。",
       "published": "2026-09-29",
-      "updated": "2026-09-29",
+      "updated": "2026-11-11",
       "toolHref": "/practice?kind=data",
       "toolLabel": "练习图表与百分比",
       "body": [
@@ -354,6 +374,22 @@ export const COMPANY_GUIDES: Record<Language, Record<string, GuideCopy>> = {
             "德勤英国早期职业招聘：官方列出数字、语言推理及行为测评，可先练习阅读数据与理解问题。",
             "联合利华英国学徒项目：2025 年早期职业手册列出数字、语言及情境判断测评。这份有年份和地区范围的材料不能代表当前所有全球项目。",
             "雀巢英国及爱尔兰：Academy 招聘页确认存在在线测评阶段，但不足以确认使用宝洁式 Switch、Digit 或 Grid 题。"
+          ]
+        },
+        {
+          "type": "h2",
+          "text": "哪些公司会考管道题（Switch）、数字题（Digit）和空间记忆（Grid）？"
+        },
+        {
+          "type": "p",
+          "text": "Switch、Digit、Grid 这几道题来自 Aon（2017 年收购了 cut-e）的游戏化测评 smartPredict，宝洁的交互测评用的就是它们，所以国内常叫“宝洁管道题”。备考机构还列出德勤、毕马威、安永、摩根士丹利、瑞银、强生、凯捷、沃达丰、西门子等公司在部分岗位使用 Aon 或 cut-e 测评。这些名单并非公司官方确认，也没有说明每家具体考哪几个游戏，请以你收到的测评邀请为准。"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "邀请里写着 Aon、cut-e 或 smartPredict：优先练本站的管道题、数字题和空间记忆。",
+            "邀请里写着 SHL、Talent Q 或 Cappfinity：多为传统的数字、语言和图形推理题，本站的资料分析和图形推理练习最接近。",
+            "管道题的核心方法（按“新位置取自旧位置”读代码）不论哪家公司出题都适用。"
           ]
         },
         {
@@ -411,6 +447,10 @@ export const COMPANY_GUIDES: Record<Language, Record<string, GuideCopy>> = {
         }
       ],
       "sources": [
+        {
+          "label": "Aon — switchChallenge practice tasks (factsheet)",
+          "url": "https://assessment.aon.com/aon.assessment/media/files/factsheets/Practice-Tasks_switchChallenge.pdf"
+        },
         {
           "label": "P&G Careers — Interactive Assessment Overview",
           "url": "https://www.pgcareers.com/us/en/interactive-assessments"

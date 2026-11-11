@@ -36,14 +36,14 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'pipeline',
     },
     en: {
-      title: 'P&G Switch Challenge Practice & Solver | CK Quiz',
-      h1: 'P&G Switch Challenge practice: step-by-step solver',
+      title: 'Switch Challenge Practice & Solver (Aon, P&G) | CK Quiz',
+      h1: 'Switch Challenge practice and step-by-step solver (Aon, P&G)',
       label: 'Switch Challenge',
       description:
-        'Practise the P&G Switch Challenge: enter the symbols and boxes, solve the unknown code and see every intermediate step. Includes a worked example, method and FAQ.',
-      keywords: ['P&G Switch Challenge practice', 'Switch Challenge', 'P&G Switch Challenge solver', 'P&G interactive assessment', 'pipeline logic solver'],
+        'Practise the Aon Switch Challenge used by P&G and other employers: enter the symbols and boxes, solve the unknown code and see every step. Worked example, method and FAQ.',
+      keywords: ['Switch Challenge practice', 'Aon Switch Challenge', 'P&G Switch Challenge practice', 'Switch Challenge', 'P&G Switch Challenge solver', 'P&G interactive assessment', 'pipeline logic solver'],
       intro:
-        'The Switch Challenge is the symbol-reordering game in the P&G Interactive Assessment, also called pipeline logic. Enter the input order, each box and the output order from your question, and the solver works out the unknown box while displaying every intermediate sequence. The point is not only the answer: stepping through the stages lets you confirm you have not reversed the direction of the forward or backward pass, which is where most marks are lost on this question type.',
+        'The Switch Challenge is the symbol-reordering game in Aon\'s smartPredict assessment, used in the P&G Interactive Assessment and by other employers; it is also called pipeline logic. Enter the input order, each box and the output order from your question, and the solver works out the unknown box while displaying every intermediate sequence. The point is not only the answer: stepping through the stages lets you confirm you have not reversed the direction of the forward or backward pass, which is where most marks are lost on this question type.',
       notes: [
         'A box is written as four digits meaning "the new position n takes whatever was in old position x". So 3142 means the new first position takes the old third.',
         'With a single unknown box you can leave the candidate options blank and the solver returns the unique answer directly. With two or more unknown boxes, candidates are required.',
@@ -106,14 +106,14 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'numerical',
     },
     en: {
-      title: 'P&G Digit Challenge Practice & Equation Solver | CK Quiz',
-      h1: 'P&G Digit Challenge practice: equation solver',
+      title: 'Digit Challenge Practice & Solver (Aon, P&G) | CK Quiz',
+      h1: 'Digit Challenge practice and equation solver (Aon, P&G)',
       label: 'Digit Challenge',
       description:
-        'Practise the P&G Digit Challenge: fill equation blanks with distinct digits, see every valid answer, and learn a fast elimination method with worked examples.',
-      keywords: ['P&G Digit Challenge practice', 'Digit Challenge', 'P&G Digit Challenge solver', 'P&G numerical test', 'equation blank calculator'],
+        'Practise the Aon Digit Challenge used by P&G and other employers: fill equation blanks with distinct digits, see every valid answer and learn a fast elimination method.',
+      keywords: ['Digit Challenge practice', 'Aon Digit Challenge', 'P&G Digit Challenge practice', 'Digit Challenge', 'P&G Digit Challenge solver', 'P&G numerical test', 'equation blank calculator'],
       intro:
-        'The Digit Challenge is the equation game in the P&G Interactive Assessment. Use the builder to reconstruct the equation from your question, mark the blanks and set the target, and the solver lists every digit combination that works. Seeing the full set of solutions is more useful than receiving one answer: it shows you which kinds of combination are worth trying first, which is exactly what makes the difference under time pressure.',
+        'The Digit Challenge is the equation game in Aon\'s smartPredict assessment, used in the P&G Interactive Assessment and by other employers. Use the builder to reconstruct the equation from your question, mark the blanks and set the target, and the solver lists every digit combination that works. Seeing the full set of solutions is more useful than receiving one answer: it shows you which kinds of combination are worth trying first, which is exactly what makes the difference under time pressure.',
       notes: [
         'Choose the digit range 1-9 or 0-9 and switch the no-repeats constraint on or off. Both directly change the search space, so match them to your question.',
         'Standard operator precedence applies: multiplication and division before addition and subtraction, brackets first.',
@@ -141,14 +141,14 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'data',
     },
     en: {
-      title: 'P&G Assessment Practice Questions with Answers | CK Quiz',
-      h1: 'P&G assessment practice questions',
+      title: 'Online Assessment Practice Questions with Answers | CK Quiz',
+      h1: 'Online assessment practice questions: Switch, Digit, figure and data',
       label: 'Practice',
       description:
-        'A practice bank for pipeline logic, figure series, numerical reasoning and data interpretation, generated at easy, medium and hard settings, with a worked explanation on every question and a retry list for the ones you get wrong.',
+        'A practice bank for Switch Challenge (pipeline logic), Digit Challenge equations, figure series and data interpretation for Aon, P&G and other online assessments, generated at easy, medium and hard settings, with a worked explanation on every question and a retry list for the ones you get wrong.',
       keywords: ['aptitude test practice bank', 'P&G assessment practice', 'reasoning questions online', 'figure series practice', 'data interpretation practice'],
       intro:
-        'The practice bank generates questions on demand across four types — pipeline logic, figure series, numerical reasoning and data interpretation. Pipeline questions offer three difficulty levels. Memory training has its own dedicated page under Skill training. Every submission comes with a full explanation: pipeline questions animate how the shapes move stage by stage, figure questions name the transformation involved, and numerical and data questions show the reasoning behind each step. Anything you get wrong is saved so you can retry just those.',
+        'The practice bank generates questions on demand across four types — Switch Challenge (pipeline logic), figure series, Digit Challenge equations and data interpretation. Switch questions offer three difficulty levels. Memory training has its own dedicated page under Skill training. Every submission comes with a full explanation: pipeline questions animate how the shapes move stage by stage, figure questions name the transformation involved, and numerical and data questions show the reasoning behind each step. Anything you get wrong is saved so you can retry just those.',
       notes: [
         'Every question is randomly generated: free users get 10 new questions per type, members are unlimited.',
         'For pipeline questions, the easy, medium and hard settings correspond to one, two and three boxes.',

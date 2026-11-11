@@ -1,6 +1,6 @@
 import { clerkMiddleware } from '@clerk/nextjs/server';
 import { NextResponse, type NextRequest } from 'next/server';
-import { preferredLanguage, type Language } from '@/lib/language';
+import { languageFromPath, preferredLanguage, type Language } from '@/lib/language';
 
 /**
  * Pre-i18n URLs kept working after every public page moved under a locale
@@ -38,7 +38,14 @@ export default clerkMiddleware((auth, request) => {
   // The root layout renders <html lang> server-side and needs the URL to do it.
   const headers = new Headers(request.headers);
   headers.set('x-pathname', pathname);
-  return NextResponse.next({ request: { headers } });
+  const response = NextResponse.next({ request: { headers } });
+  // Remember the language last read, so unprefixed pages such as /billing
+  // (and the price it charges) match the page the visitor came from.
+  const pageLanguage = languageFromPath(pathname);
+  if (pageLanguage && request.cookies.get('lang')?.value !== pageLanguage) {
+    response.cookies.set('lang', pageLanguage, { path: '/', maxAge: 31536000, sameSite: 'lax' });
+  }
+  return response;
 }, {
   ...(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.startsWith('pk_live_')
     ? { authorizedParties: ['https://quiz.ckautoflow.com'] }
