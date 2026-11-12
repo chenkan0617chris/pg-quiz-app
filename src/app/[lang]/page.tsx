@@ -121,6 +121,7 @@ export default async function HomePage({ params }: Props) {
               { href: '/grid', name: 'Grid Challenge practice', text: 'Remember dot positions in order while answering symmetry questions in between.' },
               { href: '/peak', name: 'P&G PEAK Performance Assessment practice', text: 'Get used to rating, forced-choice and workplace scenario questions before the real questionnaire.' },
               { href: '/exams', name: 'Switch, Digit & Grid mock test', text: 'Rehearse Switch, Digit and Grid style rounds under a timer and review a per-question report.' },
+              { href: '/verbal', name: 'Verbal reasoning practice', text: 'True, False or Cannot Say passages in the style of SHL, Aon and Talent Q verbal tests, with the reasoning for every answer.' },
             ].map((item) => (
               <li key={item.href} className="rounded-xl border border-slate-200 p-5">
                 <Link href={href(item.href)} className="font-semibold text-indigo-600 hover:underline">{item.name}</Link>
@@ -130,6 +131,25 @@ export default async function HomePage({ params }: Props) {
           </ul>
         </section>
       )}
+
+      <section className="mt-12" aria-labelledby="by-employer">
+        <h2 id="by-employer" className="text-xl font-bold text-slate-900">{lang === 'zh' ? '按公司和测评供应商备考' : 'Prepare by employer or test provider'}</h2>
+        <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          {([
+            ['/guides/aon-assessment', lang === 'zh' ? 'Aon / cut-e 测评' : 'Aon (cut-e) assessment'],
+            ['/guides/shl-assessment', lang === 'zh' ? 'SHL 测评' : 'SHL tests'],
+            ['/guides/company-assessments', lang === 'zh' ? '哪些公司考管道题' : 'Which companies use the Switch Challenge'],
+            ['/guides/pwc-assessment', lang === 'zh' ? '普华永道' : 'PwC'],
+            ['/guides/deloitte-assessment', lang === 'zh' ? '德勤' : 'Deloitte'],
+            ['/guides/kpmg-assessment', lang === 'zh' ? '毕马威' : 'KPMG'],
+            ['/guides/ey-assessment', lang === 'zh' ? '安永' : 'EY'],
+            ['/guides/unilever-assessment', lang === 'zh' ? '联合利华' : 'Unilever'],
+            ['/verbal', lang === 'zh' ? '英文言语推理' : 'Verbal reasoning'],
+          ] as const).map(([path, label]) => (
+            <li key={path}><Link href={href(path)} className="text-indigo-600 hover:underline">{label}</Link></li>
+          ))}
+        </ul>
+      </section>
 
       <section className="mt-12">
         <h2 className="text-xl font-bold text-slate-900">{copy.howHeading}</h2>

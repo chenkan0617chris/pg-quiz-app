@@ -31,6 +31,7 @@ export const DICT = {
   navExams: { zh: '模拟考中心', en: 'Mock exams' },
   navGrid: { zh: '空间记忆 Grid', en: 'Grid Challenge' },
   navPeak: { zh: 'PEAK 工作风格', en: 'PEAK work style' },
+  navVerbal: { zh: '言语推理（英文）', en: 'Verbal reasoning' },
   navHome: { zh: '首页', en: 'Home' },
   navGuides: { zh: '解题攻略', en: 'Guides' },
   comingSoon: { zh: '敬请期待', en: 'Coming soon' },

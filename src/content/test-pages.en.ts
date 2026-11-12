@@ -11,7 +11,7 @@ import type { Faq } from './blocks';
  * (pgcareers.com/assessment-overviews) or what candidates and prep sites
  * consistently report, and are worded as such.
  */
-export type TestPageKey = 'pipeline' | 'numerical' | 'grid' | 'peak' | 'exams';
+export type TestPageKey = 'pipeline' | 'numerical' | 'grid' | 'peak' | 'exams' | 'verbal';
 
 export type TestPageCopy = {
   /** The section name as English searchers use it. */
@@ -27,6 +27,7 @@ export const TEST_PAGE_PATHS: Record<TestPageKey, string> = {
   grid: '/grid',
   peak: '/peak',
   exams: '/exams',
+  verbal: '/verbal',
 };
 
 export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
@@ -260,6 +261,56 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
       {
         q: 'Is the mock exam free?',
         a: 'You can preview the exam room and a sample report for free. Full timed exams are part of membership.',
+      },
+    ],
+  },
+
+  verbal: {
+    name: 'Verbal reasoning',
+    sections: [
+      {
+        heading: 'What is a verbal reasoning test?',
+        paragraphs: [
+          'A verbal reasoning test gives you a short passage and a set of statements about it. For each statement you choose True, False or Cannot Say. It is one of the most common sections in graduate and professional online assessments, including SHL-style tests, Aon (cut-e) scales verbal, Talent Q Elements and Cappfinity, which are used by banks, the Big Four accounting firms, consultancies and consumer goods companies.',
+          'Tests are usually timed at around a minute per statement or two minutes per passage, so the skill is reading precisely under time pressure rather than knowing the topic.',
+        ],
+      },
+      {
+        heading: 'How to tell False from Cannot Say',
+        paragraphs: [
+          'Most lost marks come from confusing False with Cannot Say. Ask one question: does the passage contain something that contradicts the statement? If yes, it is False. If the passage is simply silent, or only gives part of what you would need, it is Cannot Say, however likely the statement sounds in real life.',
+        ],
+        list: [
+          'Watch quantity words: "most", "some", "all" and "only" change the answer.',
+          'A forecast, plan or suggestion in the passage is not a fact; a statement that treats it as fact is usually Cannot Say or False.',
+          'A comparison needs both sides in the passage. One year’s figure says nothing about the year before.',
+          'Correlation is not causation unless the passage says so.',
+        ],
+      },
+      {
+        heading: 'Worked example',
+        paragraphs: [
+          'Passage: "Managers reported no measurable change in team output." Statement: "Team output rose." The passage contradicts a rise, so the answer is False. Statement: "Team morale rose." The passage says nothing about morale, so the answer is Cannot Say.',
+        ],
+      },
+    ],
+    faqHeading: 'Verbal reasoning test FAQ',
+    faq: [
+      {
+        q: 'What is the difference between False and Cannot Say?',
+        a: 'False means the passage contradicts the statement. Cannot Say means the passage does not give enough information to decide either way.',
+      },
+      {
+        q: 'Which companies use verbal reasoning tests?',
+        a: 'Verbal reasoning appears in many graduate assessments. PwC UK and Deloitte UK, for example, name verbal or reasoning tests in their official early-careers guidance. Check your own invitation for the exact test.',
+      },
+      {
+        q: 'Should I use my own knowledge to answer?',
+        a: 'No. Judge every statement only from the passage. Outside knowledge is the most common reason for choosing True when the answer is Cannot Say.',
+      },
+      {
+        q: 'Is this verbal reasoning practice free?',
+        a: 'Yes. The passages are original, the page needs no sign-in, and every answer comes with its reasoning.',
       },
     ],
   },

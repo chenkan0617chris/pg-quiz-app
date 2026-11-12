@@ -9,6 +9,7 @@ const PATHS: { path: string; priority: number; changeFrequency: MetadataRoute.Si
   { path: '/exams', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/grid', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/peak', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/verbal', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/practice', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/pricing', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.5, changeFrequency: 'monthly' },

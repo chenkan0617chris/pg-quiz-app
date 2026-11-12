@@ -25,7 +25,7 @@ function Icon({name}:{name:IconName}){return <svg aria-hidden="true" className="
 function Brand(){return <><span className="flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-indigo-600 text-white shadow-[0_2px_5px_#4f46e526]"><svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5m8-14-6 7 6 7m-6-7h7"/></svg></span><span className="text-[19px] font-semibold tracking-[-0.6px] text-slate-900">CK<span className="ml-1 font-normal text-slate-500">Quiz</span></span></>;}
 
 type Item={path:string;label:DictKey;icon?:IconName};
-const training:Item[]=[{path:'/memory',label:'navMemory'},{path:'/grid',label:'navGrid'},{path:'/peak',label:'navPeak'}];
+const training:Item[]=[{path:'/memory',label:'navMemory'},{path:'/grid',label:'navGrid'},{path:'/peak',label:'navPeak'},{path:'/verbal',label:'navVerbal'}];
 const tools:Item[]=[{path:'/pipeline',label:'navPipeline'},{path:'/numerical',label:'navNumerical'},{path:'/series',label:'navSeries'}];
 type NavigationGroup={icon:'tools'|'training';zh:string;en:string;items:Item[]};
 const navigation:(Item|NavigationGroup)[]=[

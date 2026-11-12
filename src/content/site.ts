@@ -25,7 +25,7 @@ export const UI: Record<Language, {
     relatedHeading: '其他题型攻略',
     onThisPage: '本页目录',
     disclaimer:
-      '本站为独立的笔试练习工具，与宝洁公司（Procter & Gamble）无任何隶属、合作或授权关系。站内题目均为依据公开题型格式自行生成的练习题，不是任何公司的真实考题。P&G 及宝洁为其各自权利人的商标。',
+      '本站为独立的笔试练习工具，与宝洁公司（Procter & Gamble）、Aon、SHL 及站内提到的任何公司均无隶属、合作或授权关系。站内题目均为依据公开题型格式自行生成的练习题，不是任何公司的真实考题。文中公司及测评名称为其各自权利人的商标。',
   },
   en: {
     home: 'Home',
@@ -38,7 +38,7 @@ export const UI: Record<Language, {
     relatedHeading: 'Related preparation guides',
     onThisPage: 'On this page',
     disclaimer:
-      'This is an independent practice tool. It is not affiliated with, endorsed by, or connected to Procter & Gamble. Every question here is generated from publicly described question formats and is not real test content from any company. P&G and Procter & Gamble are trademarks of their respective owners.',
+      'This is an independent practice tool. It is not affiliated with, endorsed by, or connected to Procter & Gamble, Aon, SHL or any employer named on this site. Every question here is generated from publicly described question formats and is not real test content from any company. Company and test names are trademarks of their respective owners.',
   },
 };
 
@@ -48,6 +48,10 @@ export const GUIDE_TOOL: Record<GuideSlug, string> = {
   'pwc-assessment': '/practice?kind=data',
   'deloitte-assessment': '/practice?kind=data',
   'unilever-assessment': '/practice?kind=data',
+  'aon-assessment': '/pipeline',
+  'shl-assessment': '/verbal',
+  'kpmg-assessment': '/practice?kind=data',
+  'ey-assessment': '/practice?kind=data',
   assessment: '/practice',
   memory: '/memory',
   pipeline: '/pipeline',

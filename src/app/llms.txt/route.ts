@@ -24,6 +24,9 @@ const BODY = `# CK Quiz — Switch, Digit and Grid Challenge practice (Aon, P&G)
 - [P&G PEAK Performance Assessment practice](${SITE_URL}/en/peak): rating, forced-choice and workplace scenario formats with consistency checks.
 - [Switch, Digit and Grid mock tests](${SITE_URL}/en/exams): timed Switch, Digit and Grid style rounds with per-question reports.
 - [Practice questions with answers](${SITE_URL}/en/practice): Switch Challenge (pipeline logic), Digit Challenge, figure series and data interpretation at three levels.
+- [Verbal reasoning practice](${SITE_URL}/en/verbal): free True / False / Cannot Say passages in the style of SHL, Aon and Talent Q verbal tests.
+- [Aon (cut-e) assessment guide](${SITE_URL}/en/guides/aon-assessment) and [SHL test guide](${SITE_URL}/en/guides/shl-assessment).
+- Employer guides: [PwC](${SITE_URL}/en/guides/pwc-assessment), [Deloitte](${SITE_URL}/en/guides/deloitte-assessment), [KPMG](${SITE_URL}/en/guides/kpmg-assessment), [EY](${SITE_URL}/en/guides/ey-assessment), [Unilever](${SITE_URL}/en/guides/unilever-assessment).
 - [Preparation guides](${SITE_URL}/en/guides): methods, worked examples and common mistakes for each question type.
 
 ## Chinese pages
