@@ -12,3 +12,9 @@ export async function recordTrainingActivity(userId:string,tool:'training:grid'|
     VALUES (${userId},${tool},${action},0,'client',${sessionId}::uuid)
     ON CONFLICT(user_id,tool,action,session_id) DO NOTHING`;
 }
+
+/** Lifetime solver uses (free and full-access), for the account's own usage summary. */
+export async function solveCount(userId:string) {
+  const rows=await database()`SELECT count(*)::int AS n FROM usage_events WHERE user_id=${userId} AND action='solved'`;
+  return Number(rows[0]?.n??0);
+}

@@ -3,7 +3,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import type { PracticeRemaining, SolverRemaining } from './access-policy';
 
-export type Account={lifetime?:boolean;memoryRemaining:number;practiceUsage:Record<string,{started:number;completed:number}>;status:'trial'|'paid'|'expired';trialEndsAt:string;paidUntil:string|null;solverRemaining:SolverRemaining;practiceRemaining:PracticeRemaining};
+export type Account={lifetime?:boolean;memoryRemaining:number;practiceUsage:Record<string,{started:number;completed:number}>;status:'trial'|'paid'|'expired';trialEndsAt:string;paidUntil:string|null;solverRemaining:SolverRemaining;practiceRemaining:PracticeRemaining;solves?:number};
 export function useAccount() {
  const {userId,isLoaded}=useAuth();
  const [state,setState]=useState<{userId:string;account:Account}|null>(null);
