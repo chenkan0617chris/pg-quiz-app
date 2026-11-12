@@ -74,3 +74,19 @@
 - 2 周：GSC 出现 “aon”、“verbal reasoning”、“kpmg/ey online assessment” 查询的展示。
 - 1 个月：工具词稳定前 3；题型词进前 20。
 - 3 个月：有 5 个以上外部外链后，供应商词进第一页。
+
+## 2026-11-12 已上线并提交收录
+
+- 上线后检查：英文价格页 USD 14.99、中文 CNY 9.9；/en/verbal、/zh/verbal 和四篇新攻略均返回 200。
+- IndexNow：提交 54 个网址，返回 200。
+- Google Search Console 已请求编入索引（9 个，提交前均为“Google 不知道此网址”或“已发现，尚未编入索引”）：
+  - /en/verbal
+  - /en/guides/aon-assessment
+  - /en/guides/shl-assessment
+  - /en/guides/kpmg-assessment
+  - /en/guides/ey-assessment
+  - /en/guides/company-assessments
+  - /zh/guides/company-assessments
+  - /zh/verbal
+  - /zh/guides/aon-assessment
+- 明天再提交（Google 每天配额约 10 个）：/zh/guides/shl-assessment、/zh/guides/kpmg-assessment、/zh/guides/ey-assessment。
