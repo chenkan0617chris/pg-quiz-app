@@ -68,4 +68,14 @@ I'd like feedback from anyone who has sat the real thing recently: what felt dif
 - 第一条评论放了链接：utm_campaign=mock_exams。LinkedIn 的付费推广（Boost）已拒绝。
 - 同时把模拟考页的大标题从 "P&G online assessment mock tests" 改成 "Switch, Digit & Grid Challenge mock tests"。
 - Reddit：未发，Claude in Chrome 不能访问 reddit.com，需要手动发。
-- AlternativeTo、SaaSHub：未提交，Chrome 未登录。
+- Reddit：你已手动发到 r/SideProject，选的标签是 Showcase: Free(mium)。
+- AlternativeTo：已提交，进入免费审核队列；付费插队（$25 / $35）已拒绝。
+  - 页面：https://alternativeto.net/software/ck-quiz/（审核通过前可能不公开）
+  - 填写内容：
+    - Freemium，一次性购买，价格 $15
+    - 标签：online-aptitude-test、test-preparation、job-interview、brain-training
+    - 平台：Online；作者：CKAutoFlow；上线日期：2026-09-15
+    - 图标 + 4 张截图
+  - 已提交为替代品：Psychometric Tests、CareerTestPrep。
+  - 待改：brain-training 标签把它归到了 "Sport & Health" 分类，审核通过后可以删掉这个标签。
+- SaaSHub：未提交，Chrome 未登录。
