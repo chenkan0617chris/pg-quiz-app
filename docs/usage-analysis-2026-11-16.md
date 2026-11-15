@@ -52,7 +52,7 @@
    - 新增“如何读反向表述的陈述”一节，并补充“PEAK 有没有标准答案”的常见问题。
    - 对应 "peak performance assessment answers" 和陈述原句类搜索。
 2. **Digit 页标题：** 加上 "Test"，对应 "digit challenge test" 搜索。
-3. 在 GSC 请求收录剩下的中文 SHL / KPMG / EY 攻略，以及更新后的 /en/peak。
+3. 已在 GSC 请求收录：/zh/guides/shl-assessment、/zh/guides/kpmg-assessment、/zh/guides/ey-assessment（之前都是“Google 不知道此网址”），以及更新后的 /en/peak（已收录，请求重新抓取）。
 
 ## 建议（未做）
 - **印度价格**：印度访客和注册都在增加，US$14.99 对印度学生偏贵。可以考虑按国家定价（例如 ₹499 / 7 天）。需要 Stripe 支持 INR，并改数据库价格约束。
