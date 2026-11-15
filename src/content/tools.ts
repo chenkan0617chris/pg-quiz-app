@@ -106,7 +106,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'numerical',
     },
     en: {
-      title: 'Digit Challenge Practice & Solver (Aon, P&G) | CK Quiz',
+      title: 'Digit Challenge Test Practice & Solver (Aon, P&G) | CK Quiz',
       h1: 'Digit Challenge practice and equation solver (Aon, P&G)',
       label: 'Digit Challenge',
       description:

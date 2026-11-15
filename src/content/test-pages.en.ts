@@ -205,6 +205,13 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
         ],
       },
       {
+        heading: 'Reading negatively worded statements',
+        paragraphs: [
+          'Some statements describe a weakness rather than a strength, for example "I lose focus when a detailed task goes on for hours." Agreeing with a statement like this says something different from disagreeing with its positive twin, so read each one twice: first decide what it means in plain words, then decide how true it is of you.',
+          'Watch qualifiers such as "may", "sometimes", "always" and "over a long time". "I sometimes make small errors late in a long task" is true of most people; "I always lose accuracy" is not. Rate the exact claim, not the general topic.',
+        ],
+      },
+      {
         heading: 'How to approach it',
         paragraphs: [
           'Answer honestly and consistently, and tie each answer to something you have actually done. Similar ideas come back in different wording, and contradictory answers stand out more than any single strong or weak answer. The practice here draws statements at random and flags pairs where your answers point in different directions.',
@@ -220,6 +227,10 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
       {
         q: 'Can you fail the PEAK Performance Assessment?',
         a: 'It is used to compare your answers with the competencies P&G looks for, so some applicants do not progress after it. It is not a knowledge test, and trying to guess an ideal profile usually produces inconsistent answers.',
+      },
+      {
+        q: 'Are there answers to the PEAK Performance Assessment?',
+        a: 'No answer key exists, because it compares how you describe yourself with the competencies P&G looks for. Lists of "best answers" tend to make your responses inconsistent, which is easier to spot than any single answer. Use practice to get familiar with the formats and wording, then answer from your own experience.',
       },
       {
         q: 'Should I practise for a personality-style questionnaire?',
