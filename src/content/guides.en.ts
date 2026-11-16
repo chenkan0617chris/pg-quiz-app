@@ -20,7 +20,7 @@ export const GUIDES_EN: Record<string, GuideCopy> = {
     published: '2026-09-15',
     updated: '2026-09-29',
     toolHref: '/pipeline',
-    toolLabel: 'Open the pipeline solver',
+    toolLabel: 'Try free Switch Challenge practice questions',
     body: [
       { type: 'h2', text: '1. What the question actually tests' },
       {

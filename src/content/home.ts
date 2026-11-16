@@ -187,7 +187,7 @@ export const HOME: Record<Language, HomeCopy> = {
         blurb:
           'Four shapes pass through a row of boxes and come out reordered, with one box hidden for you to deduce. Underneath it is composition and inversion of permutations, and forward and backward reasoning lets you determine the unknown rule and check it against the full sequence.',
         toolHref: '/pipeline',
-        toolLabel: 'Switch Challenge solver',
+        toolLabel: 'Switch Challenge practice and solver',
       },
       {
         slug: 'figure',

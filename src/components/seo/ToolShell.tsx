@@ -6,6 +6,7 @@ import type { ToolCopy } from '@/content/tools';
 import { UI } from '@/content/site';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import EnglishTestContent from '@/components/seo/EnglishTestContent';
+import FreeSwitchPractice from '@/components/pipeline/FreeSwitchPractice';
 
 /**
  * Server-rendered frame around each interactive solver. The tools themselves
@@ -37,8 +38,11 @@ export default function ToolShell({
 
       <h1 className="text-3xl font-bold tracking-tight text-slate-900">{copy.h1}</h1>
       <p className="mt-4 mb-8 max-w-3xl text-[15px] leading-7 text-slate-600">{copy.intro}</p>
+      {path === '/pipeline' && <p className="-mt-4 mb-8"><a href="#free-practice" className="text-sm font-semibold text-indigo-700 underline">{lang === 'zh' ? '先做 8 道免费练习题（无需登录）↓' : 'Try 8 free practice questions first (no sign-up) ↓'}</a></p>}
 
       {children}
+
+      {path === '/pipeline' && <FreeSwitchPractice />}
 
       {path === '/pipeline' && lang === 'zh' && <section className="mt-10 rounded-xl border border-slate-200 p-5 sm:p-7" aria-labelledby="pipeline-example">
         <h2 id="pipeline-example" className="text-lg font-semibold">两级管道题例题：已知一个方框，怎样求另一个？</h2>
