@@ -58,3 +58,36 @@
 - **印度价格**：印度访客和注册都在增加，US$14.99 对印度学生偏贵。可以考虑按国家定价（例如 ₹499 / 7 天）。需要 Stripe 支持 INR，并改数据库价格约束。
 - **记录引导选择**：引导的选择目前只存在浏览器里，后台看不到用户选了哪种测评。可以加一张表记录，方便判断海外用户主要在考什么。
 - **外链**：AlternativeTo、Reddit（r/UKJobs、r/developersIndia 的求职帖）仍然是把英文词推进前 10 的关键，需要你登录账号。
+
+## "switch challenge practice" 排在第 6 页：原因和改动（2026-11-16）
+
+**排在前面的页面：**
+- JobTestPrep（多个页面）
+- Aon 官方练习 PDF
+- assess.ly、12minprep：都有免登录、可直接做的限时题。
+
+**我们的问题：**
+1. **搜索意图不匹配：** 搜 "practice" 的人想马上做题，但 /en/pipeline 的主功能是需要登录的解题器。
+2. **域名权重低、外链少：** 只能靠时间和外链慢慢积累。
+3. **很多页面 Google 还没抓取：** quiz 站约 30 个页面处于“已发现，尚未编入索引”，包括 /en/guides/pipeline、/zh/numerical、/zh/practice、/zh/grid。部分页面 Google 没看到任何引用它的页面。
+
+**已上线的改动：**
+- /en/pipeline 和 /zh/pipeline 新增 8 道免费、免登录的原创管道题：
+  - 每题选完立刻显示答案和逐步解析。
+  - 题目在服务端渲染，图形名称也写进了 HTML，搜索引擎能读到。
+  - 用测试保证每题只有一个选项正确。
+- 英文标题改为 "Switch Challenge Practice: Free Questions & Solver (Aon, P&G)"，H1 和描述同步更新。
+- 内链文字改成 "Try free Switch Challenge practice questions" 等含关键词的写法。
+- 已跑 IndexNow。
+
+**GSC 已请求收录（今天配额用完）：**
+- /en/pipeline（重新抓取）
+- /en/guides/pipeline
+- /zh/numerical
+- /en/guides/numerical
+- /zh/practice
+- /en/guides/assessment
+
+**之后几天继续提交：** /zh/grid、/en/guides/data、/en/guides/memory、/en/guides/pwc-assessment、/en/guides/deloitte-assessment、/en/about。
+
+**2 周后复查：** "switch challenge practice" 的排名，以及已收录页面数（现在 29 个，含其他子域名）。
