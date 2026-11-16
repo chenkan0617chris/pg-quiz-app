@@ -91,3 +91,20 @@
 **之后几天继续提交：** /zh/grid、/en/guides/data、/en/guides/memory、/en/guides/pwc-assessment、/en/guides/deloitte-assessment、/en/about。
 
 **2 周后复查：** "switch challenge practice" 的排名，以及已收录页面数（现在 29 个，含其他子域名）。
+
+## 2026-11-17 GSC 收录提交
+
+**已请求收录：**
+- /zh/grid（检查结果：已发现，尚未编入索引）
+
+**已收录、跳过：** 无
+
+**未能提交（配额已满）：** 提交 /en/guides/data 时第一次报“Something went wrong”，重试时 Google 提示“Quota exceeded”（今日配额已用完）。今天只成功提交了 1 个，配额可能按太平洋时间计算，和昨天的提交算在同一天里。
+
+**还需提交：**
+- /en/guides/data
+- /en/guides/memory
+- /en/guides/pwc-assessment
+- /en/guides/deloitte-assessment
+- /en/about
+- 之后再从“已发现，尚未编入索引”列表里补其他 quiz 页面
