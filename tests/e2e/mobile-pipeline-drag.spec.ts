@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
 
 test('touch and keyboard controls swap pipeline shapes', async ({ page }) => {
+  // Returning visitor: the first-visit tour would otherwise sit over the controls.
+  await page.addInitScript(() => localStorage.setItem('ckquiz.switchSolverTour.v1', 'done'));
   await page.goto('/en/pipeline', { waitUntil: 'domcontentloaded' });
   // Wait for client hydration: native inputs can change before React is ready.
   await expect(page.getByRole('button', { name: 'Solve', exact: true })).toBeEnabled();

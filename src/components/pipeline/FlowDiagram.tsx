@@ -1,39 +1,18 @@
 'use client';
 
 import type { Flow } from '@/lib/engine';
-import { useI18n } from '@/lib/i18n';
-import { PipelineBoard, PipelineShapeLane, PipelineStage } from './PipelineBoard';
+import PipelineAnimation from './PipelineAnimation';
 
-/** Vertical pipeline diagram: input chip -> box pills -> intermediate/output chips. */
-export default function FlowDiagram({
-  flow,
-  highlightOutput = false,
-}: {
-  flow: Flow;
-  highlightOutput?: boolean;
-}) {
-  const { t } = useI18n();
-  const output = flow.stages.at(-1)?.seqAfter ?? flow.input;
-
+/** Solver result: animates the shapes through every box, with solved boxes revealed. */
+export default function FlowDiagram({ flow }: { flow: Flow; highlightOutput?: boolean }) {
   return (
-    <div className="mt-6">
-      <PipelineBoard
-        ariaLabel={t('pipelineDiagram')}
-        inputLane={<PipelineShapeLane label={t('inputOrder')} lane="input" order={flow.input}/>}
-        outputLane={<PipelineShapeLane label={t('outputOrder')} lane="output" order={output} highlight={highlightOutput}/>}
-      >
-        {flow.stages.map((stage, index) => (
-          <PipelineStage
-            key={index}
-            label={t('pipelineStage', index + 1)}
-            state={{
-              key: index,
-              value: stage.box.join(''),
-              solved: stage.solved,
-            }}
-          />
-        ))}
-      </PipelineBoard>
+    <div className="mt-4">
+      <PipelineAnimation
+        key={JSON.stringify(flow)}
+        input={flow.input}
+        stages={flow.stages.map((stage) => ({ box: stage.box, unknown: stage.solved }))}
+        autoPlay
+      />
     </div>
   );
 }

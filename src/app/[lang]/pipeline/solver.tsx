@@ -9,6 +9,7 @@ import {
 import { useI18n } from '@/lib/i18n';
 import InteractivePipelineBoard from '@/components/pipeline/InteractivePipelineBoard';
 import ResultView from '@/components/pipeline/ResultView';
+import SolverTour from '@/components/pipeline/SolverTour';
 
 export default function PipelinePage() {
   const { t } = useI18n();
@@ -32,6 +33,9 @@ export default function PipelinePage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         {/* ===== Problem column ===== */}
         <div className="flex min-w-0 flex-1 flex-col gap-6">
+          <div className="-mb-3 flex justify-end">
+            <SolverTour />
+          </div>
           <InteractivePipelineBoard
             inputOrder={inputOrder}
             outputOrder={outputOrder}
@@ -45,6 +49,7 @@ export default function PipelinePage() {
           {/* Solve */}
           <button
             type="button"
+            data-tour="solve"
             onClick={solve}
             disabled={busy || !ready}
             className="w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-lg font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:bg-indigo-800"

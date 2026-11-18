@@ -126,7 +126,7 @@ export default function InteractivePipelineBoard({
         })}
       </PipelineBoard>
 
-      <div className="mx-auto mt-3 max-w-[360px] border-t border-slate-100 pt-2">
+      <div data-tour="stage-settings" className="mx-auto mt-3 max-w-[360px] border-t border-slate-100 pt-2">
         {boxes.map((box, index) => (
           <div key={index} role="group" aria-label={`${t('pipelineStage', index + 1)} ${lang === 'zh' ? '设置' : 'settings'}`} className="flex items-center gap-3 px-2">
             <span className="mr-auto text-xs text-slate-400">{t('pipelineStage', index + 1)}</span>
@@ -157,7 +157,7 @@ export default function InteractivePipelineBoard({
         ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+      <div data-tour="add-box" className="mt-4 flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"
           onClick={() => onBoxesChange([

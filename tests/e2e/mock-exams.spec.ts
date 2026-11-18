@@ -95,6 +95,48 @@ test('member completes all sections, fullscreen recovery preserves answers and r
   await page.screenshot({path:'test-results/mock-exam-report.png',fullPage:true});
 });
 
+test('background clock sync never disables the question or swallows a submit',async({page})=>{
+  test.setTimeout(60_000);
+  let state=newExam(randomUUID(),Date.now());
+  let syncs=0;
+  await page.route('**/api/exams*',async route=>{
+    const req=route.request();
+    if(req.method()==='GET')return route.fulfill({json:[]});
+    const body=req.postDataJSON();
+    if(body.action==='sync'){
+      syncs+=1;
+      // A slow sync makes any "Saving…" flash or blocked submit easy to observe.
+      await new Promise(resolve=>setTimeout(resolve,2500));
+    }
+    if(body.action!=='create')state=transitionExam(state,body as ExamCommand,Date.now());
+    return route.fulfill({json:examView(state,Date.now())});
+  });
+  await mount(page,'ExamCenter',true);
+  await page.getByRole('button',{name:'Prepare for your mock exam →'}).click();
+  await page.getByRole('button',{name:'Enter fullscreen & start'}).click();
+  await expect(page.getByRole('radio')).toHaveCount(3);
+  const q=state.current!.question;
+  if(q.kind!=='pipeline')throw new Error('Expected pipeline');
+  const choice=page.getByRole('radio',{name:new RegExp(q.answer.join('')+'$')});
+  await choice.check();
+  const submit=page.getByRole('button',{name:'Submit & continue →'});
+  await expect.poll(()=>syncs,{timeout:20_000}).toBe(1);
+  // While the sync is in flight the question stays usable and the answer stays selected.
+  // Snapshot checks (no auto-retry), sampled across the whole 2.5 s sync.
+  const button=page.locator('form button').last();
+  for(let i=0;i<6;i++){
+    expect(await button.textContent()).toBe('Submit & continue →');
+    expect(await button.isEnabled()).toBe(true);
+    await page.waitForTimeout(300);
+  }
+  await expect(choice).toBeChecked();
+  await submit.click();
+  await expect.poll(()=>state.attempts.length).toBe(1);
+  // The late sync response must not roll the exam back to the answered question.
+  await page.waitForTimeout(3000);
+  await expect(page.getByText('Question 2')).toBeVisible();
+});
+
 test('Grid preview sample interleaves judgements and scores recall separately',async({page})=>{
   await mount(page,'GridTraining');
   await page.getByRole('button',{name:'Begin observation'}).click();

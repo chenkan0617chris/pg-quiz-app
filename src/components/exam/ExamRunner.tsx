@@ -15,23 +15,41 @@ export default function ExamRunner({initial,zh,onClose,onComplete}:{initial:Exam
   const anchor=useRef({server:initial.serverNow,local:0});
   const examRef=useRef(exam);
   useEffect(()=>{examRef.current=exam;},[exam]);
+  // Every request gets a number; a background sync response is applied only if no
+  // other request started after it, so it can never overwrite a newer answer.
+  const seq=useRef(0);
+  const apply=useCallback(async(next:ExamView)=>{
+    anchor.current={server:next.serverNow,local:performance.now()};
+    setExam(next);
+    setRemaining(Math.max(0,Math.ceil(((next.deadline??next.serverNow)-next.serverNow)/1000)));
+    if(next.phase==='completed'){
+      if(document.fullscreenElement)await document.exitFullscreen().catch(()=>{});
+      onComplete(next.id);
+    }
+  },[onComplete]);
   const call=useCallback(async(command:ExamCommand)=>{
     if(lock.current)return;
     lock.current=true;setBusy(true);setError('');
+    seq.current+=1;
     try{
       const response=await fetch('/api/exams',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:initial.id,...command})});
       if(!response.ok)throw new Error(response.status===403?(zh?'会员已到期。请交卷保存，再开通会员继续。':'Membership expired. Finish to save, then renew.'):(zh?'保存失败，请重试。已保存的答案不会丢失，计时仍继续。':'Could not save. Retry; saved answers are safe and the clock continues.'));
-      const next=await response.json() as ExamView;
-      anchor.current={server:next.serverNow,local:performance.now()};
-      setExam(next);
-      setRemaining(Math.max(0,Math.ceil(((next.deadline??next.serverNow)-next.serverNow)/1000)));
-      if(next.phase==='completed'){
-        if(document.fullscreenElement)await document.exitFullscreen().catch(()=>{});
-        onComplete(next.id);
-      }
+      await apply(await response.json() as ExamView);
     }catch(e){setError(e instanceof Error?e.message:'Unavailable');}
     finally{lock.current=false;setBusy(false);}
-  },[initial.id,zh,onComplete]);
+  },[initial.id,zh,apply]);
+  // Background clock sync: silent. It does not disable the question or block a submit,
+  // and a failed sync is ignored because the local countdown keeps running.
+  const sync=useCallback(async()=>{
+    if(lock.current)return;
+    const mine=++seq.current;
+    try{
+      const response=await fetch('/api/exams',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:initial.id,action:'sync'})});
+      if(!response.ok)return;
+      const next=await response.json() as ExamView;
+      if(mine===seq.current&&!lock.current)await apply(next);
+    }catch{/* keep the local countdown */}
+  },[initial.id,apply]);
   useEffect(()=>{
     anchor.current={server:initial.serverNow,local:performance.now()};
     function focus(){setFocused(document.fullscreenElement===root.current&&!document.hidden);}
@@ -47,10 +65,10 @@ export default function ExamRunner({initial,zh,onClose,onComplete}:{initial:Exam
       const now=performance.now();
       const left=Math.max(0,Math.ceil((exam.deadline!-anchor.current.server-(now-anchor.current.local))/1000));
       setRemaining(left);
-      if(now-lastSync>15000||(left===0&&now-lastSync>3000)){lastSync=now;void call({action:'sync'});}
+      if(now-lastSync>15000||(left===0&&now-lastSync>3000)){lastSync=now;void sync();}
     },250);
     return ()=>clearInterval(timer);
-  },[exam.phase,exam.deadline,call]);
+  },[exam.phase,exam.deadline,sync]);
   async function fullscreen(){
     setError('');
     if(!root.current?.requestFullscreen||!document.fullscreenEnabled){setError(zh?'当前浏览器不支持全屏考试，请使用电脑端 Chrome、Edge 或支持全屏的浏览器。':'Fullscreen is unavailable. Use a desktop browser with fullscreen support.');return false;}
