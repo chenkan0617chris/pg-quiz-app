@@ -8,7 +8,7 @@ for(const mobile of [false,true])test(`navigation responds during a delayed rout
  try{
   await page.goto('/zh/memory');
   if(mobile)await page.getByRole('button',{name:'打开导航菜单'}).click();
-  const target=page.getByRole('link',{name:'空间记忆',exact:true});
+  const target=page.getByRole('link',{name:'空间记忆 Grid',exact:true});
   await target.click();
   await expect(page.locator('[data-navigation-pending], [data-page-loading]').first()).toBeVisible();
   if(mobile)await expect(page.getByRole('button',{name:'打开导航菜单'})).toHaveAttribute('aria-expanded','false');

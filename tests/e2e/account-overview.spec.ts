@@ -17,7 +17,7 @@ for(const plan of ['free','weekly','lifetime']){
    await expect(page.getByText('Never expires',{exact:true})).toHaveCount(0);
   }
   await expect(page.getByRole('columnheader',{name:'Used',exact:true})).toHaveCount(0);
-  for(const [name,remaining] of [['Pipeline solver',8],['Numerical solver',10],['Figure solver',3],['Sequence memory',0]] as const){
+  for(const [name,remaining] of [['Switch Challenge solver',8],['Digit Challenge solver',10],['Figure solver',3],['Sequence memory',0]] as const){
    const bar=page.getByRole('progressbar',{name,exact:true});
    await expect(bar).toHaveAttribute('aria-valuenow',String(remaining));
    await expect(bar).toHaveAttribute('aria-valuetext',`${remaining} of 10 credits remaining`);
