@@ -16,8 +16,8 @@ for (const zh of [false, true]) {
       await page.setContent(`<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${styles}</style></head><body><main style="max-width:1024px;margin:auto;padding:16px"><div id="root"></div><p id="action"></p></main></body></html>`);
       await page.addScriptTag({ content: bundle.outputFiles[0].text });
       await expect(page.getByRole('table')).toBeVisible();
-      await expect(page.getByText('¥9.9', {exact:true})).toBeVisible();
-      await expect(page.getByText(zh ? '注册即享 24 小时全功能试用；喜欢再花 ¥9.9 开通 7 天会员。' : 'Try every feature free for 24 hours from registration, then pay ¥9.9 once for 7 days of access.', {exact:true})).toBeVisible();
+      await expect(page.getByText('US$14.99', {exact:true})).toBeVisible();
+      await expect(page.getByText(zh ? '注册即享 24 小时全功能试用；喜欢再花 US$14.99 开通 7 天会员。' : 'Try every feature free for 24 hours from registration, then pay US$14.99 once for 7 days of access.', {exact:true})).toBeVisible();
       const current = page.getByText(zh ? '当前方案' : 'Current plan', { exact: false });
       if (status === 'paid' || status === 'expired') {
         await expect(page.getByRole('article', { name: status === 'paid' ? 'Member Plan' : 'Free Plan', exact: true }).getByText(zh ? '当前方案' : 'Current plan', { exact: false })).toBeVisible();

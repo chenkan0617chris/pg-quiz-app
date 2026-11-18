@@ -7,7 +7,7 @@ import { useAccount } from '@/lib/use-account';
 import { localePath } from '@/lib/seo';
 import { priceFor } from '@/lib/payment-product';
 import {
-  ONBOARDING_KEY, TRIAL_DISMISS_KEY, dayKey, isUnused, nextStepPath, parseOnboarding, startPath, trialPrompt, usageTotals,
+  ONBOARDING_KEY, TRIAL_DISMISS_KEY, dayKey, isUnused, nextStepPath, parseOnboarding, reviewProgress, startPath, trialPrompt, usageTotals,
   type ExamWhen, type Onboarding, type TargetTest,
 } from '@/lib/growth';
 
@@ -44,6 +44,7 @@ export default function GrowthPrompts() {
   const [now] = useState(() => Date.now());
   const [test, setTest] = useState<TargetTest | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const reviewDialog = useRef<HTMLDialogElement>(null);
 
   const quiet = QUIET.some(path => pathname.startsWith(path));
   const showOnboarding = !!account && !quiet && onboarding === null && isUnused(account);
@@ -53,6 +54,11 @@ export default function GrowthPrompts() {
     const el = dialog.current;
     if (showOnboarding && el && !el.open) el.showModal();
   }, [showOnboarding]);
+
+  useEffect(() => {
+    const el = reviewDialog.current;
+    if (prompt?.kind === 'ended' && el && !el.open) el.showModal();
+  }, [prompt?.kind]);
 
   function save(value: Onboarding) {
     writeStorage(ONBOARDING_KEY, JSON.stringify(value));
@@ -71,6 +77,8 @@ export default function GrowthPrompts() {
   }
 
   const totals = account ? usageTotals(account) : { practice: 0, solves: 0 };
+  const rawProgress = account?.progress;
+  const progress = rawProgress ? reviewProgress(rawProgress) : null;
   const plan = onboarding && 'test' in onboarding ? onboarding : null;
   const soon = plan && plan.when !== 'later';
   const price = priceFor(lang).label;
@@ -79,6 +87,21 @@ export default function GrowthPrompts() {
     : `So far you have done ${totals.practice} practice question${totals.practice === 1 ? '' : 's'} and ${totals.solves} solve${totals.solves === 1 ? '' : 's'}.`;
 
   return <>
+    {prompt?.kind === 'ended' && progress && rawProgress && <dialog ref={reviewDialog} aria-labelledby="trial-review-title" onCancel={dismiss}
+      className="m-auto w-[min(38rem,calc(100vw-2rem))] rounded-2xl bg-white p-0 text-slate-900 shadow-xl backdrop:bg-slate-950/40">
+      <div className="p-6 sm:p-8">
+        <p className="text-xs font-semibold tracking-wider text-indigo-600">{zh?'你的备考回顾':'YOUR PREP REVIEW'}</p>
+        <h2 id="trial-review-title" className="mt-2 text-2xl font-semibold">{zh?'24 小时免费试用已结束':'Your 24-hour free trial has ended'}</h2>
+        <p className="mt-3 text-sm leading-6 text-slate-600">{zh?`这段时间你完成了 ${rawProgress.completed} 道练习${rawProgress.mockExams?`，并完成 ${rawProgress.mockExams} 次限时模拟考`:''}。`: `You completed ${rawProgress.completed} practice question${rawProgress.completed===1?'':'s'}${rawProgress.mockExams?` and finished ${rawProgress.mockExams} timed mock exam${rawProgress.mockExams===1?'':'s'}`:''}.`}</p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-xl bg-indigo-50 p-4"><p className="text-xs font-medium text-indigo-700">{zh?'已完成练习':'PRACTICE COMPLETED'}</p><p className="mt-1 text-3xl font-semibold text-indigo-950">{rawProgress.completed}</p></div>
+          <div className="rounded-xl bg-indigo-50 p-4"><p className="text-xs font-medium text-indigo-700">{zh?'当前正确率':'CURRENT ACCURACY'}</p><p className="mt-1 text-3xl font-semibold text-indigo-950">{progress.accuracy===null?'—':`${progress.accuracy}%`}</p></div>
+        </div>
+        {progress.hasComparableProgress ? <section className="mt-5 rounded-xl border border-slate-200 p-4"><div className="flex items-baseline justify-between gap-3"><h3 className="font-semibold">{zh?'正确率变化':'Accuracy progress'}</h3><span className={`text-sm font-semibold ${progress.change!>=0?'text-emerald-700':'text-amber-700'}`}>{progress.change!>=0?(zh?`提升 ${progress.change} 个百分点`:`${progress.change} percentage points`):(zh?`变化 ${progress.change} 个百分点`:`${progress.change} percentage points`)}</span></div><div className="mt-4 space-y-3 text-sm"><div><div className="mb-1 flex justify-between text-slate-500"><span>{zh?'最早 10 题':'First 10 questions'}</span><span>{progress.firstAccuracy}%</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-slate-300" style={{width:`${progress.firstAccuracy}%`}}/></div></div><div><div className="mb-1 flex justify-between text-slate-500"><span>{zh?'最近 10 题':'Most recent 10'}</span><span>{progress.recentAccuracy}%</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-indigo-600" style={{width:`${progress.recentAccuracy}%`}}/></div></div></div></section> : <p className="mt-5 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">{zh?'你已经开始积累练习记录；继续完成更多题目后，账号页会显示更有意义的正确率变化。':'You have started building a practice record. Complete more questions to see a meaningful accuracy comparison.'}</p>}
+        <section className="mt-5 rounded-xl border border-indigo-100 bg-indigo-50/60 p-4 text-sm leading-6"><h3 className="font-semibold text-indigo-950">{zh?`继续备考，解锁 ${priceFor(lang).label} / 7 天会员`:`Keep your momentum with a ${priceFor(lang).label} / 7-day pass`}</h3><ul className="mt-2 space-y-1 text-slate-700"><li>{zh?'• 不限次数的新题与解题器':'• Unlimited fresh questions and solvers'}</li><li>{zh?'• 限时模拟考、逐题成绩与报告':'• Timed mock exams with question-by-question reports'}</li><li>{zh?'• 不自动续费，付费后立即可用':'• No auto-renewal; access starts after payment'}</li></ul></section>
+        <div className="mt-6 flex flex-wrap items-center gap-3"><Link href="/billing" className="rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white hover:bg-indigo-700">{zh?'继续备考，开通会员':'Continue with membership'}</Link><button type="button" onClick={dismiss} className="px-2 py-2 text-sm text-slate-600 underline">{zh?'今天先不用':'Not today'}</button></div>
+      </div>
+    </dialog>}
     {prompt && <div role="status" className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
       <p className="w-full leading-6 sm:w-auto sm:min-w-0 sm:flex-1">
         <span className="font-semibold">{prompt.kind === 'ending'

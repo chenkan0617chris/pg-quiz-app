@@ -3,25 +3,25 @@ import type { Language } from './language';
 export type PricePlan = {
  /** Smallest currency unit, as Stripe and payment_orders store it. */
  amount: number;
- currency: 'cny' | 'usd';
+  currency: 'usd';
  /** Shown on pages and buttons. */
  label: string;
  /** ISO code shown next to the price. */
- code: 'CNY' | 'USD';
+  code: 'USD';
 };
 
 /**
- * Seven-day access is priced by site language: Chinese pages keep CNY 9.90 so
- * Alipay and WeChat Pay stay available; English pages charge USD 14.99.
- * Both grant 168 hours (migration 017).
+ * A seven-day pass costs US$14.99 everywhere. Language only changes the copy,
+ * never the checkout currency or amount.
  */
-export const PRICES: Record<Language, PricePlan> = {
- zh: { amount: 990, currency: 'cny', label: '¥9.9', code: 'CNY' },
- en: { amount: 1499, currency: 'usd', label: 'US$14.99', code: 'USD' },
+export const PRICE: PricePlan = {
+ amount: 1499, currency: 'usd', label: 'US$14.99', code: 'USD',
 };
 
-export function priceFor(lang: Language): PricePlan {
- return PRICES[lang];
+/** @deprecated The language argument is retained for existing display callers. */
+export function priceFor(_language?: Language): PricePlan {
+ void _language;
+ return PRICE;
 }
 
 /** True when an existing pending order already carries this plan's price. */

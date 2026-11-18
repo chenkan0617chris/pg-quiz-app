@@ -26,3 +26,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
+
+/* Every actionable control should look actionable before a user clicks it. */
+a[href],
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+input:is([type='button'], [type='submit'], [type='reset'], [type='checkbox'], [type='radio']):not(:disabled),
+select:not(:disabled),
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}

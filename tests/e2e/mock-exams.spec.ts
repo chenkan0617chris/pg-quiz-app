@@ -39,6 +39,16 @@ test('guests see both previews and membership link on desktop and mobile',async(
   }
 });
 
+test('exam preview shows a non-interactive Switch challenge board',async({page})=>{
+  await mount(page,'ExamCenter');
+  await expect(page.getByRole('group',{name:'Pipeline question'})).toBeVisible();
+  await expect(page.locator('[data-pipeline-stage]')).toHaveCount(2);
+  await expect(page.getByRole('radio')).toHaveCount(0);
+  await expect(page.getByRole('button',{name:'Submit & continue →'})).toHaveCount(0);
+  await expect(page.getByText('Fullscreen focus · timed challenges')).toBeVisible();
+  await page.screenshot({path:'test-results/mock-exam-preview.png',fullPage:true});
+});
+
 test('member completes all sections, fullscreen recovery preserves answers and report is saved',async({page})=>{
   // Two server-expiry checks each wait for the real 15-second sync interval.
   test.setTimeout(60_000);

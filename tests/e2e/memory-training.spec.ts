@@ -31,6 +31,11 @@ for(const exhausted of [false,true])test(`standalone memory ${exhausted?'keeps t
   for(const position of [2,7,4])await page.getByRole('button',{name:`Position ${position}`,exact:true}).click();
   await expect(page.getByRole('heading',{name:'Sequence complete — well done'})).toBeVisible();
   expect(commands).toEqual([{action:'start',kind:'memory',difficulty:'easy'},{action:'submit',id:'memory-round',answer:[2,7,4]}]);
-  await expect(page.getByRole('button',{name:'Start next round'})).toBeVisible();
+  const completedActions=page.getByRole('group',{name:'Completed round actions'});
+  const startNext=completedActions.getByRole('button',{name:'Start next round'});
+  const replay=completedActions.getByRole('button',{name:'Replay correct sequence'});
+  await expect(startNext).toBeVisible();
+  await expect(replay).toBeVisible();
+  expect((await startNext.boundingBox())!.x).toBeLessThan((await replay.boundingBox())!.x);
   await expect(page.getByRole('button',{name:'Review round',exact:true})).toBeVisible();
 });

@@ -55,6 +55,41 @@ export function usageTotals(account: UsageAccount) {
   return { practice, solves: account.solves ?? 0 };
 }
 
+export type GrowthReviewInput = {
+  completed: number;
+  correct: number;
+  firstCompleted: number;
+  firstCorrect: number;
+  recentCompleted: number;
+  recentCorrect: number;
+  mockExams: number;
+};
+
+export type GrowthReview = {
+  accuracy: number | null;
+  firstAccuracy: number | null;
+  recentAccuracy: number | null;
+  change: number | null;
+  hasComparableProgress: boolean;
+};
+
+const percent = (correct: number, completed: number) => completed ? Math.round(correct / completed * 100) : null;
+
+/** Only compare meaningful samples, so a lucky first answer never becomes a growth claim. */
+export function reviewProgress(input: GrowthReviewInput): GrowthReview {
+  const accuracy = percent(input.correct, input.completed);
+  const comparable = input.firstCompleted >= 3 && input.recentCompleted >= 3;
+  const firstAccuracy = comparable ? percent(input.firstCorrect, input.firstCompleted) : null;
+  const recentAccuracy = comparable ? percent(input.recentCorrect, input.recentCompleted) : null;
+  return {
+    accuracy,
+    firstAccuracy,
+    recentAccuracy,
+    change: firstAccuracy === null || recentAccuracy === null ? null : recentAccuracy - firstAccuracy,
+    hasComparableProgress: comparable,
+  };
+}
+
 /** A brand-new or never-active account: the people onboarding is for. */
 export function isUnused(account: UsageAccount) {
   const { practice, solves } = usageTotals(account);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { MEMORY_POINTS } from '@/lib/memory-layout';
 
 type Props = {
@@ -11,10 +11,11 @@ type Props = {
   autoPlay?: boolean;
   preview?: boolean;
   onAnswer?: (answer: number[]) => void;
+  reviewActions?: ReactNode;
 };
 
 /** Positions are stable between observation and recall; each round has its own keyed instance. */
-export default function MemoryBoard({ sequence, zh, disabled = false, review = false, autoPlay = false, preview = false, onAnswer }: Props) {
+export default function MemoryBoard({ sequence, zh, disabled = false, review = false, autoPlay = false, preview = false, onAnswer, reviewActions }: Props) {
   const [phase, setPhase] = useState<'ready' | 'watch' | 'recall' | 'done'>(autoPlay ? 'watch' : 'ready');
   const [tick, setTick] = useState(-1);
   const [answer, setAnswer] = useState<number[]>([]);
@@ -68,9 +69,12 @@ export default function MemoryBoard({ sequence, zh, disabled = false, review = f
         </button>;
       })}
     </div>
-    {phase === 'ready' && !preview && <button type="button" disabled={disabled} onClick={() => { setTick(-1); setPhase('watch'); }} className="rounded-lg bg-[#cf80bc] px-4 py-2 font-medium text-white disabled:opacity-50">
-      {review ? (zh ? '回看正确顺序' : 'Replay correct sequence') : (zh ? '播放一次，开始记忆' : 'Play once and remember')}
-    </button>}
+    {phase === 'ready' && !preview && <div role={review?'group':undefined} aria-label={review?(zh?'本轮完成操作':'Completed round actions'):undefined} className="flex flex-wrap items-center gap-3">
+      {reviewActions}
+      <button type="button" disabled={disabled} onClick={() => { setTick(-1); setPhase('watch'); }} className="rounded-lg bg-[#cf80bc] px-4 py-2 font-medium text-white disabled:opacity-50">
+        {review ? (zh ? '回看正确顺序' : 'Replay correct sequence') : (zh ? '播放一次，开始记忆' : 'Play once and remember')}
+      </button>
+    </div>}
     {review && <p className="text-sm text-slate-600">{zh ? '正确位置顺序：' : 'Correct order: '}{sequence.join(' → ')}</p>}
   </div>;
 }

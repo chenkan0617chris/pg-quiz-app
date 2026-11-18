@@ -10,8 +10,8 @@ for (const [lang, title] of [['en', 'Sequence memory training'], ['zh', '记忆�
     await expect(page.getByRole('button',{name:lang==='zh'?'位置 1':'Position 1',exact:true})).toBeDisabled();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await page.goto(`/${lang}/practice`);
-    await expect(page.locator('#practice-kind option')).toHaveCount(4);
-    await expect(page.locator('#practice-kind option[value="memory"]')).toHaveCount(0);
+    await expect(page.getByRole('combobox')).toHaveCount(0);
+    await expect(page.getByRole('radiogroup', { name: lang === 'zh' ? '选择题型' : 'Choose a question type' }).getByRole('radio')).toHaveCount(4);
     await page.goto(`/${lang}/practice?kind=memory`);
     await expect(page).toHaveURL(new RegExp(`/${lang}/memory$`));
     await expect(page.getByRole('heading', { name: title, exact: true })).toBeVisible();

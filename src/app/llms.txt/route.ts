@@ -36,7 +36,7 @@ const BODY = `# CK Quiz — Switch, Digit and Grid Challenge practice (Aon, P&G)
 - [宝洁笔试攻略](${SITE_URL}/zh/guides)
 
 ## Access
-- Sign in for 24 hours of full access, then a free allowance per question type. Paid access is a one-time payment for 7 days (US$14.99 on English pages, ¥9.9 on Chinese pages) with no automatic renewal: ${SITE_URL}/en/pricing
+- Sign in for 24 hours of full access, then a free allowance per question type. Paid access is a one-time US$14.99 payment for 7 days in every language, with no automatic renewal: ${SITE_URL}/en/pricing
 - Guides can be read without signing in.
 `;
 

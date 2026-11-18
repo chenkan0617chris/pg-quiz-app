@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isUnused, nextStepPath, parseOnboarding, startPath, trialPrompt } from '../src/lib/growth';
+import { isUnused, nextStepPath, parseOnboarding, reviewProgress, startPath, trialPrompt } from '../src/lib/growth';
 
 const now = Date.parse('2026-11-12T12:00:00Z');
 const base = { status: 'trial' as const, trialEndsAt: new Date(now + 3600_000).toISOString(), paidUntil: null, practiceUsage: {}, solves: 0 };
@@ -42,4 +42,21 @@ test('ended prompt only for recent, active, never-paid users', () => {
   assert.equal(trialPrompt({ ...ended, trialEndsAt: new Date(now - 15 * 86400_000).toISOString() }, now), null);
   assert.equal(trialPrompt({ ...ended, status: 'paid' }, now), null);
   assert.equal(trialPrompt({ ...ended, lifetime: true }, now), null);
+});
+
+test('trial review compares the first and most recent answered questions without overstating a tiny sample', () => {
+  assert.deepEqual(reviewProgress({ completed: 20, correct: 15, firstCompleted: 10, firstCorrect: 5, recentCompleted: 10, recentCorrect: 10, mockExams: 2 }), {
+    accuracy: 75,
+    firstAccuracy: 50,
+    recentAccuracy: 100,
+    change: 50,
+    hasComparableProgress: true,
+  });
+  assert.deepEqual(reviewProgress({ completed: 2, correct: 2, firstCompleted: 2, firstCorrect: 2, recentCompleted: 2, recentCorrect: 2, mockExams: 0 }), {
+    accuracy: 100,
+    firstAccuracy: null,
+    recentAccuracy: null,
+    change: null,
+    hasComparableProgress: false,
+  });
 });

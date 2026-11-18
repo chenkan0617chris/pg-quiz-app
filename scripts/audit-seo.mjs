@@ -28,7 +28,7 @@ for(const url of urls){
  if(path.endsWith('/pricing')){
   const offer=data.find(d=>d['@type']==='SoftwareApplication')?.offers;
   assert.ok(offer,`${path}: no Offer`);
-  assert.equal(offer.priceCurrency,'AUD',`${path}: checkout currency must remain AUD`);
+  assert.equal(offer.priceCurrency,'USD',`${path}: checkout currency must remain USD`);
   const shown=`$${offer.price}`;
   assert.ok(html.includes(shown),`${path}: visible price differs from Offer`);
  }
