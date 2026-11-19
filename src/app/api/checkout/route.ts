@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server';
 import { randomUUID } from 'node:crypto';
 import { getAccess } from '@/lib/access';
 import { allowRequest,database } from '@/lib/db';
+import { recordConversion } from '@/lib/conversion-store';
 import { paymentsEnabled,stripeClient } from '@/lib/payments';
 export async function POST(request:Request){
  const {userId}=await auth();
@@ -13,6 +14,7 @@ export async function POST(request:Request){
  if(request.headers.get('origin')!==origin)return Response.json({error:'Invalid origin'},{status:403});
  try{
   if(!await allowRequest(userId,'checkout',5))return Response.json({error:'Too many requests'},{status:429});
+    try {await recordConversion(userId,'checkout_started');}catch { /* Checkout remains available if analytics is temporarily unavailable. */ }
   const body=await request.json().catch(()=>null) as {lang?:string}|null;
   const plan=priceFor(isLanguage(body?.lang)?body.lang:'zh');
   const access=await getAccess(userId);

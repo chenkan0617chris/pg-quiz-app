@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAccount } from '@/lib/use-account';
 import { useI18n } from '@/lib/i18n';
 import { hasFullAccess } from '@/lib/access-policy';
@@ -25,6 +25,12 @@ function Center({access}:{access:ReturnType<typeof useAccount>}){
   const [error,setError]=useState('');
   const [revision,setRevision]=useState(0);
   const [tab,setTab]=useState<'exam'|'report'>('exam');
+  const paywallRecorded=useRef(false);
+  useEffect(()=>{
+    if(!userId || !account || member || paywallRecorded.current)return;
+    paywallRecorded.current=true;
+    void fetch('/api/conversion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'mock_paywall_viewed'}),keepalive:true});
+  },[userId,account,member]);
   useEffect(()=>{
     if(!userId)return;
     const controller=new AbortController();

@@ -1,6 +1,7 @@
 import { matchesOrderPayment } from '@/lib/payment-product';
 import { database } from '@/lib/db';
 import { stripeClient } from '@/lib/payments';
+import { recordConversion } from '@/lib/conversion-store';
 export async function POST(request:Request){
  const secret=process.env.STRIPE_WEBHOOK_SECRET;
  if(!secret)return new Response('Unavailable',{status:503});
@@ -24,6 +25,7 @@ export async function POST(request:Request){
    if(!intent)return new Response('Missing payment',{status:400});
    // Retrieve the charge so a refund delivered before completion cannot reopen access.
    await sql`SELECT fulfill_quiz_payment(${orderId}::uuid,${session.id},${intent},${session.livemode})`;
+   if(session.livemode)await recordConversion(String(order.user_id),'payment_completed');
    const payment=await stripe.paymentIntents.retrieve(intent,{expand:['latest_charge']});
    if(payment.latest_charge&&typeof payment.latest_charge!=='string'&&payment.latest_charge.refunded)
     await sql`SELECT refund_quiz_payment(${intent},${session.livemode})`;
