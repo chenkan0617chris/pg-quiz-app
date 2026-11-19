@@ -99,17 +99,9 @@ export function isUnused(account: UsageAccount) {
 export type TrialPrompt = { kind: 'ending'; hoursLeft: number } | { kind: 'ended' } | null;
 
 export function trialPrompt(account: UsageAccount, now: number): TrialPrompt {
-  if (account.lifetime || account.status === 'paid') return null;
-  const trialEnd = Date.parse(account.trialEndsAt);
-  if (Number.isNaN(trialEnd)) return null;
-  if (account.status === 'trial') {
-    const left = trialEnd - now;
-    return left > 0 && left <= ENDING_WINDOW_MS ? { kind: 'ending', hoursLeft: Math.max(1, Math.ceil(left / 3600_000)) } : null;
-  }
-  // Expired: only people who used something, only for a while, and never former members.
-  if (account.paidUntil) return null;
-  if (now - trialEnd > ENDED_WINDOW_MS) return null;
-  return isUnused(account) ? null : { kind: 'ended' };
+  void account;
+  void now;
+  return null;
 }
 
 /** Dismissals last for the local calendar day. */

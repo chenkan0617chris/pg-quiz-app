@@ -26,7 +26,7 @@ export async function initializeAccess(userId:string,registeredAt:number) {
   const sql=database();
   const start=new Date(registeredAt).toISOString();
   await sql`INSERT INTO user_access(user_id,trial_started_at,trial_ends_at,trial_eligible)
-    VALUES (${userId},${start}::timestamptz,${start}::timestamptz+interval '24 hours',true)
+    VALUES (${userId},${start}::timestamptz,${start}::timestamptz,false)
     ON CONFLICT (user_id) DO NOTHING`;
   const access=await readAccess(userId);
   if(!access)throw new Error('Access unavailable');

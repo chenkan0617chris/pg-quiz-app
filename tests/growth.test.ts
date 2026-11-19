@@ -28,15 +28,15 @@ test('unused means no practice and no solves', () => {
   assert.equal(isUnused({ ...base, practiceUsage: { pipeline: { started: 1, completed: 0 } } }), false);
 });
 
-test('trial prompt shows in the last 6 hours of the trial', () => {
-  assert.deepEqual(trialPrompt(base, now), { kind: 'ending', hoursLeft: 1 });
-  assert.deepEqual(trialPrompt({ ...base, trialEndsAt: new Date(now + 5.5 * 3600_000).toISOString() }, now), { kind: 'ending', hoursLeft: 6 });
+test('full-feature trial prompts are disabled', () => {
+  assert.equal(trialPrompt(base, now), null);
+  assert.equal(trialPrompt({ ...base, trialEndsAt: new Date(now + 5.5 * 3600_000).toISOString() }, now), null);
   assert.equal(trialPrompt({ ...base, trialEndsAt: new Date(now + 7 * 3600_000).toISOString() }, now), null);
 });
 
-test('ended prompt only for recent, active, never-paid users', () => {
+test('ended trial prompt stays disabled for active free users', () => {
   const ended = { ...base, status: 'expired' as const, trialEndsAt: new Date(now - 86400_000).toISOString(), solves: 3 };
-  assert.deepEqual(trialPrompt(ended, now), { kind: 'ended' });
+  assert.equal(trialPrompt(ended, now), null);
   assert.equal(trialPrompt({ ...ended, solves: 0 }, now), null);
   assert.equal(trialPrompt({ ...ended, paidUntil: '2026-11-01T00:00:00Z' }, now), null);
   assert.equal(trialPrompt({ ...ended, trialEndsAt: new Date(now - 15 * 86400_000).toISOString() }, now), null);

@@ -10,5 +10,5 @@ export type SolverKind = typeof SOLVER_KINDS[number];
 export type SolverRemaining = Record<SolverKind, number>;
 
 export function hasFullAccess(status: string) {
-  return status === 'paid' || status === 'trial';
+  return status === 'paid';
 }

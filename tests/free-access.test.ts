@@ -30,6 +30,6 @@ test('free allowance policy covers each practice kind',()=>{
  assert.equal(FREE_PRACTICE_PER_KIND,10);
  assert.deepEqual([...PRACTICE_KINDS],['pipeline','numerical','data','figure','grid']);
  assert.equal(hasFullAccess('paid'),true);
- assert.equal(hasFullAccess('trial'),true);
+  assert.equal(hasFullAccess('trial'),false);
  assert.equal(hasFullAccess('expired'),false);
 });
