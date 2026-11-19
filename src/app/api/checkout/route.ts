@@ -6,6 +6,10 @@ import { getAccess } from '@/lib/access';
 import { allowRequest,database } from '@/lib/db';
 import { recordConversion } from '@/lib/conversion-store';
 import { paymentsEnabled,stripeClient } from '@/lib/payments';
+async function checkoutResponse(userId:string,url:string) {
+ try {await recordConversion(userId,'checkout_started');}catch { /* Checkout remains available if analytics is temporarily unavailable. */ }
+ return Response.json({url},{headers:{'Cache-Control':'no-store'}});
+}
 export async function POST(request:Request){
  const {userId}=await auth();
  if(!userId)return Response.json({error:'Unauthorized'},{status:401});
@@ -14,7 +18,6 @@ export async function POST(request:Request){
  if(request.headers.get('origin')!==origin)return Response.json({error:'Invalid origin'},{status:403});
  try{
   if(!await allowRequest(userId,'checkout',5))return Response.json({error:'Too many requests'},{status:429});
-    try {await recordConversion(userId,'checkout_started');}catch { /* Checkout remains available if analytics is temporarily unavailable. */ }
   const body=await request.json().catch(()=>null) as {lang?:string}|null;
   const plan=priceFor(isLanguage(body?.lang)?body.lang:'zh');
   const access=await getAccess(userId);
@@ -29,7 +32,7 @@ export async function POST(request:Request){
    const current=isCurrentPrice(order as {amount:number;currency:string},plan);
    if(order.session_id){
     const existing=await stripe.checkout.sessions.retrieve(order.session_id);
-    if(existing.status==='open'&&current&&existing.url)return Response.json({url:existing.url},{headers:{'Cache-Control':'no-store'}});
+    if(existing.status==='open'&&current&&existing.url)return checkoutResponse(userId,existing.url);
     if(existing.status==='complete')return Response.json({error:'Payment is processing. Please refresh shortly.'},{status:409});
     if(existing.status==='open')await stripe.checkout.sessions.expire(existing.id);
    }else if(current){break;}
@@ -44,6 +47,7 @@ export async function POST(request:Request){
    success_url:origin+'/billing?result=processing',cancel_url:origin+'/billing?result=cancelled',
   },{idempotencyKey:'quiz-order-'+order.id});
   await sql`UPDATE payment_orders SET session_id=${session.id} WHERE id=${order.id}`;
-  return Response.json({url:session.url},{headers:{'Cache-Control':'no-store'}});
+  if(!session.url)throw new Error('Checkout URL unavailable');
+  return checkoutResponse(userId,session.url);
  }catch{return Response.json({error:'Unable to start checkout'},{status:503});}
 }

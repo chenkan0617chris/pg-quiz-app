@@ -25,10 +25,10 @@ export async function POST(request:Request){
    if(!intent)return new Response('Missing payment',{status:400});
    // Retrieve the charge so a refund delivered before completion cannot reopen access.
    await sql`SELECT fulfill_quiz_payment(${orderId}::uuid,${session.id},${intent},${session.livemode})`;
-   if(session.livemode)await recordConversion(String(order.user_id),'payment_completed');
    const payment=await stripe.paymentIntents.retrieve(intent,{expand:['latest_charge']});
-   if(payment.latest_charge&&typeof payment.latest_charge!=='string'&&payment.latest_charge.refunded)
-    await sql`SELECT refund_quiz_payment(${intent},${session.livemode})`;
+   const refunded=Boolean(payment.latest_charge&&typeof payment.latest_charge!=='string'&&payment.latest_charge.refunded);
+   if(refunded)await sql`SELECT refund_quiz_payment(${intent},${session.livemode})`;
+   else if(session.livemode)await recordConversion(String(order.user_id),'payment_completed');
   }else if(event.type==='charge.refunded'){
    const charge=await stripe.charges.retrieve(event.data.object.id);
    if(charge.refunded&&typeof charge.payment_intent==='string')await sql`SELECT refund_quiz_payment(${charge.payment_intent},${charge.livemode})`;

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { build } from 'esbuild';
+import { readFileSync } from 'node:fs';
 
 async function api(userId:string|null,allowed=true){
   const result=await build({entryPoints:['src/app/api/conversion/route.ts'],bundle:true,write:false,format:'cjs',platform:'node',plugins:[{name:'conversion-fixture',setup(b){
@@ -24,4 +25,13 @@ test('conversion route only accepts an authenticated mock-exam paywall event',as
 test('conversion route rate limits repeated paywall events',async()=>{
   const throttled=await api('user',false);
   assert.equal((await throttled.POST(post({event:'mock_paywall_viewed'}))).status,429);
+});
+
+test('server milestones are written only after a usable checkout and non-refunded payment',()=>{
+  const checkout=readFileSync('src/app/api/checkout/route.ts','utf8');
+  assert.match(checkout,/return checkoutResponse\(userId,existing\.url\)/);
+  assert.match(checkout,/return checkoutResponse\(userId,session\.url\)/);
+  const webhook=readFileSync('src/app/api/stripe/webhook/route.ts','utf8');
+  assert.match(webhook,/const refunded=[\s\S]*latest_charge[\s\S]*refunded/);
+  assert.match(webhook,/if\(refunded\)[\s\S]*refund_quiz_payment[\s\S]*else if\(session\.livemode\)await recordConversion/);
 });
