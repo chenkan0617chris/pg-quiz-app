@@ -43,7 +43,7 @@ function Center({access}:{access:ReturnType<typeof useAccount>}){
     setBusy(true);setError('');
     try{
       const response=await fetch('/api/exams',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(id?{action:'sync',id}:{action:'create'})});
-      if(!response.ok)throw new Error(response.status===403?(zh?'此功能需要有效会员，请开通后重试。':'An active membership is required.'):(zh?'暂时无法进入考试，请重试。':'Could not open the exam. Please retry.'));
+      if(!response.ok)throw new Error(response.status===403?(zh?'模拟考仅限付费会员，请开通后重试。':'Mock exams require a paid membership.'):(zh?'暂时无法进入考试，请重试。':'Could not open the exam. Please retry.'));
       const next=await response.json() as ExamView;
       if(next.phase==='completed')await showReport(next.id);else setExam(next);
     }catch(e){setError(e instanceof Error?e.message:'Unavailable');}finally{setBusy(false);}

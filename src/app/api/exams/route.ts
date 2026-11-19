@@ -33,8 +33,8 @@ export async function POST(request:Request){
   try{
     if(!await allowRequest(userId,'exam-write',120))return reply({error:'Too many requests'},429);
     const data=input.data;
-    // Members can sit exams. Owners retain access to history and can close a session after expiry.
-    if(data.action!=='finish'&&!hasFullAccess((await getAccess(userId)).status))return reply({error:'Membership required'},403);
+    // Only paid members can sit exams. Owners retain history and can close a session after expiry.
+    if(data.action!=='finish'&&!hasFullAccess((await getAccess(userId)).status))return reply({error:'Paid membership required'},403);
     const result=data.action==='create'?await createExam(userId):await updateExam(userId,data.id,data);
     return result?reply(result):reply({error:'Not found'},404);
   }catch{return reply({error:'Service temporarily unavailable'},503);}

@@ -29,7 +29,7 @@ test('exam route accepts valid member actions and rejects unbounded or invalid a
   assert.equal((await paid.GET(new Request('http://localhost/api/exams?report=invalid'))).status,400);
 });
 
-test('trial users can start the same full exams as paid members',async()=>{
+test('trial users cannot start mock exams',async()=>{
  const trial=await api('user','trial');
- assert.equal((await trial.POST(post({action:'create'}))).status,200);
+ assert.equal((await trial.POST(post({action:'create'}))).status,403);
 });
