@@ -8,7 +8,34 @@ export const ACTIVITY_PAGE_SIZE=40;
 export type UserUsage={userId:string;status:'paid'|'trial'|'expired';lifetime:boolean;paidUntil:string|null;trialEndsAt:string|null;
   quotas:{kind:string;used:number;limit:number}[];lastActivity:string|null;solves:number;practiceStarted:number;practiceCompleted:number;exams:number;training:number};
 export type Activity={eventId:string;tool:string;action:string;occurredAt:string;freeCredits:number|null;source:string;correct:boolean|null};
+export type FunnelRow={day:string;signups:number;activated:number;paywalls:number;checkouts:number;payments:number};
+export type Funnel={days:1|7|30;totals:Omit<FunnelRow,'day'>;rows:FunnelRow[]};
 const iso=(value:unknown)=>value?new Date(String(value)).toISOString():null;
+
+const funnelRow=(row:Record<string,unknown>):FunnelRow=>({
+  day:String(row.day),signups:Number(row.signups),activated:Number(row.activated),
+  paywalls:Number(row.paywalls),checkouts:Number(row.checkouts),payments:Number(row.payments),
+});
+
+/** Registration-date cohorts; later milestones are counted only for that same cohort. */
+export async function conversionFunnel(days:1|7|30):Promise<Funnel> {
+  const rows=await database()`WITH cohort AS (
+    SELECT user_id,trial_started_at,(trial_started_at AT TIME ZONE 'Australia/Sydney')::date AS day
+    FROM user_access
+    WHERE left(user_id,5)='user_' AND user_id<>'user_test'
+      AND (trial_started_at AT TIME ZONE 'Australia/Sydney')::date >= (now() AT TIME ZONE 'Australia/Sydney')::date-${days-1}
+  ) SELECT to_char(day,'YYYY-MM-DD') AS day,count(*)::int AS signups,
+    count(*) FILTER (WHERE EXISTS(SELECT 1 FROM admin_activity a WHERE a.user_id=cohort.user_id AND a.occurred_at>=cohort.trial_started_at))::int AS activated,
+    count(*) FILTER (WHERE EXISTS(SELECT 1 FROM conversion_events e WHERE e.user_id=cohort.user_id AND e.event='mock_paywall_viewed' AND e.created_at>=cohort.trial_started_at))::int AS paywalls,
+    count(*) FILTER (WHERE EXISTS(SELECT 1 FROM conversion_events e WHERE e.user_id=cohort.user_id AND e.event='checkout_started' AND e.created_at>=cohort.trial_started_at))::int AS checkouts,
+    count(*) FILTER (WHERE EXISTS(SELECT 1 FROM conversion_events e WHERE e.user_id=cohort.user_id AND e.event='payment_completed' AND e.created_at>=cohort.trial_started_at))::int AS payments
+    FROM cohort GROUP BY day ORDER BY day DESC`;
+  const data=rows.map(row=>funnelRow(row as Record<string,unknown>));
+  return {days,rows:data,totals:data.reduce((total,row)=>({
+    signups:total.signups+row.signups,activated:total.activated+row.activated,paywalls:total.paywalls+row.paywalls,
+    checkouts:total.checkouts+row.checkouts,payments:total.payments+row.payments,
+  }),{signups:0,activated:0,paywalls:0,checkouts:0,payments:0})};
+}
 
 /** Batched for one Clerk page; no per-user requests or writes on admin reads. */
 export async function userUsage(userIds:string[]):Promise<UserUsage[]> {

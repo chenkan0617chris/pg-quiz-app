@@ -17,6 +17,11 @@ export function parsePage(value:string) {
   if(!/^\d+$/.test(value)||Number(value)<1||Number(value)>10000)throw new Error('页码无效');
   return Number(value);
 }
+export function parseFunnelDays(value:string):1|7|30 {
+  if(!value)return 7;
+  if(value==='1'||value==='7'||value==='30')return Number(value) as 1|7|30;
+  throw new Error('漏斗时间范围无效');
+}
 export function parseActivityFilters(params:QueryParams):ActivityFilters {
   const tool=queryValue(params.tool);
   if(tool && !Object.hasOwn(ACTIVITY_TOOLS,tool))throw new Error('工具筛选无效');
