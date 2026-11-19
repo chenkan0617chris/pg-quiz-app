@@ -3,13 +3,11 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { database } from '../src/lib/db';
 import { initializeAccess,readAccess } from '../src/lib/access-store';
-test('buying during a trial grants seven days immediately without adding unused trial time',{skip:!process.env.RUN_DB_TESTS},async()=>{
+test('buying from the free plan grants seven days immediately',{skip:!process.env.RUN_DB_TESTS},async()=>{
  const sql=database();const uid='payment_trial_test_'+randomUUID();const order=randomUUID();
  try{
   await initializeAccess(uid,Date.now());
-  await sql`UPDATE user_access SET trial_eligible=true WHERE user_id=${uid}`;
-  const trial=await readAccess(uid);
-  assert.equal(trial?.status,'trial');
+  assert.equal((await readAccess(uid))?.status,'expired');
   await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${order},${uid},true,990,'cny')`;
   await sql`SELECT fulfill_quiz_payment(${order}::uuid,${'cs_'+order},${'pi_'+order},true)`;
   const access=await readAccess(uid);

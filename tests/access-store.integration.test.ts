@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { initializeAccess,readAccess } from '../src/lib/access-store';
 
-test('database preserves trial start across retries and concurrent initialization',{skip:!process.env.RUN_DB_TESTS},async()=>{
+test('database initializes free access once across retries and concurrent initialization',{skip:!process.env.RUN_DB_TESTS},async()=>{
  const id=`test_access_${randomUUID()}`;
  const start=Date.now()-8*86400000;
  const initial=await initializeAccess(id,start);
@@ -12,7 +12,7 @@ test('database preserves trial start across retries and concurrent initializatio
  for(const attempt of attempts)assert.deepEqual(attempt,initial);
  assert.equal(await readAccess(`${id}_other`),null);
  const fresh=await initializeAccess(`${id}_fresh`,Date.now());
- assert.equal(fresh.status,'trial');
- assert.ok(Math.abs(Date.parse(fresh.trialEndsAt)-Date.now()-86400000)<5000);
+  assert.equal(fresh.status,'expired');
+  assert.ok(Math.abs(Date.parse(fresh.trialEndsAt)-Date.now())<5000);
  assert.deepEqual(fresh.solverRemaining,{pipeline:10,numerical:10,figure:10});
 });
