@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { build } from 'esbuild';
 
-test('practice picker uses clear cards and changes the selected exercise without starting a question', async ({ page }) => {
+test('practice opens the selected exercise directly without repeating the sidebar picker', async ({ page }) => {
   await page.route('http://practice.test/', route => route.fulfill({ contentType: 'text/html', body: '<div id="root"></div>' }));
   const bundle = await build({
     stdin: {
-      contents: `import React from 'react'; import { createRoot } from 'react-dom/client'; import PracticePage from './src/components/practice/PracticePage'; createRoot(document.getElementById('root')).render(<PracticePage />);`,
+      contents: `import React from 'react'; import { createRoot } from 'react-dom/client'; import PracticePage from './src/components/practice/PracticePage'; createRoot(document.getElementById('root')).render(<PracticePage initialKind="figure" />);`,
       resolveDir: process.cwd(), loader: 'tsx',
     },
     bundle: true, write: false, outdir: '/tmp/pg-practice-picker', format: 'iife', jsx: 'automatic',
@@ -27,24 +27,10 @@ test('practice picker uses clear cards and changes the selected exercise without
     else await page.addScriptTag({ content: file.text });
   }
 
-  const picker = page.getByRole('radiogroup', { name: 'Choose a question type' });
-  await expect(picker).toBeVisible();
-  await expect(page.locator('#practice-kind')).toHaveCount(0);
-  const pipeline = picker.getByRole('radio', { name: /Switch Challenge/ });
-  const figure = picker.getByRole('radio', { name: /Figure reasoning/ });
-  await expect(pipeline).toHaveAttribute('aria-checked', 'true');
-  await expect(page.getByRole('radiogroup', { name: 'Difficulty' }).getByRole('radio', { name: 'Basic' })).toHaveAttribute('aria-checked', 'true');
-  await expect(page.getByText('Free practice:', { exact: false })).toHaveCount(0);
-  await expect(page.getByText('Choosing does not use a new question')).toHaveCount(0);
-  await expect(page.getByText('Focus:', { exact: false })).toHaveCount(0);
-  await page.getByRole('radio', { name: 'Advanced' }).click();
-  await expect(page.getByRole('radio', { name: 'Advanced' })).toHaveAttribute('aria-checked', 'true');
-  await figure.click();
-  await expect(figure).toHaveAttribute('aria-checked', 'true');
+  await expect(page.getByRole('radiogroup', { name: 'Choose a question type' })).toHaveCount(0);
+  await expect(page.locator('[data-practice-kind="figure"]')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Figure reasoning' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Start', exact: true })).toBeVisible();
-  await expect(page.getByRole('radiogroup', { name: 'Difficulty' })).toHaveCount(0);
-  await pipeline.click();
-  await expect(page.getByRole('radiogroup', { name: 'Difficulty' }).getByRole('radio', { name: 'Basic' })).toHaveAttribute('aria-checked', 'true');
 });
 
 test('recent practice shows eight submissions per page with previous and next controls', async ({ page }) => {

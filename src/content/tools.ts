@@ -132,11 +132,11 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
         '管道推理、图形推理、数字推理与图表数据分析练习题库，按简单、中等、困难三档生成题目，每题附逐步解析，答错的题可单独重做。',
       keywords: ['笔试练习题库', '宝洁笔试练习', '推理题在线练习', '图形推理题库', '资料分析练习'],
       intro:
-        '这份独立宝洁题库提供管道题模拟练习和计算题等原创训练，题目并非官方真题。练习题库按规则实时生成题目，覆盖管道推理、图形推理、数字推理、图表数据分析四种题型，管道题支持三档难度。记忆训练请使用「专项训练」中的独立入口。每道题提交后都会给出完整解析：管道题会逐级演示图形如何移动，图形题会指出用的是哪条变换规则，数字题和数据题会写清每一步的计算依据。做错的题会单独保存，可以只重做错题。',
+        '这份独立宝洁题库提供管道题模拟练习和计算题等原创训练，题目并非官方真题。Practice 菜单按练习重点收录管道推理、数字推理、图形推理、顺序记忆、空间记忆、图表数据、PEAK 和言语推理；本页提供管道、图形、数字和数据四类随机题库，管道题支持三档难度。每道题提交后都会给出完整解析：管道题会逐级演示图形如何移动，图形题会指出用的是哪条变换规则，数字题和数据题会写清每一步的计算依据。做错的题会单独保存，可以只重做错题。',
       notes: [
         '每道题都随机生成：免费用户每类累计 10 道新题，会员不限题量。',
         '管道题的三档难度分别对应 1、2、3 个方框。',
-        '登录后可开始练习并保存记录；记忆训练记录在独立训练页面查看。',
+        '登录后可开始练习并保存记录；顺序记忆与空间记忆的记录在各自的练习页面查看。',
       ],
       guide: 'data',
     },
@@ -148,11 +148,11 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
         'A practice bank for Switch Challenge (pipeline logic), Digit Challenge equations, figure series and data interpretation for Aon, P&G and other online assessments, generated at easy, medium and hard settings, with a worked explanation on every question and a retry list for the ones you get wrong.',
       keywords: ['aptitude test practice bank', 'P&G assessment practice', 'reasoning questions online', 'figure series practice', 'data interpretation practice'],
       intro:
-        'The practice bank generates questions on demand across four types — Switch Challenge (pipeline logic), figure series, Digit Challenge equations and data interpretation. Switch questions offer three difficulty levels. Memory training has its own dedicated page under Skill training. Every submission comes with a full explanation: pipeline questions animate how the shapes move stage by stage, figure questions name the transformation involved, and numerical and data questions show the reasoning behind each step. Anything you get wrong is saved so you can retry just those.',
+        'The Practice menu brings together Switch Challenge, Digit Challenge, figure reasoning, sequence memory, Grid Challenge, data interpretation, PEAK and verbal reasoning. This page generates questions on demand for Switch, figure, Digit and data interpretation; Switch questions offer three difficulty levels. Every submission comes with a full explanation: pipeline questions animate how the shapes move stage by stage, figure questions name the transformation involved, and numerical and data questions show the reasoning behind each step. Anything you get wrong is saved so you can retry just those.',
       notes: [
         'Every question is randomly generated: free users get 10 new questions per type, members are unlimited.',
         'For pipeline questions, the easy, medium and hard settings correspond to one, two and three boxes.',
-        'Sign in to start practice and save history. Memory rounds are listed on the dedicated training page.',
+        'Sign in to start practice and save history. Sequence-memory and Grid rounds are listed on their respective Practice pages.',
       ],
       guide: 'data',
     },

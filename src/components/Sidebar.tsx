@@ -1,19 +1,19 @@
 'use client';
 
 import Link from './NavigationLink';
-import { usePathname } from 'next/navigation';
+import { usePathname,useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useI18n, type DictKey } from '@/lib/i18n';
 import { localePath } from '@/lib/seo';
 import AccountControls from './AccountControls';
+import { PRACTICE_NAVIGATION } from '@/lib/practice-navigation';
 
-type IconName = 'home'|'practice'|'exam'|'book'|'training'|'tools'|'user'|'membership'|'language'|'menu'|'close';
+type IconName = 'home'|'practice'|'exam'|'book'|'tools'|'user'|'membership'|'language'|'menu'|'close';
 const paths:Record<IconName,ReactNode>={
   home:<><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></>,
   practice:<><rect x="4" y="3" width="16" height="18" rx="3"/><path d="m8 9 1 1 2-2m-3 7 1 1 2-2m3-5h3m-3 6h3"/></>,
   exam:<><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M9 3h6v4H9zm-1 9h8m-8 4h5"/></>,
   book:<><path d="M12 5v16m0-16C8 2 3 4 3 4v15s5-2 9 2c4-4 9-2 9-2V4s-5-2-9 1Z"/></>,
-  training:<><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></>,
   tools:<><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 17.5h7m-3.5-3.5v7"/></>,
   user:<><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></>,
   membership:<><path d="m3 7 4 4 5-7 5 7 4-4-2 12H5Z"/><path d="M8 22h8"/></>,
@@ -25,14 +25,12 @@ function Icon({name}:{name:IconName}){return <svg aria-hidden="true" className="
 function Brand(){return <><span className="flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-indigo-600 text-white shadow-[0_2px_5px_#4f46e526]"><svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5m8-14-6 7 6 7m-6-7h7"/></svg></span><span className="text-[19px] font-semibold tracking-[-0.6px] text-slate-900">CK<span className="ml-1 font-normal text-slate-500">Quiz</span></span></>;}
 
 type Item={path:string;label:DictKey;icon?:IconName};
-const training:Item[]=[{path:'/memory',label:'navMemory'},{path:'/grid',label:'navGrid'},{path:'/peak',label:'navPeak'},{path:'/verbal',label:'navVerbal'}];
 const tools:Item[]=[{path:'/pipeline',label:'navPipeline'},{path:'/numerical',label:'navNumerical'},{path:'/series',label:'navSeries'}];
-type NavigationGroup={icon:'tools'|'training';zh:string;en:string;items:Item[]};
+type NavigationGroup={icon:'tools'|'practice';zh:string;en:string;items:readonly Item[]};
 const navigation:(Item|NavigationGroup)[]=[
   {path:'',label:'navHome',icon:'home'},
   {icon:'tools',zh:'解题工具',en:'Solving tools',items:tools},
-  {icon:'training',zh:'专项训练',en:'Skill training',items:training},
-  {path:'/practice',label:'navPractice',icon:'practice'},
+  {icon:'practice',zh:'练习题库',en:'Practice',items:PRACTICE_NAVIGATION},
   {path:'/exams',label:'navExams',icon:'exam'},
   {path:'/guides',label:'navGuides',icon:'book'},
 ];
@@ -40,14 +38,19 @@ const row='group flex min-h-10 w-full items-center gap-3 rounded-lg px-3 text-[1
 const selected='bg-white font-semibold text-indigo-700 shadow-[0_1px_4px_#0f172a0b] ring-1 ring-slate-200/80';
 const neutral='font-medium text-slate-600 hover:bg-slate-200/50 hover:text-slate-950';
 
-function NavGroup({label,icon,items,pathname,close}:{label:string;icon:IconName;items:Item[];pathname:string;close:()=>void}){
+function NavGroup({label,icon,items,pathname,close}:{label:string;icon:IconName;items:readonly Item[];pathname:string;close:()=>void}){
   const {lang,t}=useI18n();
-  const current=items.some(item=>pathname===localePath(lang,item.path));
+  const searchParams=useSearchParams();
+  const isActive=(path:string)=>{
+    const [targetPath,targetSearch='']=localePath(lang,path).split('?');
+    return pathname===targetPath&&(targetSearch?searchParams.toString()===targetSearch:searchParams.size===0);
+  };
+  const current=items.some(item=>isActive(item.path));
   const [open,setOpen]=useState(current);
   const id=`navigation-${icon}`;
   return <div>
     <button type="button" aria-expanded={open} aria-controls={id} onClick={()=>setOpen(!open)} className={`${row} cursor-pointer ${current?'font-semibold text-indigo-700 hover:bg-indigo-50':neutral}`}><Icon name={icon}/><span className="flex-1 text-left">{label}</span><svg aria-hidden="true" viewBox="0 0 16 16" fill="none" className={`size-4 text-slate-400 transition-transform motion-reduce:transition-none ${open?'rotate-90':''}`}><path d="m6 4 4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></button>
-    <div id={id} hidden={!open} className="ml-[21px] mt-1 border-l border-slate-200 pl-3"><div className="space-y-1 py-1">{items.map(item=>{const target=localePath(lang,item.path),active=pathname===target;return <Link key={item.path} href={target} onClick={close} aria-current={active?'page':undefined} className={`${row} !min-h-9 !gap-2.5 ${active?'bg-indigo-50 font-semibold text-indigo-700':'text-slate-500 hover:bg-slate-200/40 hover:text-slate-900'}`}><span aria-hidden="true" className={`size-1.5 shrink-0 rounded-full ${active?'bg-indigo-500':'bg-slate-300'}`}/><span>{t(item.label)}</span></Link>;})}</div></div>
+    <div id={id} hidden={!open} className="ml-[21px] mt-1 border-l border-slate-200 pl-3"><div className="space-y-1 py-1">{items.map(item=>{const target=localePath(lang,item.path),active=isActive(item.path);return <Link key={item.path} href={target} onClick={close} aria-current={active?'page':undefined} className={`${row} !min-h-9 !gap-2.5 ${active?'bg-indigo-50 font-semibold text-indigo-700':'text-slate-500 hover:bg-slate-200/40 hover:text-slate-900'}`}><span aria-hidden="true" className={`size-1.5 shrink-0 rounded-full ${active?'bg-indigo-500':'bg-slate-300'}`}/><span>{t(item.label)}</span></Link>;})}</div></div>
   </div>;
 }
 

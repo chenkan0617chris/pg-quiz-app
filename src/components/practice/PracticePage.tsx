@@ -18,7 +18,7 @@ import NumericalBoard from './NumericalBoard';
 type Question = Exclude<PublicQuestion,{kind:'memory'}>;
 type Exercise = {id:string;question:Question};
 type Result = Exercise & {answer:number[];correct:boolean;referenceAnswer:number[];submittedAt:string;explanation:Explanation};
-type PracticeChoice = { kind: Question['kind']; mark: string; zh: { title: string; detail: string }; en: { title: string; detail: string } };
+type PracticeChoice = { kind: Question['kind']; zh: { title: string; detail: string }; en: { title: string; detail: string } };
 
 const DIFFICULTIES: {value:Difficulty;zh:string;en:string}[] = [
   { value: 'easy', zh: '基础', en: 'Basic' },
@@ -28,10 +28,10 @@ const DIFFICULTIES: {value:Difficulty;zh:string;en:string}[] = [
 const HISTORY_PAGE_SIZE = 8;
 
 const PRACTICE_CHOICES: PracticeChoice[] = [
-  { kind: 'pipeline', mark: '↔', zh: { title: '管道题（Switch）', detail: '根据输入与输出，推导每个变换方框的规则。' }, en: { title: 'Switch Challenge', detail: 'Infer the rule inside each box from the input and output rows.' } },
-  { kind: 'figure', mark: '◇', zh: { title: '图形推理', detail: '观察连续图形，找出旋转、镜像、移动或反转规律。' }, en: { title: 'Figure reasoning', detail: 'Find the rotation, reflection, movement or inversion pattern.' } },
-  { kind: 'data', mark: '▥', zh: { title: '图表与数据分析', detail: '读表和图，练习增长率、占比、比值和单位转换。' }, en: { title: 'Data interpretation', detail: 'Read charts and tables to calculate growth, shares, ratios and units.' } },
-  { kind: 'numerical', mark: '×', zh: { title: '数字题（Digit）', detail: '用不同数字完成等式，找出所有符合条件的组合。' }, en: { title: 'Digit Challenge', detail: 'Use distinct digits to complete an equation and find valid combinations.' } },
+  { kind: 'pipeline', zh: { title: '管道题（Switch）', detail: '根据输入与输出，推导每个变换方框的规则。' }, en: { title: 'Switch Challenge', detail: 'Infer the rule inside each box from the input and output rows.' } },
+  { kind: 'figure', zh: { title: '图形推理', detail: '观察连续图形，找出旋转、镜像、移动或反转规律。' }, en: { title: 'Figure reasoning', detail: 'Find the rotation, reflection, movement or inversion pattern.' } },
+  { kind: 'data', zh: { title: '图表与数据分析', detail: '读表和图，练习增长率、占比、比值和单位转换。' }, en: { title: 'Data interpretation', detail: 'Read charts and tables to calculate growth, shares, ratios and units.' } },
+  { kind: 'numerical', zh: { title: '数字题（Digit）', detail: '用不同数字完成等式，找出所有符合条件的组合。' }, en: { title: 'Digit Challenge', detail: 'Use distinct digits to complete an equation and find valid combinations.' } },
 ];
 
 export default function PracticePage({initialKind = 'pipeline'}: {initialKind?: Question['kind']}) {
@@ -84,13 +84,6 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
     const next=await run({action:'submit',id:exercise.id,answer:digits.map(Number)});
     if(next && 'correct' in next){setResult(next);setRevision(v=>v+1);requestAnimationFrame(()=>resultRef.current?.scrollIntoView({behavior:'smooth',block:'nearest'}));}
   }
-  function selectKind(nextKind: Question['kind']) {
-    setKind(nextKind);
-    if(nextKind==='pipeline')setDifficulty('easy');
-    setExercise(null);
-    setDigits([]);
-    setResult(null);
-  }
   const visibleHistory=isSignedIn?history.filter(r=>!wrongOnly || !r.correct):[];
   const historyPages=Math.max(1,Math.ceil(visibleHistory.length/HISTORY_PAGE_SIZE));
   const page=Math.min(historyPage,historyPages-1);
@@ -99,26 +92,11 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
   const selectedCopy=selectedChoice[zh?'zh':'en'];
   return <div>
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
-      <section ref={toolRef} className="scroll-mt-4 rounded-xl border border-gray-200 p-5 shadow-sm sm:p-6">
-        <section className="mb-4" aria-labelledby="practice-picker-title">
-          <h2 id="practice-picker-title" className="sr-only">{zh?'选择题型':'Choose a question type'}</h2>
-          <div role="radiogroup" aria-label={zh?'选择题型':'Choose a question type'} className="grid grid-cols-2 gap-3">
-            {PRACTICE_CHOICES.map(choice=>{
-              const copy=choice[zh?'zh':'en'];
-              const selected=choice.kind===kind;
-              const left=account&&!fullAccess?Math.max(0,account.practiceRemaining?.[choice.kind]??FREE_PRACTICE_PER_KIND):null;
-              return <button key={choice.kind} type="button" role="radio" aria-checked={selected} onClick={()=>selectKind(choice.kind)} className={`group flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-3 text-left transition duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${selected?'border-indigo-500 bg-indigo-50/60 ring-1 ring-indigo-500':'border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50'}`}>
-                <span aria-hidden className={`flex size-9 shrink-0 items-center justify-center rounded-lg text-lg font-semibold ${selected?'bg-indigo-600 text-white':'bg-slate-100 text-slate-500 group-hover:text-indigo-700'}`}>{choice.mark}</span>
-                <span className="min-w-0">
-                  <span className="block text-sm font-semibold leading-5 text-slate-900">{copy.title}</span>
-                  {left!==null&&<span className={`mt-0.5 block text-xs ${left>0?'text-slate-500':'font-medium text-amber-700'}`}>{left>0?(zh?`免费剩 ${left} 题`:`${left} free left`):(zh?'免费已用完':'Free used up')}</span>}
-                </span>
-              </button>;
-            })}
-          </div>
-        </section>
+      <section ref={toolRef} data-practice-kind={kind} className="scroll-mt-4 rounded-xl border border-gray-200 p-5 shadow-sm sm:p-6">
         <div className="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <p className="text-sm text-slate-700">{selectedCopy.detail}</p>
+          <p className="text-xs font-semibold tracking-[0.12em] text-indigo-600">{zh?'练习题库':'PRACTICE'}</p>
+          <h2 className="mt-1 text-lg font-semibold text-slate-900">{selectedCopy.title}</h2>
+          <p className="mt-2 text-sm text-slate-700">{selectedCopy.detail}</p>
           <p className="mt-1 text-xs text-slate-500">{fullAccess
               ? (zh?'会员 · 不限题量':'Member · unlimited questions')
               : exhausted
