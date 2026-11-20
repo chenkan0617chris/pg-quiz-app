@@ -5,7 +5,7 @@ import { database } from '../src/lib/db';
 import { initializeAccess, consumeFreeSolve, readAccess } from '../src/lib/access-store';
 import { recordFullAccessSolve, recordTrainingActivity } from '../src/lib/activity-store';
 import { createPractice, submitPractice } from '../src/lib/practice-store';
-import { activityHistory, userUsage } from '../src/lib/admin/store';
+import { activityHistory, conversionFunnel, userUsage } from '../src/lib/admin/store';
 import { parseActivityFilters } from '../src/lib/admin/policy';
 
 const options={skip:!process.env.RUN_DB_TESTS};
@@ -66,5 +66,17 @@ test('history supports UTC date boundaries, stable pagination and unknown histor
   }finally{
     await sql`DELETE FROM usage_events WHERE user_id=${id}`;
     await sql`DELETE FROM practice_attempts WHERE user_id=${id}`;
+  }
+});
+
+test('conversion funnel accepts the selected cohort window against Postgres',options,async()=>{
+  const sql=database(),id=`user_funnel_test_${randomUUID()}`;
+  try {
+    await initializeAccess(id,Date.now());
+    const funnel=await conversionFunnel(1);
+    assert.ok(funnel.totals.signups>=1);
+    assert.equal(funnel.days,1);
+  } finally {
+    await sql`DELETE FROM user_access WHERE user_id=${id}`;
   }
 });

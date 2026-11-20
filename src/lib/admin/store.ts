@@ -23,7 +23,7 @@ export async function conversionFunnel(days:1|7|30):Promise<Funnel> {
     SELECT user_id,trial_started_at,(trial_started_at AT TIME ZONE 'Australia/Sydney')::date AS day
     FROM user_access
     WHERE left(user_id,5)='user_' AND user_id<>'user_test'
-      AND (trial_started_at AT TIME ZONE 'Australia/Sydney')::date >= (now() AT TIME ZONE 'Australia/Sydney')::date-${days-1}
+      AND (trial_started_at AT TIME ZONE 'Australia/Sydney')::date >= ((now() AT TIME ZONE 'Australia/Sydney')::date-${days-1}::integer)
   ) SELECT to_char(day,'YYYY-MM-DD') AS day,count(*)::int AS signups,
     count(*) FILTER (WHERE EXISTS(SELECT 1 FROM admin_activity a WHERE a.user_id=cohort.user_id AND a.occurred_at>=cohort.trial_started_at))::int AS activated,
     count(*) FILTER (WHERE EXISTS(SELECT 1 FROM conversion_events e WHERE e.user_id=cohort.user_id AND e.event='mock_paywall_viewed' AND e.created_at>=cohort.trial_started_at))::int AS paywalls,
