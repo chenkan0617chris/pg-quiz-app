@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isUnused, nextStepPath, parseOnboarding, reviewProgress, startPath, trialPrompt } from '../src/lib/growth';
+import { isUnused, nextStepPath, parseOnboarding, reviewProgress, startPath, trialPrompt, upgradePrompt } from '../src/lib/growth';
 
 const now = Date.parse('2026-11-12T12:00:00Z');
 const base = { status: 'trial' as const, trialEndsAt: new Date(now + 3600_000).toISOString(), paidUntil: null, practiceUsage: {}, solves: 0 };
@@ -59,4 +59,14 @@ test('trial review compares the first and most recent answered questions without
     change: null,
     hasComparableProgress: false,
   });
+});
+
+test('upgrade prompt targets free users who explored or hit a limit', () => {
+  const free = { ...base, status: 'expired' as const, practiceRemaining: { pipeline: 5, figure: 10 }, solverRemaining: { pipeline: 3 }, memoryRemaining: 10 };
+  assert.equal(upgradePrompt(free), null);
+  const twoKinds = { pipeline: { started: 4, completed: 4 }, figure: { started: 1, completed: 1 } };
+  assert.equal(upgradePrompt({ ...free, practiceUsage: twoKinds }), null);
+  assert.deepEqual(upgradePrompt({ ...free, practiceUsage: { ...twoKinds, numerical: { started: 2, completed: 1 } } }), { reason: 'explorer', kindsTried: 3, exhausted: 0 });
+  assert.deepEqual(upgradePrompt({ ...free, solverRemaining: { pipeline: 0 } }), { reason: 'limit', kindsTried: 0, exhausted: 1 });
+  assert.equal(upgradePrompt({ ...free, status: 'paid', solverRemaining: { pipeline: 0 } }), null);
 });

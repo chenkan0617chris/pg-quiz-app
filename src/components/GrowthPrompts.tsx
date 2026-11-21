@@ -6,8 +6,9 @@ import { useI18n } from '@/lib/i18n';
 import { useAccount } from '@/lib/use-account';
 import { localePath } from '@/lib/seo';
 import { priceFor } from '@/lib/payment-product';
+import { reportConversion } from '@/lib/conversion-client';
 import {
-  ONBOARDING_KEY, TRIAL_DISMISS_KEY, dayKey, isUnused, nextStepPath, parseOnboarding, reviewProgress, startPath, trialPrompt, usageTotals,
+  ONBOARDING_KEY, TRIAL_DISMISS_KEY, UPGRADE_DISMISS_KEY, dayKey, isUnused, nextStepPath, parseOnboarding, reviewProgress, startPath, trialPrompt, upgradePrompt, usageTotals,
   type ExamWhen, type Onboarding, type TargetTest,
 } from '@/lib/growth';
 
@@ -49,6 +50,16 @@ export default function GrowthPrompts() {
   const quiet = QUIET.some(path => pathname.startsWith(path));
   const showOnboarding = !!account && !quiet && onboarding === null && isUnused(account);
   const prompt = account && !quiet && dismissed !== dayKey(now) ? trialPrompt(account, now) : null;
+  const [upgradeDismissed, setUpgradeDismissed] = useState(() => readStorage(UPGRADE_DISMISS_KEY));
+  // The mock-exam centre already shows its own paywall, so the banner stays out of the way there.
+  const upgrade = account && !quiet && !prompt && !showOnboarding && !pathname.includes('/exams') && upgradeDismissed !== dayKey(now)
+    ? upgradePrompt(account) : null;
+  const upgradeRecorded = useRef(false);
+  useEffect(() => {
+    if (!upgrade || upgradeRecorded.current) return;
+    upgradeRecorded.current = true;
+    reportConversion('upgrade_prompt_viewed');
+  }, [upgrade]);
 
   useEffect(() => {
     const el = dialog.current;
@@ -69,6 +80,11 @@ export default function GrowthPrompts() {
     if (!test) return;
     save({ test, when });
     router.push(localePath(lang, startPath(test)));
+  }
+  function dismissUpgrade() {
+    const day = dayKey(now);
+    writeStorage(UPGRADE_DISMISS_KEY, day);
+    setUpgradeDismissed(day);
   }
   function dismiss() {
     const day = dayKey(now);
@@ -115,6 +131,21 @@ export default function GrowthPrompts() {
       <div className="flex items-center gap-2">
         <Link href="/billing" className="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white hover:bg-indigo-700">{zh ? '开通 7 天会员' : 'Get the 7-day pass'}</Link>
         <button type="button" onClick={dismiss} aria-label={zh ? '今天不再提示' : 'Hide for today'} className="rounded-lg px-2 py-2 text-amber-800 hover:bg-amber-100">✕</button>
+      </div>
+    </div>}
+
+    {upgrade && <div role="status" className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-3 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-950">
+      <p className="w-full leading-6 sm:w-auto sm:min-w-0 sm:flex-1">
+        <span className="font-semibold">{upgrade.reason === 'limit'
+          ? (zh ? `你已用完 ${upgrade.exhausted} 项免费额度。` : `You have used up ${upgrade.exhausted} free allowance${upgrade.exhausted === 1 ? '' : 's'}. `)
+          : (zh ? `你已经练了 ${upgrade.kindsTried} 种题型。` : `You have tried ${upgrade.kindsTried} question types. `)}</span>
+        {zh
+          ? `7 天会员 ${price}：所有题型不限新题、解题器不限次、限时模拟考和逐题报告。一次付款，不自动续费。`
+          : `A 7-day pass is ${price}: unlimited fresh questions in every type, unlimited solvers, timed mock exams and question-by-question reports. One payment, no auto-renewal.`}
+      </p>
+      <div className="flex items-center gap-2">
+        <Link href="/billing" className="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white hover:bg-indigo-700">{zh ? '看看会员包含什么' : 'See what the pass includes'}</Link>
+        <button type="button" onClick={dismissUpgrade} aria-label={zh ? '今天不再提示' : 'Hide for today'} className="rounded-lg px-2 py-2 text-indigo-800 hover:bg-indigo-100">✕</button>
       </div>
     </div>}
 

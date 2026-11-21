@@ -1,7 +1,9 @@
 import 'server-only';
 import { database } from './db';
 
-export const CONVERSION_EVENTS = ['mock_paywall_viewed','checkout_started','payment_completed'] as const;
+export const CONVERSION_EVENTS = ['mock_paywall_viewed','upgrade_prompt_viewed','pricing_viewed','checkout_started','payment_completed'] as const;
+/** Events the browser may report; checkout and payment are written by the server only. */
+export const CLIENT_CONVERSION_EVENTS = ['mock_paywall_viewed','upgrade_prompt_viewed','pricing_viewed'] as const;
 export type ConversionEvent = typeof CONVERSION_EVENTS[number];
 
 /** One person counts once per conversion milestone per Sydney calendar day. */

@@ -1,13 +1,21 @@
 'use client';
 import PlanComparison from './plan-comparison';
 import { useAccount } from '@/lib/use-account';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { reportConversion } from '@/lib/conversion-client';
 import { useAuth,useClerk } from '@clerk/nextjs';
 import { useI18n } from '@/lib/i18n';
 export default function Purchase({enabled}:{enabled:boolean}){
  const {isSignedIn}=useAuth();const clerk=useClerk();const {lang}=useI18n();const zh=lang==='zh';
  const {account,isLoaded,failed}=useAccount();
  const [busy,setBusy]=useState(false);const [error,setError]=useState('');
+ // Funnel step between "saw an upgrade prompt" and "opened checkout": a free account looked at the price.
+ const pricingRecorded=useRef(false);
+ useEffect(()=>{
+  if(!isSignedIn || !account || account.status==='paid' || pricingRecorded.current)return;
+  pricingRecorded.current=true;
+  reportConversion('pricing_viewed');
+ },[isSignedIn,account]);
  async function buy(){
   if(!isSignedIn){await clerk.openSignIn();return;}
   setBusy(true);setError('');

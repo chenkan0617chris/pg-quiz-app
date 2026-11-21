@@ -109,3 +109,34 @@ export function dayKey(now: number) {
   const d = new Date(now);
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
+
+export const UPGRADE_DISMISS_KEY = 'ck-upgrade-prompt-dismissed';
+/** Free users who have tried this many practice types are exploring seriously. */
+export const UPGRADE_MIN_KINDS = 3;
+
+type AllowanceAccount = UsageAccount & {
+  practiceRemaining?: Record<string, number>;
+  solverRemaining?: Record<string, number>;
+  memoryRemaining?: number;
+};
+
+export type UpgradePrompt = { reason: 'limit' | 'explorer'; kindsTried: number; exhausted: number } | null;
+
+/**
+ * Free-plan upgrade nudge. Hitting any free allowance is the strongest signal;
+ * otherwise someone who has tried several question types is comparing the whole
+ * product and should learn what membership adds before they leave.
+ */
+export function upgradePrompt(account: AllowanceAccount): UpgradePrompt {
+  if (account.status === 'paid') return null;
+  const kindsTried = Object.values(account.practiceUsage).filter(row => row.started > 0).length;
+  const remaining = [
+    ...Object.values(account.practiceRemaining ?? {}),
+    ...Object.values(account.solverRemaining ?? {}),
+    ...(account.memoryRemaining === undefined ? [] : [account.memoryRemaining]),
+  ];
+  const exhausted = remaining.filter(left => left <= 0).length;
+  if (exhausted > 0) return { reason: 'limit', kindsTried, exhausted };
+  if (kindsTried >= UPGRADE_MIN_KINDS) return { reason: 'explorer', kindsTried, exhausted };
+  return null;
+}
