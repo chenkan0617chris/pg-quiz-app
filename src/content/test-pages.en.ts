@@ -87,7 +87,7 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
       },
       {
         q: 'Is the Switch Challenge solver free?',
-        a: 'Sign in to use it. New accounts get 24 hours of full access, and free users then keep a limited number of solver uses and practice questions for each type.',
+        a: 'Sign in to use it. Free accounts get a limited number of solver uses and practice questions for each type; a 7-day pass removes the limits.',
       },
     ],
   },

@@ -121,7 +121,7 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     accessHeading: '免费体验与会员价格',
     accessText:
-      '注册后先享 24 小时全功能免费试用，期间不扣次数。试用到期未购买，每个账号的管道、图形和数字解题器各有 10 次免费机会，独立累计，不每日重置；每种练习题型累计 10 道随机新题，记忆训练累计免费 10 轮，做过的题可重练并查看解析。购买会员后可在 7 天内继续使用解题器、不限量生成新题，一次付款，不自动续费。',
+      '注册即可免费使用，无需绑卡：每个账号的管道、图形和数字解题器各有 10 次免费机会，独立累计，不每日重置；每种练习题型累计 10 道随机新题，记忆训练累计免费 10 轮，做过的题可重练并查看解析。购买会员后可在 7 天内继续使用解题器、不限量生成新题并做限时模拟考，一次付款，不自动续费。',
     accessCta: '查看免费体验与会员',
     faqHeading: '常见问题',
     faq: [
@@ -149,9 +149,9 @@ export const HOME: Record<Language, HomeCopy> = {
   },
 
   en: {
-    title: 'Switch, Digit & Grid Challenge Practice: Aon, P&G | CK Quiz',
+    title: 'Free P&G Assessment Practice: Switch, Digit & Grid Challenge',
     description:
-      'Free practice for Aon-style online assessments used by P&G and other large employers: Switch and Digit Challenge solvers, Grid Challenge training, P&G PEAK formats and timed mock tests.',
+      'Free P&G assessment test practice for the Aon games: Switch and Digit Challenge solvers, Grid Challenge training, PEAK formats and timed mock tests, with worked answers.',
     keywords: [
       'Switch Challenge practice',
       'Aon assessment practice',
@@ -173,7 +173,7 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     h1: 'Online assessment practice: Switch, Digit and Grid Challenges for Aon, P&G and more',
     lede:
-      'CK Quiz is independent preparation for gamified online assessments, starting with the Aon tests that P&G and many other large employers use: Switch Challenge practice with a step-by-step solver, Digit Challenge equation practice, Grid Challenge dot-memory training, PEAK Performance Assessment question formats and timed mock tests, plus figure reasoning and data interpretation. Every question is original and comes with a worked solution. Sign in for 24 hours of full access, then keep a free allowance for each type. Not affiliated with Aon, Procter & Gamble or any employer.',
+      'CK Quiz is independent preparation for gamified online assessments, starting with the Aon tests that P&G and many other large employers use: Switch Challenge practice with a step-by-step solver, Digit Challenge equation practice, Grid Challenge dot-memory training, PEAK Performance Assessment question formats and timed mock tests, plus figure reasoning and data interpretation. Every question is original and comes with a worked solution. Sign up free for an allowance of every question type; no card required. Not affiliated with Aon, Procter & Gamble or any employer.',
     primaryCta: { label: 'Start practising', href: '/practice' },
     secondaryCta: { label: 'Read the guides', href: '/guides' },
     typesHeading: 'The five question types',
@@ -250,7 +250,7 @@ export const HOME: Record<Language, HomeCopy> = {
     ],
     accessHeading: 'Free access and pricing',
     accessText:
-      'Registration includes a 24-hour trial of every feature without consuming credits. After the trial, each account gets 10 lifetime free uses of each solver and 10 random new questions per practice type, with full explanations. Memory training has 10 lifetime free rounds, one credit per start. Allowances do not reset daily. Buy 7-day access for continued solving and new generated questions. One-time payment, no automatic renewal.',
+      'Sign up free, no card required: each account gets 10 lifetime free uses of each solver and 10 random new questions per practice type, with full explanations. Memory training has 10 lifetime free rounds, one credit per start. Allowances do not reset daily. Buy 7-day access for continued solving, new generated questions and timed mock exams. One-time payment, no automatic renewal.',
     accessCta: 'See free access and pricing',
     faqHeading: 'Frequently asked questions',
     faq: [

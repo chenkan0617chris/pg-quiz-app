@@ -11,11 +11,11 @@ export type PricePlan = {
 };
 
 /**
- * A seven-day pass costs US$14.99 everywhere. Language only changes the copy,
+ * A seven-day pass costs US$6.99 everywhere (US$14.99 until 2026-11-22). Language only changes the copy,
  * never the checkout currency or amount.
  */
 export const PRICE: PricePlan = {
- amount: 1499, currency: 'usd', label: 'US$14.99', code: 'USD',
+ amount: 699, currency: 'usd', label: 'US$6.99', code: 'USD',
 };
 
 /** @deprecated The language argument is retained for existing display callers. */

@@ -36,12 +36,12 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'pipeline',
     },
     en: {
-      title: 'Switch Challenge Practice: Free Questions & Solver (Aon, P&G)',
+      title: 'P&G Switch Challenge Solver + Free Practice Questions (Aon)',
       h1: 'Switch Challenge practice: free questions and step-by-step solver',
       label: 'Switch Challenge',
       description:
-        'Free Switch Challenge practice questions with answers, no sign-up, plus a step-by-step solver. For the Aon Switch Challenge used by P&G and other employers.',
-      keywords: ['Switch Challenge practice', 'Switch Challenge practice questions', 'Switch Challenge test', 'Aon Switch Challenge', 'P&G Switch Challenge practice', 'Switch Challenge', 'P&G Switch Challenge solver', 'P&G interactive assessment', 'pipeline logic solver'],
+        'Solve any P&G Switch Challenge question step by step, then practise free Switch Challenge questions with answers. No sign-up needed. Aon smartPredict format.',
+      keywords: ['P&G Switch Challenge solver', 'Switch Challenge solver', 'P&G Switch Challenge answers', 'Switch Challenge practice', 'Switch Challenge practice questions', 'Switch Challenge test', 'Aon Switch Challenge', 'P&G Switch Challenge practice', 'P&G assessment test practice free', 'P&G interactive assessment', 'pipeline logic solver'],
       intro:
         'The Switch Challenge is the symbol-reordering game in Aon\'s smartPredict assessment, used in the P&G Interactive Assessment and by other employers; it is also called pipeline logic. Enter the input order, each box and the output order from your question, and the solver works out the unknown box while displaying every intermediate sequence. The point is not only the answer: stepping through the stages lets you confirm you have not reversed the direction of the forward or backward pass, which is where most marks are lost on this question type.',
       notes: [
@@ -106,12 +106,12 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'numerical',
     },
     en: {
-      title: 'Digit Challenge Test Practice & Solver (Aon, P&G) | CK Quiz',
+      title: 'P&G Digit Challenge Calculator & Free Practice (Aon) | CK Quiz',
       h1: 'Digit Challenge practice and equation solver (Aon, P&G)',
       label: 'Digit Challenge',
       description:
-        'Practise the Aon Digit Challenge used by P&G and other employers: fill equation blanks with distinct digits, see every valid answer and learn a fast elimination method.',
-      keywords: ['Digit Challenge practice', 'Aon Digit Challenge', 'P&G Digit Challenge practice', 'Digit Challenge', 'P&G Digit Challenge solver', 'P&G numerical test', 'equation blank calculator'],
+        'Free P&G Digit Challenge calculator: fill the equation blanks with distinct digits and see every valid answer, then practise Aon Digit Challenge questions with worked solutions.',
+      keywords: ['P&G Digit Challenge calculator', 'P&G Digit Challenge', 'Digit Challenge practice', 'Aon Digit Challenge', 'P&G Digit Challenge practice', 'Digit Challenge', 'P&G Digit Challenge solver', 'P&G numerical test', 'equation blank calculator'],
       intro:
         'The Digit Challenge is the equation game in Aon\'s smartPredict assessment, used in the P&G Interactive Assessment and by other employers. Use the builder to reconstruct the equation from your question, mark the blanks and set the target, and the solver lists every digit combination that works. Seeing the full set of solutions is more useful than receiving one answer: it shows you which kinds of combination are worth trying first, which is exactly what makes the difference under time pressure.',
       notes: [

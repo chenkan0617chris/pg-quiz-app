@@ -6,7 +6,7 @@ import { isLanguage } from '@/lib/language';
 import { notFound } from 'next/navigation';
 export async function generateMetadata({params}:{params:Promise<{lang:string}>}){
   const {lang}=await params;if(!isLanguage(lang))notFound();
-  return pageMetadata({lang,path:'/exams',title:lang==='zh'?'宝洁管道题模拟考试｜计算与空间记忆训练 | CK Quiz':'Switch, Digit & Grid Challenge Mock Tests (Aon, P&G) | CK Quiz',description:lang==='zh'?'宝洁管道题模拟考试与计算题、空间记忆训练：会员可限时作答，保存逐题成绩和耗时。可免费预览考场与报告；题目为独立原创，非官方测评。':'Timed online assessment mock tests with Switch, Digit and Grid Challenge rounds, as used by Aon, P&G and other employers. Per-question reports. Free preview.'});
+  return pageMetadata({lang,path:'/exams',title:lang==='zh'?'宝洁管道题模拟考试｜计算与空间记忆训练 | CK Quiz':'P&G Assessment Mock Test: Switch, Digit & Grid (Aon) | CK Quiz',description:lang==='zh'?'宝洁管道题模拟考试与计算题、空间记忆训练：会员可限时作答，保存逐题成绩和耗时。可免费预览考场与报告；题目为独立原创，非官方测评。':'Timed P&G assessment practice tests with Switch, Digit and Grid Challenge rounds in the Aon format, scored question by question. Free preview of the exam and report.'});
 }
 export default async function Page({params}:{params:Promise<{lang:string}>}){
   const {lang}=await params;if(!isLanguage(lang))notFound();

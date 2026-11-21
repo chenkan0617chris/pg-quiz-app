@@ -16,8 +16,8 @@ for (const zh of [false, true]) {
       await page.setContent(`<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${styles}</style></head><body><main style="max-width:1024px;margin:auto;padding:16px"><div id="root"></div><p id="action"></p></main></body></html>`);
       await page.addScriptTag({ content: bundle.outputFiles[0].text });
       await expect(page.getByRole('table')).toBeVisible();
-      await expect(page.getByText('US$14.99', {exact:true})).toBeVisible();
-      await expect(page.getByText(zh ? '注册即享 24 小时全功能试用；喜欢再花 US$14.99 开通 7 天会员。' : 'Try every feature free for 24 hours from registration, then pay US$14.99 once for 7 days of access.', {exact:true})).toBeVisible();
+      await expect(page.getByText('US$6.99', {exact:true})).toBeVisible();
+      await expect(page.getByText(zh ? '免费额度用完后，可花 US$6.99 开通 7 天会员，解锁不限次练习与模拟考。' : 'Use the free allowances first, then pay US$6.99 once for 7 days of unlimited practice and mock exams.', {exact:true})).toBeVisible();
       const current = page.getByText(zh ? '当前方案' : 'Current plan', { exact: false });
       if (status === 'paid' || status === 'expired') {
         await expect(page.getByRole('article', { name: status === 'paid' ? 'Member Plan' : 'Free Plan', exact: true }).getByText(zh ? '当前方案' : 'Current plan', { exact: false })).toBeVisible();
@@ -29,7 +29,7 @@ for (const zh of [false, true]) {
       await expect(newQuestions.getByRole('cell').nth(0)).toHaveText(zh ? '每类累计 10 道' : '10 lifetime per type');
       await expect(newQuestions.getByRole('cell').nth(1)).toHaveText(zh ? '不限题量' : 'Unlimited');
       await expect(page.getByText(zh ? '模拟考试与模拟卷' : 'Mock exams & practice papers', { exact: true })).toBeVisible();
-      await expect(page.getByText(zh ? '试用用户与付费会员均可使用三项限时模拟考、全屏考场与逐题成绩报告。试用到期后仍保留已有报告。' : 'Trial users and paid members get all three timed challenges, fullscreen exams and question reports. Existing reports remain available after the trial ends.')).toBeVisible();
+      await expect(page.getByText(zh ? '付费会员可使用三项限时模拟考、全屏考场与逐题成绩报告；免费账号可预览考场和报告。' : 'Paid members can use all three timed challenges, fullscreen exams and question reports; free accounts can preview the exam and report.')).toBeVisible();
       const buy = page.getByRole('button', { name: zh ? '购买 7 天会员' : 'Buy 7-day access', exact: true });
       if (status === 'paid') await expect(buy).toHaveCount(0);
       else if (status === 'loading' || status === 'failed') await expect(buy).toBeDisabled();
