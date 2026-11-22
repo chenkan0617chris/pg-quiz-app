@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTrainingActivity } from '@/lib/use-training-activity';
 import { useI18n } from '@/lib/i18n';
+import InfoTip from '@/components/InfoTip';
 import { PAIRS, PEAK_DIMENSIONS, SCENARIOS, STATEMENTS, type Dimension, type Pair, type Scenario, type Statement } from '@/content/peak-bank';
 
 type Item = {type:'statement';item:Statement}|{type:'pair';item:Pair}|{type:'scenario';item:Scenario};
@@ -55,21 +56,29 @@ export default function PeakTraining(){
   });
 
   let statementNo=0,pairNo=0,scenarioNo=0;
-  return <div className="space-y-6"><span className="text-xs font-semibold tracking-wider text-indigo-600">PEAK · {zh?'工作风格专项训练':'WORK STYLE TRAINING'}</span><h1 className="text-3xl font-bold">{zh?'工作风格与情境练习':'P&G PEAK Performance Assessment practice'}</h1>
-    <p className="text-sm leading-7 text-slate-600">{zh?'PEAK 了解你的经历、工作方式和价值取向，常见形式包括：对陈述打分、在两种做法中选更像自己的一项、以及职场情境选择。本页每轮随机抽取 10 道陈述、5 组二选一和 3 个情境，题库共 ':'PEAK explores your experience, working style and values. Common formats include rating statements, choosing which of two approaches is more like you, and workplace scenarios. Each round draws 10 statements, 5 pairs and 3 scenarios at random from a bank of '}{STATEMENTS.length+PAIRS.length+SCENARIOS.length}{zh?' 道原创题，不是官方题库，也没有“标准人格答案”。':' original items. These are not official questions and there is no “correct personality”.'} <a href="https://www.pgcareers.com/global/en/assesment-overviews" className="text-indigo-600 underline" target="_blank" rel="noreferrer">{zh?'官方说明':'Official overview'}</a></p>
-    <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-600">{zh?'按真实经历回答，而不是猜测雇主想听什么。前后矛盾的回答比“不够完美”的回答更容易引起注意。本页不保存个人回答，不计算录用概率。':'Answer from real experience instead of guessing what an employer wants. Inconsistent answers stand out more than imperfect ones. This page does not save personal responses or calculate hiring probabilities.'}</p>
+  return <div className="space-y-6">
+    <div>
+      <div className="flex items-center gap-2.5">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{zh?'PEAK 工作风格练习':'P&G PEAK Performance Assessment practice'}</h1>
+        <InfoTip label={zh?'关于 PEAK':'About PEAK'}>
+          <p>{zh?'PEAK 了解你的经历、工作方式和价值取向，常见形式包括陈述打分、二选一和职场情境题。每轮随机抽 10 道陈述、5 组二选一和 3 个情境，题库共 ':'PEAK explores your experience, working style and values through rating statements, forced-choice pairs and workplace scenarios. Each round draws 10 statements, 5 pairs and 3 scenarios from a bank of '}{STATEMENTS.length+PAIRS.length+SCENARIOS.length}{zh?' 道原创题，没有“标准人格答案”。':' original items. There is no “correct personality”.'}</p>
+          <p className="mt-2 text-slate-500">{zh?'本页不保存个人回答，不计算录用概率。':'This page does not save responses or predict hiring outcomes.'} <a href="https://www.pgcareers.com/global/en/assesment-overviews" className="text-indigo-600 underline" target="_blank" rel="noreferrer">{zh?'官方说明':'Official overview'}</a></p>
+        </InfoTip>
+      </div>
+      <p className="mt-2 text-[15px] text-slate-500">{zh?'按真实经历作答。前后矛盾比“不够完美”更容易引起注意。':'Answer from real experience. Inconsistency stands out more than imperfection.'}</p>
+    </div>
     {!items?<p role="status" className="text-sm text-slate-500">{zh?'正在抽题…':'Drawing questions…'}</p>:items.map((entry,i)=>{
       if(entry.type==='statement'){statementNo++;const s=entry.item;return <fieldset key={i} disabled={done} className="rounded-xl border border-slate-200 p-5"><legend className="px-2 text-sm font-medium"><span className="mr-2 text-xs text-slate-400">{zh?`陈述 ${statementNo}`:`Statement ${statementNo}`}</span>{s[lang]}</legend><div className="flex flex-wrap gap-2">{labels.map((label,j)=><label key={j} className={`cursor-pointer rounded-lg border px-3 py-3 text-sm ${answers[i]===j?'border-indigo-500 bg-indigo-50 text-indigo-800':'border-slate-200'}`}><input type="radio" name={`peak-${i}`} checked={answers[i]===j} onChange={()=>pick(i,j)} className="mr-2"/>{label}</label>)}</div>{done&&conflicts.some(c=>c.pos===i||c.neg===i)&&<p className="mt-3 text-sm text-amber-700">{zh?'这一题与同一维度的另一题回答方向相反，请检查是否前后一致。':'This answer points the opposite way to another statement on the same theme. Check your consistency.'}</p>}</fieldset>;}
       if(entry.type==='pair'){pairNo++;const p=entry.item;return <fieldset key={i} disabled={done} className="rounded-xl border border-slate-200 p-5"><legend className="px-2 text-sm font-medium"><span className="mr-2 text-xs text-slate-400">{zh?`二选一 ${pairNo}`:`Pair ${pairNo}`}</span>{zh?'哪一项更像你在工作中的做法？':'Which is more like you at work?'}</legend><div className="grid gap-2 sm:grid-cols-2">{[p.a,p.b].map((side,j)=><label key={j} className={`cursor-pointer rounded-lg border px-4 py-3 text-sm ${answers[i]===j?'border-indigo-500 bg-indigo-50 text-indigo-800':'border-slate-200'}`}><input type="radio" name={`peak-${i}`} checked={answers[i]===j} onChange={()=>pick(i,j)} className="mr-2"/>{side[lang]}</label>)}</div></fieldset>;}
       scenarioNo++;const sc=entry.item;return <fieldset key={i} disabled={done} className="rounded-xl border border-slate-200 p-5"><legend className="px-2 text-sm font-medium"><span className="mr-2 text-xs text-slate-400">{zh?`情境 ${scenarioNo}`:`Scenario ${scenarioNo}`}</span>{sc[lang]}</legend><div className="grid gap-2">{sc.options.map((option,j)=><label key={j} className={`cursor-pointer rounded-lg border px-4 py-3 text-sm ${answers[i]===j?'border-indigo-500 bg-indigo-50 text-indigo-800':'border-slate-200'}`}><input type="radio" name={`peak-${i}`} checked={answers[i]===j} onChange={()=>pick(i,j)} className="mr-2"/>{String.fromCharCode(65+j)}. {option[lang]}{done&&<span className={`mt-2 block text-xs leading-6 ${answers[i]===j?'text-indigo-700':'text-slate-500'}`}>{option.note[lang]}</span>}</label>)}</div></fieldset>;
     })}
     {done?<div role="status" className="space-y-4 rounded-xl bg-indigo-50 p-5"><h2 className="font-semibold">{zh?`本轮完成 · ${answered} / ${total}`:`Round complete · ${answered} / ${total}`}</h2>
-      <p className="text-sm">{zh?'这不是人格评分，也不代表录用结果。下面是你本轮自我描述的倾向，用来检查回答是否与真实经历一致。':'This is not a personality score or a hiring prediction. Below is how you described yourself this round, to check consistency with your real experience.'}</p>
+      <p className="text-sm text-slate-600">{zh?'你本轮自我描述的倾向（不是人格评分）：':'How you described yourself this round (not a personality score):'}</p>
       <ul className="grid gap-2 sm:grid-cols-2">{profile.filter(p=>p.score!==null||p.picks).map(p=><li key={p.dim} className="rounded-lg bg-white p-3 text-sm"><div className="flex justify-between"><span className="font-medium">{PEAK_DIMENSIONS[p.dim][lang]}</span><span className="text-xs text-slate-500">{p.picks?(zh?`二选一选中 ${p.picks} 次`:`chosen ${p.picks}× in pairs`):''}</span></div>{p.score!==null&&<div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-indigo-500" style={{width:`${p.score/4*100}%`}}/></div>}</li>)}</ul>
       <p className={`text-sm ${conflicts.length?'text-amber-800':'text-emerald-800'}`}>{conflicts.length?(zh?`发现 ${conflicts.length} 处前后不一致（${conflicts.map(c=>PEAK_DIMENSIONS[c.dim].zh).join('、')}），已在对应题目下标出。`:`${conflicts.length} inconsistent answer pair(s) found (${conflicts.map(c=>PEAK_DIMENSIONS[c.dim].en).join(', ')}), marked under the statements.`):(zh?'本轮正反陈述的回答方向一致。':'Your answers to positive and reverse-worded statements were consistent.')}</p>
-      <p className="text-sm">{zh?'情境题每个选项下都附有分析，可以对照自己的选择，准备一个真实的工作或学习实例来支撑它。':'Each scenario option now shows a note. Compare it with your choice and prepare a real example that supports it.'}</p>
+      <p className="text-sm text-slate-600">{zh?'情境题选项下已显示分析。':'Scenario options now show a note.'}</p>
       <button onClick={next} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white">{zh?'换一组新题':'Next set'}</button></div>
-    :<button disabled={!items||answered!==total} onClick={()=>{setDone(true);activity.complete();}} className="rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white disabled:opacity-40">{zh?`完成并查看反思提示（${answered}/${total}）`:`Complete & reflect (${answered}/${total})`}</button>}
-    <div><Link href={`/${lang}/exams`} className="text-sm font-semibold text-indigo-600">{zh?'前往互动认知模拟考 →':'Explore the interactive mock exam →'}</Link></div>
+    :<button disabled={!items||answered!==total} onClick={()=>{setDone(true);activity.complete();}} className="rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white disabled:opacity-40">{zh?`完成（${answered}/${total}）`:`Finish (${answered}/${total})`}</button>}
+    <div><Link href={`/${lang}/exams`} className="text-sm font-semibold text-indigo-600">{zh?'限时模拟考 →':'Timed mock exam →'}</Link></div>
   </div>;
 }

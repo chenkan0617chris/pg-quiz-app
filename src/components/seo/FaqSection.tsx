@@ -8,13 +8,16 @@ import JsonLd from '@/components/JsonLd';
 export default function FaqSection({ heading, items }: { heading: string; items: Faq[] }) {
   return (
     <section className="mt-12">
-      <h2 className="text-xl font-bold text-slate-900">{heading}</h2>
+      <h2 className="text-lg font-semibold text-slate-900">{heading}</h2>
       <div className="mt-5 divide-y divide-slate-200 border-y border-slate-200">
         {items.map((item) => (
-          <div key={item.q} className="py-5">
-            <h3 className="font-semibold text-slate-900">{item.q}</h3>
-            <p className="mt-2 text-[15px] leading-7 text-slate-700">{item.a}</p>
-          </div>
+          <details key={item.q} className="group py-4">
+            <summary className="flex cursor-pointer list-none items-start justify-between gap-4 [&::-webkit-details-marker]:hidden">
+              <h3 className="font-medium text-slate-900">{item.q}</h3>
+              <span aria-hidden="true" className="mt-0.5 text-lg leading-none text-slate-400 transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <p className="mt-3 text-[15px] leading-7 text-slate-600">{item.a}</p>
+          </details>
         ))}
       </div>
       <JsonLd

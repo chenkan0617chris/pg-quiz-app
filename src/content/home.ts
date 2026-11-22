@@ -8,6 +8,10 @@ export type HomeCopy = {
   keywords: string[];
   h1: string;
   lede: string;
+  /** One-line hook under the H1; the long lede is kept for the collapsed section. */
+  tagline: string;
+  cards: { href: string; name: string; text: string; tag?: string }[];
+  cardsHeading: string;
   primaryCta: { label: string; href: string };
   secondaryCta: { label: string; href: string };
   typesHeading: string;
@@ -45,8 +49,21 @@ export const HOME: Record<Language, HomeCopy> = {
     h1: '宝洁管道题与宝洁笔试题在线练习',
     lede:
       '宝洁管道题要求你根据输入、输出图形的顺序，找出中间方框的重排规则。你可以在这里学习正推与逆推方法，用管道题工具核对答案，再进入分难度练习。CK Quiz 同时提供宝洁笔试题中的数字、图形、资料分析与记忆训练；所有练习均为独立原创，非宝洁官方真题。',
-    primaryCta: { label: '打开管道题解题工具', href: '/pipeline' },
-    secondaryCta: { label: '开始管道题模拟练习', href: '/practice?kind=pipeline' },
+    tagline: '原创题目，每题带逐步解析。注册即可免费练习，无需绑卡。',
+    cardsHeading: '选择要练的内容',
+    cards: [
+      { href: '/pipeline', name: '管道题解题工具', text: '录入题目，求出未知方框并逐步验算', tag: '工具' },
+      { href: '/practice?kind=pipeline', name: '管道题练习', text: '三档难度，每题带动画解析' },
+      { href: '/numerical', name: '数字推理工具', text: '列出算式填空的所有可行解', tag: '工具' },
+      { href: '/series', name: '图形推理工具', text: '识别规律，推出下一幅图形', tag: '工具' },
+      { href: '/memory', name: '顺序记忆', text: '记住圆点亮起的顺序再点击' },
+      { href: '/grid', name: '空间记忆', text: '边判断对称边记住位置' },
+      { href: '/verbal', name: '英文言语推理', text: 'True / False / Cannot Say' },
+      { href: '/peak', name: 'PEAK 工作风格', text: '陈述打分、二选一与情境题' },
+      { href: '/exams', name: '限时模拟考', text: '连续计时作答，生成逐题报告', tag: '会员' },
+    ],
+    primaryCta: { label: '开始练习', href: '/practice?kind=pipeline' },
+    secondaryCta: { label: '管道题解题工具', href: '/pipeline' },
     typesHeading: '覆盖的五种题型',
     typesIntro:
       '每种题型都有独立的解题攻略，讲清底层结构、标准流程和常见失分点；攻略旁边就是对应的工具，可以边读边验证。',
@@ -122,7 +139,7 @@ export const HOME: Record<Language, HomeCopy> = {
     accessHeading: '免费体验与会员价格',
     accessText:
       '注册即可免费使用，无需绑卡：每个账号的管道、图形和数字解题器各有 10 次免费机会，独立累计，不每日重置；每种练习题型累计 10 道随机新题，记忆训练累计免费 10 轮，做过的题可重练并查看解析。购买会员后可在 7 天内继续使用解题器、不限量生成新题并做限时模拟考，一次付款，不自动续费。',
-    accessCta: '查看免费体验与会员',
+    accessCta: '查看价格',
     faqHeading: '常见问题',
     faq: [
       {
@@ -171,11 +188,24 @@ export const HOME: Record<Language, HomeCopy> = {
       'graduate aptitude test practice',
       'FMCG assessment practice',
     ],
-    h1: 'Online assessment practice: Switch, Digit and Grid Challenges for Aon, P&G and more',
+    h1: 'Switch, Digit and Grid Challenge practice for Aon and P&G assessments',
     lede:
       'CK Quiz is independent preparation for gamified online assessments, starting with the Aon tests that P&G and many other large employers use: Switch Challenge practice with a step-by-step solver, Digit Challenge equation practice, Grid Challenge dot-memory training, PEAK Performance Assessment question formats and timed mock tests, plus figure reasoning and data interpretation. Every question is original and comes with a worked solution. Sign up free for an allowance of every question type; no card required. Not affiliated with Aon, Procter & Gamble or any employer.',
+    tagline: 'Original questions with a worked solution for every answer. Free to start, no card required.',
+    cardsHeading: 'Choose what to practise',
+    cards: [
+      { href: '/pipeline', name: 'Switch Challenge solver', text: 'Enter a question and see every step', tag: 'Tool' },
+      { href: '/practice?kind=pipeline', name: 'Switch Challenge practice', text: 'Three levels, animated explanations' },
+      { href: '/numerical', name: 'Digit Challenge solver', text: 'Every valid way to fill the blanks', tag: 'Tool' },
+      { href: '/series', name: 'Figure series solver', text: 'Find the rule and the next figure', tag: 'Tool' },
+      { href: '/grid', name: 'Grid Challenge', text: 'Remember dots between symmetry checks' },
+      { href: '/memory', name: 'Sequence memory', text: 'Repeat the order the dots light up' },
+      { href: '/verbal', name: 'Verbal reasoning', text: 'True / False / Cannot Say passages' },
+      { href: '/peak', name: 'PEAK assessment', text: 'Ratings, pairs and workplace scenarios' },
+      { href: '/exams', name: 'Timed mock test', text: 'Full rehearsal with a per-question report', tag: 'Pro' },
+    ],
     primaryCta: { label: 'Start practising', href: '/practice' },
-    secondaryCta: { label: 'Read the guides', href: '/guides' },
+    secondaryCta: { label: 'Switch Challenge solver', href: '/pipeline' },
     typesHeading: 'The five question types',
     typesIntro:
       'Each type has its own guide covering the structure underneath it, a standard procedure and the mistakes that cost most marks. The matching tool sits alongside, so you can verify as you read.',
@@ -251,7 +281,7 @@ export const HOME: Record<Language, HomeCopy> = {
     accessHeading: 'Free access and pricing',
     accessText:
       'Sign up free, no card required: each account gets 10 lifetime free uses of each solver and 10 random new questions per practice type, with full explanations. Memory training has 10 lifetime free rounds, one credit per start. Allowances do not reset daily. Buy 7-day access for continued solving, new generated questions and timed mock exams. One-time payment, no automatic renewal.',
-    accessCta: 'See free access and pricing',
+    accessCta: 'See pricing',
     faqHeading: 'Frequently asked questions',
     faq: [
       {

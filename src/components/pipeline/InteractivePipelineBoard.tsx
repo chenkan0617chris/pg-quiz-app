@@ -1,6 +1,7 @@
 'use client';
 
 import { useId } from 'react';
+import InfoTip from '@/components/InfoTip';
 import styles from './PipelineBoard.module.css';
 import type { BoxInput } from '@/lib/engine';
 import { useI18n } from '@/lib/i18n';
@@ -168,7 +169,7 @@ export default function InteractivePipelineBoard({
         >
           {t('addBox')}
         </button>
-        <p className="text-xs text-slate-400">{t('boxUnknownHint')}</p>
+        <InfoTip label={t('addBox')}>{t('boxUnknownHint')}</InfoTip>
       </div>
     </div>
   );

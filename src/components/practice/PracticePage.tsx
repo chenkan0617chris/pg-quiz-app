@@ -9,6 +9,7 @@ import { FREE_PRACTICE_PER_KIND,hasFullAccess } from '@/lib/access-policy';
 import { priceFor } from '@/lib/payment-product';
 import Link from 'next/link';
 import PipelineQuestionBoard from './PipelineQuestionBoard';
+import InfoTip from '@/components/InfoTip';
 
 import type { PublicQuestion, Explanation, Difficulty } from '@/lib/practice';
 import Lesson from '@/components/practice/Lesson';
@@ -93,34 +94,35 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
   return <div>
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
       <section ref={toolRef} data-practice-kind={kind} className="scroll-mt-4 rounded-xl border border-gray-200 p-5 shadow-sm sm:p-6">
-        <div className="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <p className="text-xs font-semibold tracking-[0.12em] text-indigo-600">{zh?'练习题库':'PRACTICE'}</p>
-          <h2 className="mt-1 text-lg font-semibold text-slate-900">{selectedCopy.title}</h2>
-          <p className="mt-2 text-sm text-slate-700">{selectedCopy.detail}</p>
-          <p className="mt-1 text-xs text-slate-500">{fullAccess
-              ? (zh?'会员 · 不限题量':'Member · unlimited questions')
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-slate-100 pb-5">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <h2 className="text-lg font-semibold text-slate-900">{selectedCopy.title}</h2>
+            <InfoTip label={zh?'题型说明':'About this type'}>
+              <p>{selectedCopy.detail}</p>
+              <p className="mt-2 text-slate-500">{zh?`免费用户每类累计 ${FREE_PRACTICE_PER_KIND} 道新题，不每日重置；做过的题可在「最近练习」免费重练。会员不限题量。`:`Free accounts get ${FREE_PRACTICE_PER_KIND} new questions per type (no daily reset). Past questions can be retried free from Recent practice. Members are unlimited.`}</p>
+            </InfoTip>
+            <span className={`rounded-full px-2.5 py-1 text-xs ${exhausted?'bg-amber-50 text-amber-700':'bg-slate-100 text-slate-500'}`}>{fullAccess
+              ? (zh?'不限题量':'Unlimited')
               : exhausted
-                ? (zh?'免费新题已用完 · 做过的题仍可在「最近练习」重练':`All ${FREE_PRACTICE_PER_KIND} free questions for this type are used. Past questions can still be retried from Recent practice.`)
+                ? (zh?'免费题已用完':'Free questions used')
                 : account
-                  ? (zh?`免费新题剩 ${remaining}/${FREE_PRACTICE_PER_KIND} 道 · 做过的题可免费重练`:`${remaining}/${FREE_PRACTICE_PER_KIND} free new questions left · retries are free`)
-                  : (zh?`每类题型免费 ${FREE_PRACTICE_PER_KIND} 道，登录后开始`:`${FREE_PRACTICE_PER_KIND} free questions per type · sign in to start`)}</p>
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
-            {kind==='pipeline'?<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <span id="practice-difficulty-label" className="text-sm font-medium text-slate-700">{zh?'难度':'Difficulty'}</span>
-              <div role="radiogroup" aria-labelledby="practice-difficulty-label" className="inline-flex rounded-lg border border-slate-200 bg-white p-1">
-                {DIFFICULTIES.map(d=><button key={d.value} type="button" role="radio" aria-checked={difficulty===d.value} onClick={()=>setDifficulty(d.value)} className={`cursor-pointer rounded-md px-3 py-1.5 text-sm whitespace-nowrap transition ${difficulty===d.value?'bg-indigo-600 font-medium text-white shadow-sm':'text-slate-600 hover:bg-slate-100'}`}>{zh?d.zh:d.en}</button>)}
-              </div>
-            </div>:<span/>}
+                  ? (zh?`免费剩 ${remaining}/${FREE_PRACTICE_PER_KIND}`:`${remaining}/${FREE_PRACTICE_PER_KIND} free left`)
+                  : (zh?`免费 ${FREE_PRACTICE_PER_KIND} 题`:`${FREE_PRACTICE_PER_KIND} free`)}</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            {kind==='pipeline'&&<div role="radiogroup" aria-label={zh?'难度':'Difficulty'} className="inline-flex rounded-lg border border-slate-200 bg-white p-1">
+              {DIFFICULTIES.map(d=><button key={d.value} type="button" role="radio" aria-checked={difficulty===d.value} onClick={()=>setDifficulty(d.value)} className={`cursor-pointer rounded-md px-3 py-1.5 text-sm whitespace-nowrap transition ${difficulty===d.value?'bg-indigo-600 font-medium text-white shadow-sm':'text-slate-600 hover:bg-slate-100'}`}>{zh?d.zh:d.en}</button>)}
+            </div>}
             {exhausted
-              ? <Link href="/billing" className="rounded-lg bg-indigo-600 px-5 py-2 text-center font-medium whitespace-nowrap text-white hover:bg-indigo-700">{zh?'开通会员':'Unlock membership'} · {priceFor(lang).label} / {zh?'7 天':'7 days'}</Link>
+              ? <Link href="/billing" className="rounded-lg bg-indigo-600 px-5 py-2 text-center font-medium whitespace-nowrap text-white hover:bg-indigo-700">{zh?'开通会员':'Unlock membership'} · {priceFor(lang).label}</Link>
               : <button disabled={busy||!ready||(!!isSignedIn&&!account)} onClick={()=>start()} className="min-w-28 cursor-pointer rounded-lg bg-indigo-600 px-6 py-2 font-medium whitespace-nowrap text-white hover:bg-indigo-700 disabled:cursor-default disabled:opacity-50">{busy?'…':(zh?'开始':'Start')}</button>}
           </div>
         </div>
         {error && <p role="alert" className="mb-4 text-red-600">{error}</p>}
         {!exercise || !isSignedIn ? <div className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500">
-          {zh?'选好题型后点击上方按钮开始。题目为规则生成的原创练习。':'Pick a type and press the button above to start. Questions are original generated exercises.'}
+          {zh?'点击「开始」出第一题':'Press Start for your first question'}
         </div> : <form onSubmit={submit}>
-          {exercise.question.kind==='pipeline'?<PipelineQuestionBoard question={exercise.question} values={digits} onChange={setDigits} disabled={!!result||busy} zh={zh}/>:exercise.question.kind==='figure'?<div><p className="mb-4 text-sm text-slate-600">{zh?'观察前五幅图，选择下一幅。格子按旋转、镜像、移动或黑白翻转规律变化。':'Study the five figures and select the next. Look for rotation, reflection, movement or inversion.'}</p><div className="flex flex-wrap gap-3">{exercise.question.frames.map((mask,i)=><Figure key={i} mask={mask} label={`${i+1}`}/>)}<div className="flex w-24 items-center justify-center text-3xl">?</div></div></div>:exercise.question.kind==='data'?<DataPrompt question={exercise.question} zh={zh}/>:<NumericalBoard key={exercise.id} target={exercise.question.target} values={digits} onChange={setDigits} disabled={!!result||busy} zh={zh}/>}
+          {exercise.question.kind==='pipeline'?<PipelineQuestionBoard question={exercise.question} values={digits} onChange={setDigits} disabled={!!result||busy} zh={zh}/>:exercise.question.kind==='figure'?<div><div className="flex flex-wrap gap-3">{exercise.question.frames.map((mask,i)=><Figure key={i} mask={mask} label={`${i+1}`}/>)}<div className="flex w-24 items-center justify-center text-3xl">?</div></div></div>:exercise.question.kind==='data'?<DataPrompt question={exercise.question} zh={zh}/>:<NumericalBoard key={exercise.id} target={exercise.question.target} values={digits} onChange={setDigits} disabled={!!result||busy} zh={zh}/>}
           {exercise.question.kind==='figure'?<fieldset className="my-6 flex flex-wrap gap-3"><legend className="mb-2">{zh?'选择下一幅图形':'Choose the next figure'}</legend>{exercise.question.options.map((mask,i)=><label key={i} className={`cursor-pointer rounded-lg border p-3 ${digits[0]===String(i+1)?'border-indigo-500 bg-indigo-50':'border-slate-200'}`}><input type="radio" name="figure-answer" aria-label={`${zh?'选项':'Option'} ${String.fromCharCode(65+i)}`} disabled={!!result||busy} checked={digits[0]===String(i+1)} onChange={()=>setDigits([String(i+1)])}/><Figure mask={mask} label={String.fromCharCode(65+i)}/></label>)}</fieldset>:exercise.question.kind==='data'?<fieldset className="my-6 grid gap-3 sm:grid-cols-2"><legend className="mb-2 text-sm">{zh?'选择一个答案':'Choose one answer'}</legend>{exercise.question.options.map((option,i)=><label key={i} className={`flex cursor-pointer items-center gap-3 rounded-lg border p-4 ${digits[0]===String(i+1)?'border-indigo-500 bg-indigo-50':'border-gray-200'}`}><input type="radio" name="data-answer" required disabled={!!result||busy} checked={digits[0]===String(i+1)} onChange={()=>setDigits([String(i+1)])}/>{String.fromCharCode(65+i)}. {option.toFixed(1)}{exercise.question.kind==='data'&&exercise.question.metric!=='ratio'?'%':''}</label>)}</fieldset>:null}
           {!result && <button disabled={busy||digits.some(v=>!v)} className="rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white disabled:opacity-50">{zh?'提交答案':'Check answer'}</button>}
           {result && <div ref={resultRef} role="status" className={`scroll-mt-4 rounded-lg p-5 ${result.correct?'bg-green-50 text-green-900':'bg-amber-50 text-amber-900'}`}>
@@ -136,7 +138,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
         </form>}
       </section>
       <aside className="self-start rounded-xl border border-gray-200 p-4 xl:sticky xl:top-4">
-        <div className="flex items-baseline justify-between gap-2"><h2 className="font-semibold">{zh?'最近练习':'Recent practice'}</h2><span className="text-xs text-gray-500">{zh?'最近 50 次':'Last 50'}</span></div>
+        <div className="flex items-baseline justify-between gap-2"><h2 className="font-semibold">{zh?'最近练习':'Recent practice'}</h2><span className="text-xs text-gray-400">{zh?'最近 50 次':'Last 50'}</span></div>
         <label className="my-3 flex cursor-pointer items-center gap-2 text-sm"><input type="checkbox" checked={wrongOnly} onChange={e=>{setWrongOnly(e.target.checked);setHistoryPage(0);}}/>{zh?'只看错题':'Mistakes only'}</label>
         {historyError && isSignedIn && <button onClick={()=>setRevision(v=>v+1)} className="text-sm text-red-600">{zh?'记录加载失败，点击重试':'History unavailable. Retry'}</button>}
         {!visibleHistory.length && <p className="text-sm text-gray-400">{zh?'暂无记录':'No submissions yet'}</p>}

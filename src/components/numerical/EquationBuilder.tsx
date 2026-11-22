@@ -96,7 +96,6 @@ export default function EquationBuilder({
         </Btn>
       </div>
 
-      <p className="mt-3 text-xs text-gray-400">{t('numBuilderHint')}</p>
     </div>
   );
 }

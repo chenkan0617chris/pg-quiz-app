@@ -46,30 +46,26 @@ export default async function GuidesIndex({ params }: Props) {
   return (
     <>
       <Breadcrumbs items={[{ name: ui.home, href: localePath(lang) }, { name: ui.guides, href: localePath(lang, '/guides') }]} />
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900">{copy.h1}</h1>
-      <p className="mt-4 max-w-3xl text-[15px] leading-7 text-slate-600">{copy.lede}</p>
+      <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{copy.h1}</h1>
+      <p className="mt-2 max-w-3xl text-[15px] leading-7 text-slate-500">{copy.lede}</p>
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2">
+      <div className="mt-8 grid gap-3 sm:grid-cols-2">
         {GUIDE_SLUGS.map((slug) => {
           const guide = getGuide(lang, slug);
           return (
-            <article key={slug} className="rounded-2xl border border-slate-200 p-6">
-              <h2 className="text-base font-semibold text-slate-900">
-                <Link href={localePath(lang, `/guides/${slug}`)} className="hover:text-indigo-600 hover:underline">
+            <article key={slug} className="group relative rounded-xl border border-slate-200 p-5 transition hover:border-indigo-300 hover:shadow-sm">
+              <h2 className="text-base font-semibold text-slate-900 group-hover:text-indigo-700">
+                <Link href={localePath(lang, `/guides/${slug}`)} className="after:absolute after:inset-0">
                   {GUIDE_LABELS[lang][slug]}
                 </Link>
               </h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{guide.description}</p>
-              <p className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-                <Link href={localePath(lang, `/guides/${slug}`)} className="font-medium text-indigo-600 hover:underline">{ui.readGuide}</Link>
-                <Link href={localePath(lang, guide.toolHref)} className="text-slate-600 hover:text-indigo-600 hover:underline">{guide.toolLabel}</Link>
-              </p>
+              <p className="mt-1.5 line-clamp-2 text-sm leading-6 text-slate-500">{guide.description}</p>
+              <Link href={localePath(lang, guide.toolHref)} className="relative z-10 mt-3 inline-block text-sm text-indigo-600 hover:underline">{guide.toolLabel} →</Link>
             </article>
           );
         })}
       </div>
 
-      <p className="mt-12 border-t border-slate-200 pt-6 text-xs leading-6 text-slate-500">{ui.disclaimer}</p>
     </>
   );
 }

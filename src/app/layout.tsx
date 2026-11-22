@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { languageFromPath, preferredLanguage } from '@/lib/language';
 import { HREFLANG, SITE_URL, localePath } from '@/lib/seo';
+import { UI } from '@/content/site';
 import './globals.css';
 import { I18nProvider } from '@/lib/i18n';
 import Sidebar from '@/components/Sidebar';
@@ -53,10 +54,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <Sidebar isAdmin={admin.allowed} />
               <main className="min-w-0 flex-1 px-5 pb-8 pt-24 sm:px-8 md:pt-10 lg:px-10">
                 <div className="mx-auto w-full max-w-5xl"><GrowthPrompts />{children}
-                  <footer className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-slate-200 pt-6 text-sm text-slate-600">
-                    <Link href={localePath(lang, '/guides')}>{lang === 'zh' ? '解题攻略' : 'Solving guides'}</Link>
-                    <Link href={localePath(lang, '/pricing')}>{lang === 'zh' ? '会员价格与免费体验' : 'Pricing and free access'}</Link>
-                    <Link href={localePath(lang, '/about')}>{lang === 'zh' ? '关于本站与题目来源' : 'About and methodology'}</Link>
+                  <footer className="mt-16 border-t border-slate-200 pt-6 text-sm text-slate-500">
+                    <nav className="flex flex-wrap gap-x-6 gap-y-2">
+                      <Link href={localePath(lang, '/guides')} className="hover:text-slate-900">{lang === 'zh' ? '解题攻略' : 'Guides'}</Link>
+                      <Link href={localePath(lang, '/pricing')} className="hover:text-slate-900">{lang === 'zh' ? '价格' : 'Pricing'}</Link>
+                      <Link href={localePath(lang, '/about')} className="hover:text-slate-900">{lang === 'zh' ? '关于本站' : 'About'}</Link>
+                    </nav>
+                    <p className="mt-4 max-w-3xl text-xs leading-5 text-slate-400">{UI[lang].disclaimer}</p>
                   </footer>
                 </div>
               </main>

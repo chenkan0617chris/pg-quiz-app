@@ -50,13 +50,20 @@ export default function FreeSwitchPractice() {
   const done = Object.keys(picks).length;
   const correct = SWITCH_QUESTIONS.filter(q => picks[q.id] === codeText(q.answer)).length;
 
-  return <section id="free-practice" aria-labelledby="free-practice-title" className="mt-10 scroll-mt-24 rounded-xl border border-slate-200 p-5 sm:p-7">
-    <p className="text-xs font-semibold tracking-wider text-indigo-600">{zh ? '免费 · 无需登录' : 'FREE · NO SIGN-UP'}</p>
-    <h2 id="free-practice-title" className="mt-1 text-xl font-semibold">{zh ? '管道题免费练习：8 道原创题与解析' : 'Free Switch Challenge practice questions with answers'}</h2>
-    <p className="mt-2 text-sm leading-7 text-slate-600">{zh
-      ? '每题四个图形经过一个或两个方框，选出未知方框（????）的代码。前 3 题只有一个方框，后 5 题有一个已知方框，难度和真实测评后半段接近。选完立刻显示答案和逐步解析。'
-      : 'Four symbols pass through one or two boxes. Pick the code for the unknown box (????). Questions 1–3 have a single box; 4–8 chain a known box with the unknown one, like the harder questions in the real test. The answer and a step-by-step explanation appear as soon as you choose.'}</p>
-    <p role="status" className="mt-3 text-sm font-medium text-slate-800">{zh ? `已答 ${done} / 8，答对 ${correct} 题` : `Answered ${done} of 8 · ${correct} correct`}</p>
+  // Collapsed by default: the questions stay in the server HTML for search engines
+  // without competing with the solver above.
+  return <details id="free-practice" className="group mt-10 scroll-mt-24 rounded-xl border border-slate-200">
+    <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-5 py-4 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+      <h2 className="text-sm font-semibold text-slate-800">{zh ? '免费练习 8 题' : '8 free practice questions'}</h2>
+      <span className="flex items-center gap-3">
+        {done > 0 && <span role="status" className="text-sm text-slate-500">{zh ? `已答 ${done}/8 · 答对 ${correct}` : `${done}/8 answered · ${correct} correct`}</span>}
+        <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" className="size-4 shrink-0 text-slate-400 transition-transform group-open:rotate-90"><path d="m6 4 4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </span>
+    </summary>
+    <div className="border-t border-slate-200 px-5 pb-6 pt-4">
+    <p className="text-sm text-slate-500">{zh
+      ? '每题选出未知方框（????）的代码，选完立刻显示答案和解析，无需登录。'
+      : 'Pick the code for the unknown box (????). The answer and explanation appear as soon as you choose. No sign-up needed.'}</p>
 
     <ol className="mt-5 space-y-6">{SWITCH_QUESTIONS.map((q, n) => {
       const mine = picks[q.id], answered = mine !== undefined, right = mine === codeText(q.answer);
@@ -85,15 +92,10 @@ export default function FreeSwitchPractice() {
       </li>;
     })}</ol>
 
-    <div className="mt-6 rounded-lg border border-indigo-100 bg-indigo-50/60 p-4 text-sm">
-      <p className="font-semibold text-indigo-950">{zh ? '下一步：限时练习' : 'Next: practise against the clock'}</p>
-      <p className="mt-1 leading-6 text-slate-600">{zh
-        ? '真实测评大约 6 分钟，题目越做越难。会做之后，用题库生成新题，或用模拟考在限时条件下连续作答。'
-        : 'The real test gives you about six minutes and the questions get harder as you go. Once these feel easy, generate new questions in the practice bank or sit a timed mock exam.'}</p>
-      <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 font-medium">
-        <Link className="text-indigo-700 underline" href={localePath(lang, '/practice?kind=pipeline')}>{zh ? '更多管道题练习 →' : 'More Switch practice →'}</Link>
-        <Link className="text-indigo-700 underline" href={localePath(lang, '/exams')}>{zh ? '限时模拟考 →' : 'Timed mock exam →'}</Link>
-      </p>
+    <p className="mt-6 flex flex-wrap gap-x-5 gap-y-1 text-sm font-medium">
+      <Link className="text-indigo-600 hover:underline" href={localePath(lang, '/practice?kind=pipeline')}>{zh ? '更多管道题练习 →' : 'More Switch practice →'}</Link>
+      <Link className="text-indigo-600 hover:underline" href={localePath(lang, '/exams')}>{zh ? '限时模拟考 →' : 'Timed mock exam →'}</Link>
+    </p>
     </div>
-  </section>;
+  </details>;
 }

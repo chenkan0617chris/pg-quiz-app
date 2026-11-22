@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
+import InfoTip from '@/components/InfoTip';
 import { VERBAL_LABELS, VERBAL_PASSAGES, type VerbalAnswer, type VerbalPassage } from '@/content/verbal-bank';
 
 const PER_ROUND = 3;
@@ -43,18 +44,20 @@ export default function VerbalTraining() {
   }
 
   return <div className="space-y-6">
-    <span className="text-xs font-semibold tracking-wider text-indigo-600">{zh ? '言语推理 · 英文' : 'VERBAL REASONING'}</span>
-    <h1 className="text-3xl font-bold">{zh ? '英文言语推理练习：True / False / Cannot Say' : 'Verbal reasoning test practice: True, False or Cannot Say'}</h1>
-    <p className="text-sm leading-7 text-slate-600">{zh
-      ? '外企、四大、投行和快消公司的在线测评（SHL、Aon/cut-e、Talent Q 等）常考英文言语推理：读一段短文，判断每个陈述是正确、错误还是无法判断。每轮随机抽 3 篇原创短文、12 个陈述，提交后逐题给出依据。'
-      : 'Many graduate and professional online assessments, including SHL, Aon (cut-e) and Talent Q tests used by banks, consultancies and consumer goods firms, include verbal reasoning: read a short passage and decide whether each statement is True, False or Cannot Say. Each round draws 3 original passages and 12 statements, with the reasoning shown for every answer.'}</p>
-    <div className="rounded-xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">
-      <p className="font-medium text-slate-800">{zh ? '判断规则（只看原文，不用常识）' : 'The rule: use only the passage, never outside knowledge'}</p>
-      <ul className="mt-2 list-disc space-y-1 pl-5">
-        <li>{zh ? 'True：原文直接写明，或必然能推出。' : 'True: the passage states it, or it must follow from what is stated.'}</li>
-        <li>{zh ? 'False：原文与陈述矛盾。' : 'False: the passage contradicts the statement.'}</li>
-        <li>{zh ? 'Cannot Say：原文信息不够，哪怕陈述听起来合理。' : 'Cannot Say: the passage does not give enough to decide, however plausible the statement sounds.'}</li>
-      </ul>
+    <div>
+      <div className="flex items-center gap-2.5">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{zh ? '英文言语推理练习' : 'Verbal reasoning test practice'}</h1>
+        <InfoTip label={zh ? '判断规则' : 'The rules'}>
+          <p className="font-medium text-slate-800">{zh ? '只看原文，不用常识' : 'Use only the passage, never outside knowledge'}</p>
+          <ul className="mt-1.5 list-disc space-y-1 pl-4 marker:text-slate-300">
+            <li>{zh ? 'True：原文直接写明，或必然能推出。' : 'True: the passage states it, or it must follow.'}</li>
+            <li>{zh ? 'False：原文与陈述矛盾。' : 'False: the passage contradicts it.'}</li>
+            <li>{zh ? 'Cannot Say：原文信息不够，哪怕听起来合理。' : 'Cannot Say: not enough information, however plausible.'}</li>
+          </ul>
+          <p className="mt-2 text-slate-500">{zh ? 'SHL、Aon/cut-e、Talent Q 等测评常见题型。短文均为原创，作答不保存。' : 'Common in SHL, Aon (cut-e) and Talent Q tests. Passages are original; answers are not saved.'}</p>
+        </InfoTip>
+      </div>
+      <p className="mt-2 text-[15px] text-slate-500">{zh ? '读短文，判断每个陈述是 True、False 还是 Cannot Say。每轮 3 篇。' : 'Read each passage and mark every statement True, False or Cannot Say. 3 passages per round.'}</p>
     </div>
 
     {done && <div role="status" className="rounded-xl bg-indigo-50 p-5">
@@ -81,7 +84,6 @@ export default function VerbalTraining() {
     </section>)}
 
     {passages && !done && <button disabled={answered !== keys.length} onClick={e => finish(e.timeStamp)} className="rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white disabled:opacity-40">{zh ? `提交并查看解析（${answered}/${keys.length}）` : `Check answers (${answered}/${keys.length})`}</button>}
-    <p className="text-xs text-slate-500">{zh ? '短文和题目均为本站原创，不是任何公司的真题。本页免费，不保存作答。' : 'All passages are original and not taken from any employer’s test. Free to use; answers are not saved.'}</p>
-    <div><Link href={`/${lang}/practice`} className="text-sm font-semibold text-indigo-600">{zh ? '去练数字推理和资料分析 →' : 'Practise numerical and data interpretation next →'}</Link></div>
+    <div><Link href={`/${lang}/practice`} className="text-sm font-semibold text-indigo-600">{zh ? '数字与资料分析练习 →' : 'Numerical and data practice →'}</Link></div>
   </div>;
 }

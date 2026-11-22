@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { localePath } from '@/lib/seo';
 import { TEST_PAGES_EN, TEST_PAGE_PATHS, type TestPageKey } from '@/content/test-pages.en';
 import FaqSection from '@/components/seo/FaqSection';
+import MoreInfo from '@/components/MoreInfo';
 
 /**
  * Server-rendered explanation of one P&G assessment section, in English only.
@@ -14,24 +15,26 @@ export default function EnglishTestContent({ page }: { page: TestPageKey }) {
   const others = (Object.keys(TEST_PAGES_EN) as TestPageKey[]).filter((key) => key !== page);
 
   return (
-    <div className="mt-12 border-t border-slate-200 pt-8">
+    <div>
+      <MoreInfo summary={`About the ${copy.name}`} className="mt-4">
       {copy.sections.map((section) => (
-        <section key={section.heading} className="mt-8 first:mt-0 max-w-3xl">
-          <h2 className="text-xl font-bold text-slate-900">{section.heading}</h2>
+        <section key={section.heading} className="mt-6 max-w-3xl">
+          <h2 className="text-base font-semibold text-slate-900">{section.heading}</h2>
           {section.paragraphs.map((text) => (
-            <p key={text} className="mt-3 text-[15px] leading-7 text-slate-700">{text}</p>
+            <p key={text} className="mt-3 text-sm leading-7 text-slate-600">{text}</p>
           ))}
           {section.list && (
-            <ul className="mt-3 list-disc space-y-2 pl-6 text-[15px] leading-7 text-slate-700 marker:text-slate-400">
+            <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-7 text-slate-600 marker:text-slate-400">
               {section.list.map((item) => <li key={item}>{item}</li>)}
             </ul>
           )}
         </section>
       ))}
+      </MoreInfo>
 
       <FaqSection heading={copy.faqHeading} items={copy.faq} />
 
-      <nav aria-label="Other assessment games" className="mt-10 rounded-xl bg-slate-50 p-5">
+      <nav aria-label="Other assessment games" className="mt-10">
         <h2 className="text-sm font-semibold text-slate-900">Practise the other Aon and P&amp;G assessment games</h2>
         <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           {others.map((key) => (

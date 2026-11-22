@@ -10,7 +10,9 @@ export type ToolCopy = {
   label: string;
   description: string;
   keywords: string[];
-  /** Shown above the interactive area, so the page carries readable content on its own. */
+  /** One short line under the heading. */
+  tagline: string;
+  /** Longer explanation, kept in the collapsed "about" section below the tool. */
   intro: string;
   /** Shown below it: how to read the output, and what the tool deliberately does not do. */
   notes: string[];
@@ -21,6 +23,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
   pipeline: {
     zh: {
       title: '宝洁管道题工具｜在线求解与逐步验算 | CK Quiz',
+      tagline: '录入题目，求出未知方框，并查看每一级的变化。',
       h1: '宝洁管道题工具：在线求解与逐步验算',
       label: '管道推理',
       description:
@@ -37,6 +40,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
     },
     en: {
       title: 'P&G Switch Challenge Solver + Free Practice Questions (Aon)',
+      tagline: 'Enter a question to find the hidden box and see every step.',
       h1: 'Switch Challenge practice: free questions and step-by-step solver',
       label: 'Switch Challenge',
       description:
@@ -56,6 +60,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
   series: {
     zh: {
       title: '图形推理规律求解器 | 在线找规律工具',
+      tagline: '点格子录入图形，找出规律并推出下一幅。',
       h1: '图形推理规律求解器',
       label: '图形推理',
       description:
@@ -72,6 +77,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
     },
     en: {
       title: 'Figure Series Rule Solver — Find the Next Figure',
+      tagline: 'Click cells to enter the figures, then find the rule and the next one.',
       h1: 'Figure series rule solver',
       label: 'Figure series',
       description:
@@ -91,6 +97,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
   numerical: {
     zh: {
       title: '宝洁计算题工具与三乘表｜数字推理练习 | CK Quiz',
+      tagline: '搭出算式、填好目标，列出所有可行的数字组合。',
       h1: '宝洁计算题工具：算式求解与三乘表',
       label: '数字推理',
       description:
@@ -107,6 +114,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
     },
     en: {
       title: 'P&G Digit Challenge Calculator & Free Practice (Aon) | CK Quiz',
+      tagline: 'Build the equation, set the target, and see every valid digit combination.',
       h1: 'Digit Challenge practice and equation solver (Aon, P&G)',
       label: 'Digit Challenge',
       description:
@@ -126,6 +134,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
   practice: {
     zh: {
       title: '宝洁题库与管道题模拟练习｜逐题解析 | CK Quiz',
+      tagline: '选题型、点开始，提交后看逐步解析。',
       h1: '宝洁题库：管道题与计算题模拟练习',
       label: '练习题库',
       description:
@@ -142,6 +151,7 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
     },
     en: {
       title: 'Online Assessment Practice Questions with Answers | CK Quiz',
+      tagline: 'Pick a type, press start, and get a worked solution after each answer.',
       h1: 'Online assessment practice questions: Switch, Digit, figure and data',
       label: 'Practice',
       description:

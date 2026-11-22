@@ -145,7 +145,6 @@ export default async function GuidePage({ params }: Props) {
         </ul>
       </section>
 
-      <p className="mt-12 border-t border-slate-200 pt-6 text-xs leading-6 text-slate-500">{ui.disclaimer}</p>
     </>
   );
 }

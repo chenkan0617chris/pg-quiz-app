@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useSolveRequest } from '@/lib/solve-request';
 import { useI18n } from '@/lib/i18n';
+import InfoTip from '@/components/InfoTip';
 import {
   defaultTokens,
   formatEquation,
@@ -38,7 +39,7 @@ export default function NumericalPage() {
         <div className="flex min-w-0 flex-1 flex-col gap-6">
           {/* Equation builder */}
           <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-4 text-base font-semibold text-gray-800">{t('numEquation')}</h2>
+            <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-gray-800">{t('numEquation')}<InfoTip label={t('numEquation')}>{t('numBuilderHint')}</InfoTip></h2>
             <EquationBuilder
               tokens={tokens}
               target={target}
@@ -58,8 +59,7 @@ export default function NumericalPage() {
 
           {/* Equation templates */}
           <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-1 text-base font-semibold text-gray-800">{t('numTemplates')}</h2>
-            <p className="mb-4 text-xs text-gray-400">{t('numTemplatesHint')}</p>
+            <h2 className="mb-4 text-base font-semibold text-gray-800">{t('numTemplates')}</h2>
             <div className="flex flex-wrap gap-2">
               {PRESET_SPECS.map((spec) => (
                 <button

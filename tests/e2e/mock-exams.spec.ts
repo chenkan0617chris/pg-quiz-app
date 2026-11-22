@@ -26,7 +26,7 @@ async function mount(page:Page,component:string,member=false,zh=false){
 
 test('guests see both previews and membership link on desktop and mobile',async({page})=>{
   await mount(page,'ExamCenter',false,true);
-  await expect(page.getByRole('heading',{name:'宝洁管道题模拟考试与综合测评训练',exact:true})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'宝洁管道题模拟考试',exact:true})).toBeVisible();
   await expect(page.getByRole('link',{name:/开通会员，解锁完整模拟考/})).toHaveAttribute('href','/billing');
   await page.getByRole('tab',{name:'报告预览'}).click();
   await expect(page.getByText('训练总分',{exact:true})).toBeVisible();
