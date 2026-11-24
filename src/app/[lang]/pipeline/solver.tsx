@@ -7,6 +7,10 @@ import {
   type SolveResult,
 } from '@/lib/engine';
 import { useI18n } from '@/lib/i18n';
+import { useAccount } from '@/lib/use-account';
+import { allowanceState } from '@/lib/allowance';
+import { FREE_SOLVES_PER_KIND } from '@/lib/access-policy';
+import AllowanceNotice from '@/components/AllowanceNotice';
 import InteractivePipelineBoard from '@/components/pipeline/InteractivePipelineBoard';
 import ResultView from '@/components/pipeline/ResultView';
 import SolverTour from '@/components/pipeline/SolverTour';
@@ -21,7 +25,10 @@ export default function PipelinePage() {
   ]);
   const [result, setResult] = useState<SolveResult | null>(null);
 
-  const {run,busy,ready,error} = useSolveRequest<SolveResult>('/api/solve/pipeline');
+  const {run,busy,ready,error,limited} = useSolveRequest<SolveResult>('/api/solve/pipeline');
+  const {account} = useAccount();
+  const remaining = account?.solverRemaining?.pipeline;
+  const allowance = allowanceState({account,remaining,limited});
   const solve = async () => {
     const next = await run({inputUnknown:false,outputUnknown:false,inputOrder,outputOrder,boxes,candidates:''});
     if (next) setResult(next);
@@ -46,13 +53,14 @@ export default function PipelinePage() {
           />
 
           {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+          <AllowanceNotice state={allowance} unit="solve" remaining={remaining} limit={FREE_SOLVES_PER_KIND} />
           {/* Solve */}
           <button
             type="button"
             data-tour="solve"
             onClick={solve}
-            disabled={busy || !ready}
-            className="w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-lg font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:bg-indigo-800"
+            disabled={busy || !ready || allowance === 'empty'}
+            className="w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-lg font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50"
           >
             {busy ? '…' : t('solve')}
           </button>

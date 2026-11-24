@@ -9,7 +9,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
    keywords:['P&G assessment preparation','P&G online assessment practice','P&G test preparation','Switch challenge practice','Digit challenge practice'],
    h1:'How to prepare for P&G online assessments',
    lede:'Start with the assessment instructions in your invitation, learn the rules of the relevant tasks, then practise with feedback. This guide helps you choose a starting point and understand what our independent practice covers. It is a study plan, not a collection of actual P&G test questions.',
-   published:'2026-09-28',updated:'2026-09-28',toolHref:'/practice',toolLabel:'Try the fixed practice samples',
+   published:'2026-09-28',updated:'2026-11-22',toolHref:'/practice',toolLabel:'Try the random practice questions',
    body:[
     {type:'h2',text:'1. Check the assessment you have actually been invited to take'},
     {type:'p',text:'P&G lists assessments between application and interviews. The types vary by role; an invitation may include work-related attitudes and cognitive tasks. Read your own instructions for timing, device requirements and accessibility arrangements before deciding what to practise. An internship, graduate application and experienced role need not have identical assessments.'},
@@ -59,7 +59,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
    keywords:['sequence memory practice','dot memory practice','P&G memory assessment preparation','Grid challenge practice'],
    h1:'Sequence memory practice: remember the order, not just the dots',
    lede:'In sequence-memory practice, several positions light up one after another. Your task is to recall both the locations and their order. Our trainer uses a blue board with 25 scattered white dots and pink dots, with sequences of 3, 5 or 7 distinct positions. It is an original recall exercise, not a full Grid Challenge simulator.',
-   published:'2026-09-28',updated:'2026-09-28',toolHref:'/memory',toolLabel:'Open sequence-memory practice',
+   published:'2026-09-28',updated:'2026-11-10',toolHref:'/memory',toolLabel:'Open sequence-memory practice',
    body:[
     {type:'h2',text:'1. Understand the difference between simple recall and a dual task'},
     {type:'p',text:'Simple sequence recall asks you to watch positions and reproduce their order. A dual-task memory exercise adds another job between observations, such as judging symmetry, which interrupts rehearsal. Success on simple recall does not establish readiness for that combined task. Our current trainer supports ordered recall only.'},
@@ -104,7 +104,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
    keywords:['宝洁在线测评准备','宝洁笔试练习','宝洁管道题','宝洁数字题','宝洁记忆力测试'],
    h1:'宝洁在线测评怎么准备：先确认题型，再针对性练习',
    lede:'先阅读招聘通知中的测评要求，理解对应题型的规则，再通过练习和反馈发现问题。本文提供一条可执行的准备路径，并说明本站练习的覆盖范围；它不是宝洁真实考题合集，也不是通过考试的保证。',
-   published:'2026-09-28',updated:'2026-09-28',toolHref:'/practice',toolLabel:'体验随机练习题',
+   published:'2026-09-28',updated:'2026-11-22',toolHref:'/practice',toolLabel:'体验随机练习题',
    body:[
     {type:'h2',text:'1. 先确认你实际收到的测评要求'},
     {type:'p',text:'P&G 官方将在线测评列在申请与面试之间，并说明测评类型会因岗位等因素而变化。请以自己的邀请邮件为准，确认完成时间、设备要求及需要的无障碍安排。不要把另一位求职者的经历当成自己必定遇到的全部题型。'},
@@ -154,7 +154,7 @@ export const PREPARATION_GUIDES: Record<Language,Record<'assessment'|'memory',Gu
    keywords:['记忆力测试练习','圆点顺序记忆','宝洁记忆题','Grid Challenge 练习'],
    h1:'圆点顺序记忆怎么练：位置正确，顺序也要正确',
    lede:'顺序记忆题会依次点亮若干位置，作答时既要记住位置，也要重现顺序。本站训练使用蓝色底板上的 25 个散布白点与依次亮起的粉色圆点，支持 3、5、7 个不重复位置。这是原创的顺序回忆练习，不是完整 Grid Challenge 模拟器。',
-   published:'2026-09-28',updated:'2026-09-28',toolHref:'/memory',toolLabel:'开始圆点顺序记忆练习',
+   published:'2026-09-28',updated:'2026-11-10',toolHref:'/memory',toolLabel:'开始圆点顺序记忆练习',
    body:[
     {type:'h2',text:'1. 区分基础顺序回忆与双任务记忆'},
     {type:'p',text:'基础练习是观察位置后按顺序重现。双任务记忆还会在观察之间加入其他工作，例如判断图形是否对称，这会打断默念和复习。基础回忆做得好，并不能证明已经适应两种任务交替进行；本站当前只提供顺序回忆。'},

@@ -16,7 +16,7 @@ test('practice opens the selected exercise directly without repeating the sideba
         if (args.path.endsWith('/i18n')) return { contents: `export function useI18n(){return {lang:'en'}}; export function shapeNameKey(){return 'shape'}`, loader: 'js' };
         if (args.path.endsWith('/use-account')) return { contents: `export function useAccount(){return {account:null}}`, loader: 'js' };
         if (args.path.endsWith('/solve-request')) return { contents: `export function useSolveRequest(){return {run:async()=>null,busy:false,ready:true,error:null}}`, loader: 'js' };
-        if (args.path === '@clerk/nextjs') return { contents: `export function useAuth(){return {userId:null,isSignedIn:false}}`, loader: 'js' };
+        if (args.path === '@clerk/nextjs') return { contents: `export function useAuth(){return {userId:null,isSignedIn:false}};export function useClerk(){return {}}`, loader: 'js' };
         return { contents: `export default function Link({href,children,...props}){return <a href={href}{...props}>{children}</a>}`, loader: 'tsx', resolveDir: process.cwd() };
       });
     }}],
@@ -58,7 +58,7 @@ test('recent practice shows eight submissions per page with previous and next co
         if (args.path.endsWith('/i18n')) return { contents: `export function useI18n(){return {lang:'en'}}; export function shapeNameKey(){return 'shape'}`, loader: 'js' };
         if (args.path.endsWith('/use-account')) return { contents: `export function useAccount(){return {account:null}}`, loader: 'js' };
         if (args.path.endsWith('/solve-request')) return { contents: `export function useSolveRequest(){return {run:async()=>null,busy:false,ready:true,error:null}}`, loader: 'js' };
-        if (args.path === '@clerk/nextjs') return { contents: `export function useAuth(){return {userId:'user-1',isSignedIn:true}}`, loader: 'js' };
+        if (args.path === '@clerk/nextjs') return { contents: `export function useAuth(){return {userId:'user-1',isSignedIn:true}};export function useClerk(){return {}}`, loader: 'js' };
         return { contents: `export default function Link({href,children,...props}){return <a href={href}{...props}>{children}</a>}`, loader: 'tsx', resolveDir: process.cwd() };
       });
     }}],

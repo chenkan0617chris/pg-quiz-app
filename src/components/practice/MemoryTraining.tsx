@@ -6,6 +6,8 @@ import { useI18n } from '@/lib/i18n';
 import { useAccount } from '@/lib/use-account';
 import { useSolveRequest } from '@/lib/solve-request';
 import { FREE_MEMORY_ROUNDS, hasFullAccess } from '@/lib/access-policy';
+import { allowanceState } from '@/lib/allowance';
+import { UpgradeCard } from '@/components/AllowanceNotice';
 import type { Difficulty, PublicQuestion } from '@/lib/practice';
 import MemoryBoard from './MemoryBoard';
 import InfoTip from '@/components/InfoTip';
@@ -28,7 +30,8 @@ function Training({access}:{access:ReturnType<typeof useAccount>}){
   const [history,setHistory]=useState<Result[]>([]);
   const [historyError,setHistoryError]=useState(false);
   const [revision,setRevision]=useState(0);
-  const {run,busy,ready,error}=useSolveRequest<Round|Result>('/api/practice');
+  const {run,busy,ready,error,limited}=useSolveRequest<Round|Result>('/api/practice');
+  const locked=allowanceState({account,remaining:account?.memoryRemaining,limited})==='locked';
   const active=!!round&&!result;
   useEffect(()=>{
     if(!userId)return;
@@ -59,7 +62,7 @@ function Training({access}:{access:ReturnType<typeof useAccount>}){
       {failed&&!account&&<p role="alert" className="my-4 text-sm text-amber-700">{zh?'暂时无法读取训练额度，请重试。':'Could not load training access. Please retry.'} <button onClick={()=>window.dispatchEvent(new Event('account-updated'))} className="underline">{zh?'重试':'Retry'}</button></p>}
       {result&&<div role="status" className={`my-5 rounded-xl p-5 ${result.correct?'bg-emerald-50 text-emerald-900':'bg-amber-50 text-amber-900'}`}><h3 className="font-semibold">{result.correct?(zh?'顺序全部正确':'Sequence complete — well done'):(zh?'这一轮还差一点':'Not quite this round')}</h3><p className="mt-2 text-sm">{zh?'你记住的顺序：':'Your sequence: '}{result.answer.join(' → ')}</p><p className="mt-2 text-sm">{zh?'正确顺序：':'Correct sequence: '}{result.referenceAnswer.join(' → ')}</p></div>}
       <div className="flex flex-wrap items-center justify-end gap-4 border-t border-slate-100 pt-5">
-        {active?(answer&&!busy?<button onClick={()=>void submit(answer)} className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white">{zh?'重新提交本轮':'Retry submission'}</button>:<span role="status" className="text-sm text-indigo-600">{busy?(zh?'正在保存…':'Saving…'):(zh?'请完成本轮回忆':'Complete this round')}</span>):exhausted?<Link href="/billing" className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white">{zh?'免费轮数已用完 · 开通会员':'Free rounds used · unlock membership'}</Link>:!result?<button disabled={busy||!ready||(!!userId&&!account)} onClick={()=>void start()} className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">{busy?(zh?'准备中…':'Preparing…'):(zh?'开始记忆训练':'Start memory training')}</button>:null}
+        {active?(answer&&!busy?<button onClick={()=>void submit(answer)} className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white">{zh?'重新提交本轮':'Retry submission'}</button>:<span role="status" className="text-sm text-indigo-600">{busy?(zh?'正在保存…':'Saving…'):(zh?'请完成本轮回忆':'Complete this round')}</span>):exhausted||locked?<div className="w-full"><UpgradeCard locked={!exhausted} unit="round" limit={FREE_MEMORY_ROUNDS}/></div>:!result?<button disabled={busy||!ready||(!!userId&&!account)} onClick={()=>void start()} className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">{busy?(zh?'准备中…':'Preparing…'):(zh?'开始记忆训练':'Start memory training')}</button>:null}
       </div>
     </section>
     <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm"><Link href={`/${lang}/grid`} className="font-medium text-indigo-600">{zh?'进阶：空间记忆双任务 →':'Next: Grid dual-task memory →'}</Link><Link href={`/${lang}/exams`} className="text-slate-500">{zh?'前往模拟考中心 →':'Explore mock exams →'}</Link></div>

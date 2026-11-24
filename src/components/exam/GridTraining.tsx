@@ -6,6 +6,8 @@ import { useTrainingActivity } from '@/lib/use-training-activity';
 import { useSolveRequest } from '@/lib/solve-request';
 import { useAccount } from '@/lib/use-account';
 import { FREE_PRACTICE_PER_KIND, hasFullAccess } from '@/lib/access-policy';
+import { allowanceState } from '@/lib/allowance';
+import { UpgradeCard } from '@/components/AllowanceNotice';
 import type { GridQuestion } from '@/lib/exam-types';
 import type { Difficulty } from '@/lib/practice';
 import GridBoard from './GridBoard';
@@ -26,7 +28,8 @@ export default function GridTraining(){
   const member=!!account&&hasFullAccess(account.status);
   const remaining=account?.practiceRemaining?.grid;
   const exhausted=!!account&&!member&&(remaining??0)<=0;
-  const {run,busy,ready,error}=useSolveRequest<GridQuestion>('/api/grid');
+  const {run,busy,ready,error,limited}=useSolveRequest<GridQuestion>('/api/grid');
+  const locked=allowanceState({account,remaining,limited})==='locked';
   const [difficulty,setDifficulty]=useState<Difficulty>('easy');
   const [question,setQuestion]=useState<GridQuestion|null>(null);
   const [round,setRound]=useState(0);
@@ -65,7 +68,7 @@ export default function GridTraining(){
       </div>}
       {error&&<p role="alert" className="mt-4 text-sm text-rose-700">{error}</p>}
       <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-slate-100 pt-5">
-        {exhausted?<Link href="/billing" className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white">{zh?'免费轮数已用完 · 开通会员':'Free rounds used · unlock membership'}</Link>
+        {locked||(exhausted&&(!question||answer))?<div className="w-full"><UpgradeCard locked={locked} unit="round" limit={FREE_PRACTICE_PER_KIND}/></div>
           :<button disabled={busy||!ready||(!!userId&&!account)||(!!question&&!answer)} onClick={()=>void start()} className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">{busy?(zh?'出题中…':'Preparing…'):question?(zh?'下一轮（新题）':'Next round (new)'):(zh?'开始随机训练':'Start random training')}</button>}
       </div>
     </section>

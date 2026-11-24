@@ -7,6 +7,7 @@ import { useAccount } from '@/lib/use-account';
 import { localePath } from '@/lib/seo';
 import { priceFor } from '@/lib/payment-product';
 import { reportConversion } from '@/lib/conversion-client';
+import { useUpgradeCardShown } from '@/lib/upgrade-card-presence';
 import {
   ONBOARDING_KEY, TRIAL_DISMISS_KEY, UPGRADE_DISMISS_KEY, dayKey, isUnused, nextStepPath, parseOnboarding, reviewProgress, startPath, trialPrompt, upgradePrompt, usageTotals,
   type ExamWhen, type Onboarding, type TargetTest,
@@ -52,7 +53,17 @@ export default function GrowthPrompts() {
   const prompt = account && !quiet && dismissed !== dayKey(now) ? trialPrompt(account, now) : null;
   const [upgradeDismissed, setUpgradeDismissed] = useState(() => readStorage(UPGRADE_DISMISS_KEY));
   // The mock-exam centre already shows its own paywall, so the banner stays out of the way there.
-  const upgrade = account && !quiet && !prompt && !showOnboarding && !pathname.includes('/exams') && upgradeDismissed !== dayKey(now)
+  // A tool that has just run out shows its own card; do not repeat the same offer above it.
+  const cardShown = useUpgradeCardShown();
+  // Each tool loads the account on its own, so give its card a moment before falling back to the banner.
+  const [settled, setSettled] = useState(false);
+  const loaded = !!account;
+  useEffect(() => {
+    if (!loaded) return;
+    const timer = setTimeout(() => setSettled(true), 800);
+    return () => clearTimeout(timer);
+  }, [loaded]);
+  const upgrade = account && settled && !cardShown && !quiet && !prompt && !showOnboarding && !pathname.includes('/exams') && upgradeDismissed !== dayKey(now)
     ? upgradePrompt(account) : null;
   const upgradeRecorded = useRef(false);
   useEffect(() => {

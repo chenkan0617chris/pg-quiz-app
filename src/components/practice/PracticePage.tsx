@@ -6,8 +6,8 @@ import { useI18n } from '@/lib/i18n';
 import { useSolveRequest } from '@/lib/solve-request';
 import { useAccount } from '@/lib/use-account';
 import { FREE_PRACTICE_PER_KIND,hasFullAccess } from '@/lib/access-policy';
-import { priceFor } from '@/lib/payment-product';
-import Link from 'next/link';
+import { LOW_ALLOWANCE,allowanceState } from '@/lib/allowance';
+import { UpgradeCard } from '@/components/AllowanceNotice';
 import PipelineQuestionBoard from './PipelineQuestionBoard';
 import InfoTip from '@/components/InfoTip';
 
@@ -63,7 +63,8 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
   // Bring the practice area to the top of the viewport so the question, answer controls and
   // submit button are visible without scrolling — the SEO intro above would otherwise push them down.
   function revealTool(){requestAnimationFrame(()=>{const el=toolRef.current;if(!el)return;const top=el.getBoundingClientRect().top;if(top<0||top>80)el.scrollIntoView({behavior:'smooth',block:'start'});});}
-  const {run,busy,ready,error}=useSolveRequest<Exercise|Result>('/api/practice');
+  const {run,busy,ready,error,limited}=useSolveRequest<Exercise|Result>('/api/practice');
+  const locked=allowanceState({account,remaining,limited})==='locked';
   useEffect(()=>{
     if(!isSignedIn)return;
     const controller=new AbortController();
@@ -101,7 +102,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
               <p>{selectedCopy.detail}</p>
               <p className="mt-2 text-slate-500">{zh?`免费用户每类累计 ${FREE_PRACTICE_PER_KIND} 道新题，不每日重置；做过的题可在「最近练习」免费重练。会员不限题量。`:`Free accounts get ${FREE_PRACTICE_PER_KIND} new questions per type (no daily reset). Past questions can be retried free from Recent practice. Members are unlimited.`}</p>
             </InfoTip>
-            <span className={`rounded-full px-2.5 py-1 text-xs ${exhausted?'bg-amber-50 text-amber-700':'bg-slate-100 text-slate-500'}`}>{fullAccess
+            <span className={`rounded-full px-2.5 py-1 text-xs ${exhausted||(!fullAccess&&remaining!==undefined&&remaining<=LOW_ALLOWANCE)?'bg-amber-50 text-amber-700':'bg-slate-100 text-slate-500'}`}>{fullAccess
               ? (zh?'不限题量':'Unlimited')
               : exhausted
                 ? (zh?'免费题已用完':'Free questions used')
@@ -113,13 +114,12 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
             {kind==='pipeline'&&<div role="radiogroup" aria-label={zh?'难度':'Difficulty'} className="inline-flex rounded-lg border border-slate-200 bg-white p-1">
               {DIFFICULTIES.map(d=><button key={d.value} type="button" role="radio" aria-checked={difficulty===d.value} onClick={()=>setDifficulty(d.value)} className={`cursor-pointer rounded-md px-3 py-1.5 text-sm whitespace-nowrap transition ${difficulty===d.value?'bg-indigo-600 font-medium text-white shadow-sm':'text-slate-600 hover:bg-slate-100'}`}>{zh?d.zh:d.en}</button>)}
             </div>}
-            {exhausted
-              ? <Link href="/billing" className="rounded-lg bg-indigo-600 px-5 py-2 text-center font-medium whitespace-nowrap text-white hover:bg-indigo-700">{zh?'开通会员':'Unlock membership'} · {priceFor(lang).label}</Link>
-              : <button disabled={busy||!ready||(!!isSignedIn&&!account)} onClick={()=>start()} className="min-w-28 cursor-pointer rounded-lg bg-indigo-600 px-6 py-2 font-medium whitespace-nowrap text-white hover:bg-indigo-700 disabled:cursor-default disabled:opacity-50">{busy?'…':(zh?'开始':'Start')}</button>}
+            {!exhausted&&<button disabled={busy||!ready||(!!isSignedIn&&!account)} onClick={()=>start()} className="min-w-28 cursor-pointer rounded-lg bg-indigo-600 px-6 py-2 font-medium whitespace-nowrap text-white hover:bg-indigo-700 disabled:cursor-default disabled:opacity-50">{busy?'…':(zh?'开始':'Start')}</button>}
           </div>
         </div>
         {error && <p role="alert" className="mb-4 text-red-600">{error}</p>}
-        {!exercise || !isSignedIn ? <div className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500">
+        {locked&&<div className="mb-4"><UpgradeCard locked unit="question" limit={FREE_PRACTICE_PER_KIND}/></div>}
+        {exhausted&&!exercise ? <UpgradeCard unit="question" limit={FREE_PRACTICE_PER_KIND}/> : !exercise || !isSignedIn ? <div className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500">
           {zh?'点击「开始」出第一题':'Press Start for your first question'}
         </div> : <form onSubmit={submit}>
           {exercise.question.kind==='pipeline'?<PipelineQuestionBoard question={exercise.question} values={digits} onChange={setDigits} disabled={!!result||busy} zh={zh}/>:exercise.question.kind==='figure'?<div><div className="flex flex-wrap gap-3">{exercise.question.frames.map((mask,i)=><Figure key={i} mask={mask} label={`${i+1}`}/>)}<div className="flex w-24 items-center justify-center text-3xl">?</div></div></div>:exercise.question.kind==='data'?<DataPrompt question={exercise.question} zh={zh}/>:<NumericalBoard key={exercise.id} target={exercise.question.target} values={digits} onChange={setDigits} disabled={!!result||busy} zh={zh}/>}
@@ -133,6 +133,7 @@ function PracticeContent({initialKind}: {initialKind: Question['kind']}) {
               </div>
               {!exhausted&&<button type="button" autoFocus onClick={()=>start()} disabled={busy} className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">{zh?'下一题':'Next question'} → <span className="ml-1 hidden text-xs font-normal opacity-75 lg:inline">Enter</span></button>}
             </div>
+            {exhausted&&<div className="mt-4"><UpgradeCard unit="question" limit={FREE_PRACTICE_PER_KIND}/></div>}
             <Lesson key={result.id} explanation={result.explanation} question={result.question}/>
           </div>}
         </form>}
