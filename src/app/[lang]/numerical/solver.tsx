@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import { useSolveRequest } from '@/lib/solve-request';
 import { useI18n } from '@/lib/i18n';
+import { useAccount } from '@/lib/use-account';
+import { allowanceState } from '@/lib/allowance';
+import { FREE_SOLVES_PER_KIND } from '@/lib/access-policy';
+import AllowanceNotice from '@/components/AllowanceNotice';
 import InfoTip from '@/components/InfoTip';
 import {
   defaultTokens,
@@ -26,7 +30,10 @@ export default function NumericalPage() {
   const [range, setRange] = useState<Range>('1-9');
   const [result, setResult] = useState<NumericResult | null>(null);
 
-  const {run,busy,ready,error} = useSolveRequest<NumericResult>('/api/solve/numerical');
+  const {run,busy,ready,error,limited} = useSolveRequest<NumericResult>('/api/solve/numerical');
+  const {account} = useAccount();
+  const remaining = account?.solverRemaining?.numerical;
+  const allowance = allowanceState({account,remaining,limited});
   const solve = async () => {
     const next = await run({tokens,target:target.trim() ? Number(target) : null,distinct,range});
     if (next) setResult(next);
@@ -126,12 +133,13 @@ export default function NumericalPage() {
           </section>
 
           {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+          <AllowanceNotice state={allowance} unit="solve" remaining={remaining} limit={FREE_SOLVES_PER_KIND} />
           {/* Solve */}
           <button
             type="button"
             onClick={solve}
-            disabled={busy || !ready}
-            className="w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-lg font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:bg-indigo-800"
+            disabled={busy || !ready || allowance === 'empty'}
+            className="w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-lg font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50"
           >
             {busy ? '…' : t('solve')}
           </button>

@@ -14,9 +14,12 @@ async function mountSolver(page: Page) {
     loader: { '.module.css': 'local-css' },
     define: { 'process.env.NODE_ENV': '"production"', 'process.env': '{}' },
     plugins: [{ name: 'fixtures', setup(buildContext) {
-      buildContext.onResolve({ filter: /^(next\/navigation|.*\/solve-request)$/ }, args => ({ path: args.path, namespace: 'fixture' }));
+      buildContext.onResolve({ filter: /^(next\/navigation|next\/link|@clerk\/nextjs|.*\/solve-request|.*\/use-account)$/ }, args => ({ path: args.path, namespace: 'fixture' }));
       buildContext.onLoad({ filter: /.*/, namespace: 'fixture' }, args => {
         if (args.path === 'next/navigation') return { contents: `export function usePathname(){return '/en/pipeline'} export function useRouter(){return {push(){},replace(){},refresh(){}}}`, loader: 'js' };
+        if (args.path === 'next/link') return { contents: `export default function Link({href,children,...props}){return <a href={href}{...props}>{children}</a>}`, loader: 'tsx', resolveDir: process.cwd() };
+        if (args.path === '@clerk/nextjs') return { contents: `export function useAuth(){return {}} export function useClerk(){return {}}`, loader: 'js' };
+        if (args.path.endsWith('/use-account')) return { contents: `export function useAccount(){return {account:null}}`, loader: 'js' };
         return { contents: `export function useSolveRequest(){return {run:async()=>null,busy:false,ready:true,error:null}}`, loader: 'js' };
       });
     }}],

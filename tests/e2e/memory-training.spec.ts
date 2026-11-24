@@ -21,7 +21,7 @@ for(const exhausted of [false,true])test(`standalone memory ${exhausted?'keeps t
   await page.goto('http://memory.test/');await page.addScriptTag({content:bundle.outputFiles[0].text});
   await expect(page.getByRole('combobox')).toHaveCount(0);
   if(exhausted){
-    await expect(page.getByRole('link',{name:'Free rounds used · unlock membership'})).toHaveAttribute('href','/billing');
+    await expect(page.getByRole('region',{name:/7-day pass/}).getByRole('button',{name:/US\$6\.99/})).toBeVisible();
     await expect(page.getByRole('button',{name:'Start memory training'})).toHaveCount(0);
     expect(commands).toEqual([]);return;
   }

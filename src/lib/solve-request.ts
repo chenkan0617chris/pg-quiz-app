@@ -9,26 +9,27 @@ export function useSolveRequest<T>(path:string) {
   const {lang} = useI18n();
   const [busy,setBusy] = useState(false);
   const [error,setError] = useState('');
+  /** The server refused for lack of free allowance or membership; callers show the upgrade card. */
+  const [limited,setLimited] = useState(false);
   async function run(input:unknown):Promise<T | undefined> {
     if (!isLoaded || busy) return;
-    setError('');
+    setError('');setLimited(false);
     if (!isSignedIn) { await clerk.openSignIn(); return; }
     setBusy(true);
     try {
       const response = await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)});
       window.dispatchEvent(new Event('account-updated'));
       if (response.status === 401) { await clerk.openSignIn(); return; }
-      if (!response.ok) throw new Error(response.status === 403 ? 'expired' : response.status === 429 ? 'limit' : response.status === 400 ? 'input' : 'server');
+      if (response.status === 403) { setLimited(true); return; }
+      if (!response.ok) throw new Error(response.status === 429 ? 'limit' : response.status === 400 ? 'input' : 'server');
       return await response.json() as T;
     } catch (e) {
-      setError(e instanceof Error && e.message === 'expired'
-        ? (lang==='zh'?'免费次数已用完，或该练习需要会员。请前往「会员与价格」解锁 7 天使用权。':'Free uses are exhausted or this practice requires paid access. Visit Membership & pricing to unlock 7-day access.')
-        : e instanceof Error && e.message === 'limit'
+      setError(e instanceof Error && e.message === 'limit'
         ? (lang==='zh'?'操作太频繁，请一分钟后再试。':'Too many requests. Try again in a minute.')
         : e instanceof Error && e.message === 'input'
         ? (lang==='zh'?'请检查输入，或减少题目规模后重试。':'Check your input or reduce the puzzle size.')
         : (lang==='zh'?'暂时无法解题，请稍后重试。':'Unable to solve right now. Please try again.'));
     } finally { setBusy(false); }
   }
-  return {run,busy,ready:isLoaded,error};
+  return {run,busy,ready:isLoaded,error,limited};
 }
