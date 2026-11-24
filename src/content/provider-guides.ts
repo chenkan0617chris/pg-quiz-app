@@ -18,7 +18,7 @@ export const PROVIDER_GUIDES: Record<Language, Record<string, GuideCopy>> = {
       published: '2026-11-12',
       updated: '2026-11-12',
       toolHref: '/pipeline',
-      toolLabel: 'Practise the Switch Challenge',
+      toolLabel: 'Aon Switch Challenge practice',
       body: [
         { type: 'h2', text: 'What is in an Aon assessment?' },
         { type: 'p', text: 'Aon’s gamified smartPredict assessment is made of short challenges, each measuring one ability. Prep providers commonly list four: Switch (deductive logic), Digit (numerical), Grid (working memory) and Motion (planning). Employers can also send classic cut-e scales tests, such as scales verbal (true/false/cannot say), scales numerical (tables and charts) and scales ix (inductive patterns), and a personality questionnaire.' },

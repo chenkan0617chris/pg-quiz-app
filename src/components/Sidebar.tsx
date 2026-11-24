@@ -4,7 +4,8 @@ import Link from './NavigationLink';
 import { usePathname,useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useI18n, type DictKey } from '@/lib/i18n';
-import { localePath } from '@/lib/seo';
+import { HREFLANG, localePath } from '@/lib/seo';
+import { languageFromPath, withLanguage } from '@/lib/language';
 import AccountControls from './AccountControls';
 import { PRACTICE_NAVIGATION } from '@/lib/practice-navigation';
 
@@ -54,9 +55,26 @@ function NavGroup({label,icon,items,pathname,close}:{label:string;icon:IconName;
   </div>;
 }
 
+/**
+ * A real link wherever the page exists in both languages, so crawlers can walk
+ * from one tree to the other. Account pages have no translated URL: a button.
+ */
+function LanguageSwitch({onSwitch}:{onSwitch:()=>void}){
+  const pathname=usePathname();
+  const {lang,toggle}=useI18n(),zh=lang==='zh',next=zh?'en':'zh';
+  const shared={'aria-label':zh?'切换为 English':'Switch to 中文',className:'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-[11px] font-medium text-slate-500 hover:bg-slate-200/60 hover:text-slate-800'};
+  const content=<><Icon name="language"/><span>{zh?'English':'中文'}</span></>;
+  if(!languageFromPath(pathname))return <button type="button" {...shared} onClick={()=>{onSwitch();toggle();}}>{content}</button>;
+  return <a {...shared} href={withLanguage(pathname,next)} hrefLang={HREFLANG[next]} onClick={event=>{
+    // Let the browser handle "open in new tab"; toggle() keeps the query and hash.
+    if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+    event.preventDefault();onSwitch();toggle();
+  }}>{content}</a>;
+}
+
 export default function Sidebar({isAdmin=false}:{isAdmin?:boolean}){
   const pathname=usePathname();
-  const {lang,t,toggle}=useI18n(),zh=lang==='zh';
+  const {lang,t}=useI18n(),zh=lang==='zh';
   const [mobileOpen,setMobileOpen]=useState(false);
   const sidebar=useRef<HTMLElement>(null),trigger=useRef<HTMLButtonElement>(null),closeButton=useRef<HTMLButtonElement>(null);
   const close=()=>setMobileOpen(false);
@@ -96,7 +114,7 @@ export default function Sidebar({isAdmin=false}:{isAdmin?:boolean}){
       <div className="shrink-0 border-t border-slate-200/80 px-4 pb-4 pt-4">
         <nav aria-label={zh?'账号与订阅':'Account and membership'} className="space-y-1"><p className="px-3 pb-1 text-[10px] font-semibold tracking-[0.12em] text-slate-400">{zh?'账号与会员':'ACCOUNT'}</p>{isAdmin&&accountLink('/admin',zh?'用户使用后台':'Admin dashboard','user')}{accountLink('/account',zh?'我的账号':'My account','user')}{accountLink('/billing',zh?'会员与价格':'Membership & pricing','membership')}</nav>
         <div className="mx-2 mb-3 mt-4 border-t border-slate-200/80"/><AccountControls onNavigate={close}/>
-        <div className="mt-3 flex items-center justify-between px-3"><span className="text-[10px] tracking-wide text-slate-400">CKAutoFlow</span><button type="button" onClick={()=>{close();toggle();}} aria-label={zh?'切换为 English':'Switch to 中文'} className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-[11px] font-medium text-slate-500 hover:bg-slate-200/60 hover:text-slate-800"><Icon name="language"/><span>{zh?'EN':'中文'}</span></button></div>
+        <div className="mt-3 flex items-center justify-between px-3"><span className="text-[10px] tracking-wide text-slate-400">CKAutoFlow</span><LanguageSwitch onSwitch={close}/></div>
       </div>
     </aside>
   </>;

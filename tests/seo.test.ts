@@ -32,8 +32,11 @@ test('every hreflang cluster is reciprocal and self-referencing', () => {
   }
 });
 
-test('the site root is the x-default only for the home page', () => {
-  assert.equal(alternates('zh').languages?.['x-default'], '/');
+test('x-default never points at the redirecting root', () => {
+  // "/" answers 307, so naming it as an alternate tells Google to prefer it
+  // over /en, which then gets filed as a duplicate.
+  assert.equal(alternates('zh').languages?.['x-default'], '/en');
+  assert.equal(alternates('en').languages?.['x-default'], alternates('en').canonical);
   assert.equal(alternates('zh', '/practice').languages?.['x-default'], '/en/practice');
 });
 
@@ -60,4 +63,41 @@ test('noindex account pages remain crawlable so crawlers can read the directive'
  const blocked=groups.flatMap(g=>g.disallow??[]);
  for(const path of ['/billing','/sign-in','/sign-up'])assert.ok(!blocked.includes(path));
  assert.ok(blocked.includes('/api/'));
+});
+
+test('sitemap alternates repeat the hreflang set in the page head', () => {
+ for(const entry of sitemap()){
+  const [,lang,path]=/^https:\/\/quiz\.ckautoflow\.com\/(zh|en)(.*)$/.exec(entry.url)!;
+  const head=alternates(lang as 'zh'|'en',path).languages!;
+  assert.deepEqual(entry.alternates?.languages,Object.fromEntries(Object.entries(head).map(([tag,url])=>[tag,`https://quiz.ckautoflow.com${url}`])));
+ }
+});
+
+test('every sitemap page carries a real, non-future edit date', () => {
+ const tomorrow=new Date(Date.now()+864e5).toISOString().slice(0,10);
+ for(const entry of sitemap()){
+  assert.match(String(entry.lastModified),/^\d{4}-\d{2}-\d{2}$/,entry.url);
+  assert.ok(String(entry.lastModified)<=tomorrow,entry.url);
+ }
+});
+
+test('pages rewritten on 22 November say so in the sitemap', () => {
+ const entries=sitemap();
+ for(const lang of ['zh','en'])for(const path of ['','/exams','/grid','/peak','/verbal','/practice','/pricing','/guides','/pipeline','/series','/memory','/numerical']){
+  const entry=entries.find(e=>e.url===`https://quiz.ckautoflow.com/${lang}${path}`);
+  assert.ok(String(entry?.lastModified)>='2026-11-22',`${lang}${path} ${entry?.lastModified}`);
+ }
+});
+
+test('revised preparation guides show their real revision date', () => {
+ for(const lang of ['zh','en'] as const){
+  assert.equal(getGuide(lang,'assessment').updated,'2026-11-22');
+  assert.equal(getGuide(lang,'memory').updated,'2026-11-10');
+ }
+});
+
+test('guide links to practice describe the destination', () => {
+ assert.equal(getGuide('en','aon-assessment').toolLabel,'Aon Switch Challenge practice');
+ // Practice questions are random; the five fixed samples no longer exist.
+ assert.doesNotMatch(getGuide('en','assessment').toolLabel,/fixed/i);
 });

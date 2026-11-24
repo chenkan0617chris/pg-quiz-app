@@ -29,8 +29,9 @@ export function absolute(path: string): string {
 /**
  * Canonical + reciprocal hreflang set for one page.
  *
- * Every locale variant lists itself as well as its siblings, and `x-default`
- * points at the negotiating root so Google has an explicit fallback.
+ * Every locale variant lists itself as well as its siblings. `x-default` is the
+ * English page, which is also where `/` sends crawlers: naming the redirecting
+ * root instead made Google prefer `/` and file `/en` as its duplicate.
  */
 export function alternates(lang: Language, path = ''): NonNullable<Metadata['alternates']> {
   return {
@@ -38,7 +39,7 @@ export function alternates(lang: Language, path = ''): NonNullable<Metadata['alt
     languages: {
       'zh-CN': localePath('zh', path),
       en: localePath('en', path),
-      'x-default': path === '' ? '/' : localePath('en', path),
+      'x-default': localePath('en', path),
     },
   };
 }
