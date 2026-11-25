@@ -67,6 +67,24 @@ test('USD 6.99 checkout grants seven days and refunds revoke it',{skip:!process.
   await sql`DELETE FROM user_access WHERE user_id=${uid}`;
  }
 });
+test('AUD 9.90 checkout grants seven days',{skip:!process.env.RUN_DB_TESTS},async()=>{
+ const sql=database();const uid='payment_aud990_test_'+randomUUID();const order=randomUUID();
+ try{
+  await initializeAccess(uid,Date.now()-8*86400000);
+  await sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${order},${uid},true,990,'aud')`;
+  await sql`SELECT fulfill_quiz_payment(${order}::uuid,${'cs_'+order},${'pi_'+order},true)`;
+  const access=await readAccess(uid);
+  assert.equal(access?.status,'paid');
+  assert.equal(access?.lifetime,false);
+  assert.ok(Math.abs(Date.parse(access!.paidUntil!)-Date.now()-7*86400000)<5000);
+  await sql`SELECT refund_quiz_payment(${'pi_'+order},true)`;
+  assert.equal((await readAccess(uid))?.status,'expired');
+  await assert.rejects(sql`INSERT INTO payment_orders(id,user_id,livemode,amount,currency) VALUES (${randomUUID()},${uid},true,1000,'aud')`);
+ }finally{
+  await sql`DELETE FROM payment_orders WHERE user_id=${uid}`;
+  await sql`DELETE FROM user_access WHERE user_id=${uid}`;
+ }
+});
 test('legacy USD 14.99 checkout still grants seven days',{skip:!process.env.RUN_DB_TESTS},async()=>{
  const sql=database();const uid='payment_usd_test_'+randomUUID();const order=randomUUID();
  try{

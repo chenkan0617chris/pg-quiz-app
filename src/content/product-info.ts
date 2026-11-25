@@ -11,11 +11,11 @@ export const PRODUCT_INFO: Record<Language, {
 }> = {
  zh: {
   pricingTitle: '会员价格与免费体验 | 宝洁笔试题库',
-  pricingDescription: '查看宝洁笔试练习工具的 US$6.99 会员价格、每种解题器 10 次免费机会、免费随机练习题和 7 天使用权。一次性购买，不自动续费；包含管道、图形、数字推理及资料分析练习。',
+  pricingDescription: '查看宝洁笔试练习工具的 A$9.90 会员价格、每种解题器 10 次免费机会、免费随机练习题和 7 天使用权。一次性购买，不自动续费；包含管道、图形、数字推理及资料分析练习。',
   aboutTitle: '关于本站与题目编写方法 | 宝洁笔试题库',
   aboutDescription: '了解 CKAutoFlow 独立练习工具的题目生成方法、求解器范围和资料来源。本站提供原创练习，不提供宝洁真实试题或通过考试保证。',
   trial: '注册即可免费使用，无需绑卡：每种解题器累计免费 10 次，记忆训练累计免费 10 轮，每种练习题型累计 10 道随机新题与解析；次数不每日重置。限时模拟考仅限付费会员，免费账号可预览考场与报告。攻略无需登录即可阅读。',
-  access: '一次性支付 US$6.99，购买 7 天使用权。付款确认起使用全部功能 7 天，不自动续费；到期后恢复免费方案，未用完的免费次数保留。',
+  access: '一次性支付 A$9.90（澳元），购买 7 天使用权，可用支付宝、微信支付或银行卡。付款确认起使用全部功能 7 天，不自动续费；到期后恢复免费方案，未用完的免费次数保留。',
   included: ['会员模拟考：管道 6 分钟、数字 5 分钟、空间记忆 9 分钟，含全屏考场、考试历史与逐题得分和耗时报告。','空间记忆双任务与 PEAK 工作风格熟悉练习；非会员可预览模拟考场与报告。','顺序记忆：蓝色板上的圆点回忆，支持 3、5、7 个位置；不是完整 Grid 双任务模拟。','管道推理：位置重排、逐级推导与未知方框求解。','图形推理：3×3 方格中的六类变换与候选规律验证。','数字推理：算式填空、数字不重复约束及可行解检查。','图表数据分析练习：增长率、占比、比值与单位换算。','分难度练习、答题记录和错题复练；界面支持中英文。'],
   limits: '需要登录才能使用求解和保存练习记录。已有有效付费使用权时不能重复购买。实际可用支付方式以 Stripe 结账页显示为准。',
   action: '登录并购买 7 天会员',
@@ -31,7 +31,7 @@ export const PRODUCT_INFO: Record<Language, {
   aboutTitle: 'About and Question Methodology | CK Quiz',
   aboutDescription: 'How CKAutoFlow creates independent reasoning practice, what the solvers support and where assessment information comes from. No official test questions or pass guarantees.',
   trial: 'Sign up free, no card required: get 10 free uses per solver, 10 memory rounds and 10 random new questions per practice type with explanations. Allowances do not reset daily. Timed mock exams are for paid members; free accounts can preview the exam and report. Guides are free to read without signing in.',
-  access: 'A one-time US$6.99 payment unlocks all features for 7 days from payment confirmation. No automatic renewal; afterwards you return to the free plan with unused free credits intact.',
+  access: 'A one-time $6.99 payment unlocks all features for 7 days from payment confirmation. No automatic renewal; afterwards you return to the free plan with unused free credits intact.',
   included: ['Member mock exams: 6-minute Switch, 5-minute Digit and 9-minute Grid presets, fullscreen focus, saved history and per-question scores and timing.','Grid dual-task and PEAK familiarization samples; non-members can preview the exam and reports.','Sequence memory: dot recall with 3, 5 or 7 positions; not a complete dual-task Grid simulation.','Pipeline logic: position permutations, intermediate steps and unknown-box solving.','Figure reasoning: six transformation families on a 3×3 grid and candidate-rule checks.','Numerical reasoning: equation blanks, distinct-digit constraints and valid-solution checks.','Data interpretation practice: growth, shares, ratios and unit conversion.','Difficulty-based practice, answer history and wrong-answer retries, in Chinese and English.'],
   limits: 'Sign-in is required to solve questions and save practice history. Accounts with active paid access cannot buy again. Available payment methods are shown at Stripe checkout.',
   action: 'Sign in and buy 7-day access',
