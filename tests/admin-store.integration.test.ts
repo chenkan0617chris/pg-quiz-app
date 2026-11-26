@@ -5,7 +5,7 @@ import { database } from '../src/lib/db';
 import { initializeAccess, consumeFreeSolve, readAccess } from '../src/lib/access-store';
 import { recordFullAccessSolve, recordTrainingActivity } from '../src/lib/activity-store';
 import { createPractice, submitPractice } from '../src/lib/practice-store';
-import { activityHistory, conversionFunnel, userUsage } from '../src/lib/admin/store';
+import { activityHistory, checkoutClicks, conversionFunnel, userUsage } from '../src/lib/admin/store';
 import { parseActivityFilters } from '../src/lib/admin/policy';
 
 const options={skip:!process.env.RUN_DB_TESTS};
@@ -78,5 +78,23 @@ test('conversion funnel accepts the selected cohort window against Postgres',opt
     assert.equal(funnel.days,1);
   } finally {
     await sql`DELETE FROM user_access WHERE user_id=${id}`;
+  }
+});
+
+test('checkout clicks count every click by click date and hide excluded accounts',options,async()=>{
+  const sql=database(),id=`user_clicks_test_${randomUUID()}`;
+  try {
+    const before=await checkoutClicks(1,[]);
+    for(const outcome of ['redirected','already_paid'] as const)
+      await sql`INSERT INTO checkout_clicks(user_id,source,lang,amount,currency,outcome) VALUES (${id},'billing','en',699,'usd',${outcome})`;
+    const after=await checkoutClicks(1,[]);
+    assert.equal(after.total.clicks-before.total.clicks,2);
+    assert.equal(after.total.people-before.total.people,1);
+    assert.equal(after.total.redirected-before.total.redirected,1);
+    assert.equal(after.recent[0].userId,id);
+    const hidden=await checkoutClicks(1,[id]);
+    assert.equal(hidden.total.clicks,before.total.clicks);
+  } finally {
+    await sql`DELETE FROM checkout_clicks WHERE user_id=${id}`;
   }
 });

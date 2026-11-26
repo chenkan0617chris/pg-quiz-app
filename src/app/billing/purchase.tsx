@@ -9,7 +9,7 @@ import { useI18n } from '@/lib/i18n';
 export default function Purchase({enabled}:{enabled:boolean}){
  const {isSignedIn}=useAuth();const {lang}=useI18n();const zh=lang==='zh';
  const {account,isLoaded,failed}=useAccount();
- const {buy,busy,error}=useCheckout();
+ const {buy,busy,error}=useCheckout('billing');
  // Funnel step between "saw an upgrade prompt" and "opened checkout": a free account looked at the price.
  const pricingRecorded=useRef(false);
  useEffect(()=>{

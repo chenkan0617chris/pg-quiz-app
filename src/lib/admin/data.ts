@@ -1,8 +1,9 @@
 import 'server-only';
 import { clerkClient } from '@clerk/nextjs/server';
 import { adminIdentity } from './auth';
-import { activityHistory, conversionFunnel, userUsage, USER_PAGE_SIZE } from './store';
+import { activityHistory, checkoutClicks, conversionFunnel, userUsage, USER_PAGE_SIZE } from './store';
 import type { ActivityFilters } from './policy';
+import { internalUserIds } from '../checkout-click-policy';
 
 async function requireAdmin() {
   if(!(await adminIdentity()).allowed)throw new Error('Admin access required');
@@ -30,4 +31,10 @@ export async function adminUserDetail(userId:string,filters:ActivityFilters) {
 export async function adminFunnel(days:1|7|30) {
   await requireAdmin();
   return conversionFunnel(days);
+}
+
+/** Owner/test accounts are hidden unless asked for: ADMIN_USER_IDS plus INTERNAL_USER_IDS. */
+export async function adminCheckoutClicks(days:1|7|30,includeInternal:boolean) {
+  await requireAdmin();
+  return checkoutClicks(days,includeInternal?[]:internalUserIds(process.env.ADMIN_USER_IDS,process.env.INTERNAL_USER_IDS));
 }

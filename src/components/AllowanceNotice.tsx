@@ -25,7 +25,7 @@ export default function AllowanceNotice({ state, unit, remaining, limit }: { sta
 /** In-place offer shown where a free account runs out, with checkout one click away. */
 export function UpgradeCard({ locked = false, unit, limit }: { locked?: boolean; unit: Unit; limit: number }) {
   const { lang } = useI18n(), zh = lang === 'zh';
-  const { buy, busy, error } = useCheckout();
+  const { buy, busy, error } = useCheckout('upgrade_card');
   const price = priceFor(lang).label;
   const bodyId = useId();
   const reported = useRef(false);
