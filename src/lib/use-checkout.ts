@@ -2,9 +2,10 @@
 import { useState } from 'react';
 import { useAuth, useClerk } from '@clerk/nextjs';
 import { useI18n } from './i18n';
+import type { CheckoutSource } from './checkout-click-policy';
 
 /** Opens Stripe checkout for the 7-day pass. Shared by the billing page and the in-place upgrade card. */
-export function useCheckout() {
+export function useCheckout(source: CheckoutSource = 'other') {
   const { isSignedIn } = useAuth();
   const clerk = useClerk();
   const { lang } = useI18n(), zh = lang === 'zh';
@@ -15,7 +16,7 @@ export function useCheckout() {
     const unavailable = zh ? '暂时无法付款，请稍后重试。' : 'Checkout is currently unavailable.';
     setBusy(true); setError('');
     try {
-      const response = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lang }) });
+      const response = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lang, source }) });
       if (response.status === 401) { await clerk.openSignIn(); return; }
       if (!response.ok) {
         setError(response.status === 409

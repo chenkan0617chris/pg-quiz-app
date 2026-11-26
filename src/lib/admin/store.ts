@@ -66,3 +66,29 @@ export async function activityHistory(userId:string,filters:ActivityFilters):Pro
     ORDER BY occurred_at DESC,event_id DESC LIMIT ${ACTIVITY_PAGE_SIZE+1} OFFSET ${(filters.page-1)*ACTIVITY_PAGE_SIZE}`;
   return {items:rows.slice(0,ACTIVITY_PAGE_SIZE).map(row=>({eventId:row.event_id,tool:row.tool,action:row.action,occurredAt:iso(row.occurred_at)!,freeCredits:row.free_credits===null?null:Number(row.free_credits),source:row.source,correct:row.correct})),hasNext:rows.length>ACTIVITY_PAGE_SIZE};
 }
+
+export type ClickCounts={clicks:number;people:number;redirected:number;paid:number};
+export type CheckoutClicks={days:1|7|30;total:ClickCounts;
+  byPlan:(ClickCounts&{lang:string;amount:number;currency:string})[];bySource:{source:string;clicks:number}[];
+  recent:{at:string;userId:string;lang:string;source:string;outcome:string;paid:boolean}[]};
+const clickCounts=(row:Record<string,unknown>):ClickCounts=>({clicks:Number(row.clicks),people:Number(row.people),redirected:Number(row.redirected),paid:Number(row.paid)});
+
+/** Every checkout request by click date (Sydney), not by sign-up cohort. `excluded` hides owner/test accounts. */
+export async function checkoutClicks(days:1|7|30,excluded:string[]):Promise<CheckoutClicks> {
+  const sql=database(),params=[days-1,JSON.stringify(excluded)];
+  const scope=`FROM checkout_clicks c LEFT JOIN payment_orders o ON o.id=c.order_id
+    WHERE c.event_day >= ((now() AT TIME ZONE 'Australia/Sydney')::date-$1::integer)
+      AND NOT (c.user_id IN (SELECT jsonb_array_elements_text($2::jsonb)))`;
+  const counts=`count(*)::int AS clicks,count(DISTINCT c.user_id)::int AS people,
+    count(*) FILTER (WHERE c.outcome='redirected')::int AS redirected,count(DISTINCT c.order_id) FILTER (WHERE o.status='paid')::int AS paid`;
+  const [total,plans,sources,recent]=await Promise.all([
+    sql.query(`SELECT ${counts} ${scope}`,params),
+    sql.query(`SELECT c.lang,c.amount,c.currency,${counts} ${scope} GROUP BY c.lang,c.amount,c.currency ORDER BY clicks DESC`,params),
+    sql.query(`SELECT c.source,count(*)::int AS clicks ${scope} GROUP BY c.source ORDER BY clicks DESC`,params),
+    sql.query(`SELECT c.created_at,c.user_id,c.lang,c.source,c.outcome,coalesce(o.status='paid',false) AS paid ${scope} ORDER BY c.created_at DESC LIMIT 20`,params),
+  ]) as Record<string,unknown>[][];
+  return {days,total:clickCounts(total[0]),
+    byPlan:plans.map(row=>({...clickCounts(row),lang:String(row.lang),amount:Number(row.amount),currency:String(row.currency)})),
+    bySource:sources.map(row=>({source:String(row.source),clicks:Number(row.clicks)})),
+    recent:recent.map(row=>({at:iso(row.created_at)!,userId:String(row.user_id),lang:String(row.lang),source:String(row.source),outcome:String(row.outcome),paid:Boolean(row.paid)}))};
+}
