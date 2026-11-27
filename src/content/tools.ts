@@ -39,12 +39,12 @@ export const TOOLS: Record<'pipeline' | 'series' | 'numerical' | 'practice', Rec
       guide: 'pipeline',
     },
     en: {
-      title: 'P&G Switch Challenge Solver + Free Practice Questions (Aon)',
+      title: 'Switch Challenge Practice: Free P&G Questions, Answers & Solver',
       tagline: 'Enter a question to find the hidden box and see every step.',
       h1: 'Switch Challenge practice: free questions and step-by-step solver',
       label: 'Switch Challenge',
       description:
-        'Solve any P&G Switch Challenge question step by step, then practise free Switch Challenge questions with answers. No sign-up needed. Aon smartPredict format.',
+        'Free P&G Switch Challenge practice questions with answers, plus a step-by-step solver for any question. Learn to read the 4-digit codes fast. No sign-up needed. Aon smartPredict format.',
       keywords: ['P&G Switch Challenge solver', 'Switch Challenge solver', 'P&G Switch Challenge answers', 'Switch Challenge practice', 'Switch Challenge practice questions', 'Switch Challenge test', 'Aon Switch Challenge', 'P&G Switch Challenge practice', 'P&G assessment test practice free', 'P&G interactive assessment', 'pipeline logic solver'],
       intro:
         'The Switch Challenge is the symbol-reordering game in Aon\'s smartPredict assessment, used in the P&G Interactive Assessment and by other employers; it is also called pipeline logic. Enter the input order, each box and the output order from your question, and the solver works out the unknown box while displaying every intermediate sequence. The point is not only the answer: stepping through the stages lets you confirm you have not reversed the direction of the forward or backward pass, which is where most marks are lost on this question type.',

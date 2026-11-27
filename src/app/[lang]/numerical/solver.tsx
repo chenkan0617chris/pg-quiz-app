@@ -7,6 +7,7 @@ import { useAccount } from '@/lib/use-account';
 import { allowanceState } from '@/lib/allowance';
 import { FREE_SOLVES_PER_KIND } from '@/lib/access-policy';
 import AllowanceNotice from '@/components/AllowanceNotice';
+import PracticeNext from '@/components/PracticeNext';
 import InfoTip from '@/components/InfoTip';
 import {
   defaultTokens,
@@ -22,7 +23,7 @@ import NumericResultView from '@/components/numerical/NumericResultView';
 type Range = '1-9' | '0-9';
 
 export default function NumericalPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const [tokens, setTokens] = useState<Token[]>(() => defaultTokens());
   const [target, setTarget] = useState('177');
@@ -153,6 +154,7 @@ export default function NumericalPage() {
           ) : (
             <NumericResultView result={result} tokens={tokens} target={target} />
           )}
+          {(result !== null || allowance === 'empty') && <PracticeNext kind="numerical" lang={lang} />}
         </section>
       </div>
     </div>
