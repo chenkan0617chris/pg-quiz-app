@@ -5,5 +5,5 @@ import { useI18n } from '@/lib/i18n';
 
 export default function AuthProvider({children}:{children:React.ReactNode}) {
   const {lang} = useI18n();
-  return <ClerkProvider localization={lang === 'zh' ? zhCN : enUS} signInUrl="/sign-in" signUpUrl="/sign-up" signInFallbackRedirectUrl="/pipeline" signUpFallbackRedirectUrl="/pipeline">{children}</ClerkProvider>;
+  return <ClerkProvider localization={lang === 'zh' ? zhCN : enUS} signInUrl="/sign-in" signUpUrl="/sign-up" signInFallbackRedirectUrl="/pipeline" signUpFallbackRedirectUrl="/practice">{children}</ClerkProvider>;
 }

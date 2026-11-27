@@ -10,6 +10,7 @@ import AllowanceNotice from '@/components/AllowanceNotice';
 import {useSolveRequest} from '@/lib/solve-request';
 import {ruleNames, type FigureRule} from '@/lib/figure';
 import Figure from '@/components/practice/Figure';
+import PracticeNext from '@/components/PracticeNext';
 
 export default function Page(){const {userId}=useAuth();return <FigureSolver key={userId??'visitor'}/>;}
 function FigureSolver(){
@@ -26,6 +27,6 @@ function FigureSolver(){
  {error&&<p role="alert" className="text-red-600">{error}</p>}
  <AllowanceNotice state={allowance} unit="solve" remaining={remaining} limit={FREE_SOLVES_PER_KIND}/>
  {result&&<section className="space-y-4 rounded-xl border p-5" aria-live="polite"><h2 className="font-semibold">{zh?'求解结果':'Results'}</h2><p>{!result.length?(zh?'没有找到符合已支持规则的解。请检查输入，或考虑其他规律。':'No supported rule matches. Check the figures or consider a different rule.'):result.length===1?(zh?'已支持规则得到同一个预测（不代表所有可能规律的唯一答案）。':'The matching supported rules agree on this prediction; other rule families may differ.'):(zh?'存在不同预测，暂时不能确定唯一答案。':'Multiple predictions match; a unique answer cannot be determined.')}</p>{result.map(r=><div key={r.next} className="flex flex-wrap items-center gap-5"><Figure mask={r.next} label={zh?'下一幅':'Next figure'}/><ul>{r.rules.map(rule=><li key={rule}>{ruleNames[rule][lang]}</li>)}</ul></div>)}</section>}
- <Link href={`/${lang}/practice?kind=figure`} className="inline-block text-sm font-medium text-indigo-600 hover:underline">{zh?'图形推理练习 →':'Figure reasoning practice →'}</Link>
+ {(result||allowance==='empty')?<PracticeNext kind="figure" lang={lang}/>:<Link href={`/${lang}/practice?kind=figure`} className="inline-block text-sm font-medium text-indigo-600 hover:underline">{zh?'图形推理练习 →':'Figure reasoning practice →'}</Link>}
  </div>;
 }

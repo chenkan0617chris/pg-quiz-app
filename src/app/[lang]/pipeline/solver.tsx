@@ -11,12 +11,13 @@ import { useAccount } from '@/lib/use-account';
 import { allowanceState } from '@/lib/allowance';
 import { FREE_SOLVES_PER_KIND } from '@/lib/access-policy';
 import AllowanceNotice from '@/components/AllowanceNotice';
+import PracticeNext from '@/components/PracticeNext';
 import InteractivePipelineBoard from '@/components/pipeline/InteractivePipelineBoard';
 import ResultView from '@/components/pipeline/ResultView';
 import SolverTour from '@/components/pipeline/SolverTour';
 
 export default function PipelinePage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const [inputOrder, setInputOrder] = useState<number[]>([1, 2, 3, 4]);
   const [outputOrder, setOutputOrder] = useState<number[]>([4, 3, 2, 1]);
@@ -74,6 +75,7 @@ export default function PipelinePage() {
           ) : (
             <ResultView result={result} />
           )}
+          {(result !== null || allowance === 'empty') && <PracticeNext kind="pipeline" lang={lang} />}
         </section>
       </div>
     </div>
