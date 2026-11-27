@@ -233,6 +233,10 @@ export const TEST_PAGES_EN: Record<TestPageKey, TestPageCopy> = {
         a: 'No answer key exists, because it compares how you describe yourself with the competencies P&G looks for. Lists of "best answers" tend to make your responses inconsistent, which is easier to spot than any single answer. Use practice to get familiar with the formats and wording, then answer from your own experience.',
       },
       {
+        q: 'What do PEAK assessment questions look like?',
+        a: 'Expect three formats: rating how well a statement such as "I plan my work before starting" describes you, picking the more accurate of two positive statements, and choosing how you would act in a short workplace scenario. This page has free example questions in all three, with no sign-up.',
+      },
+      {
         q: 'Should I practise for a personality-style questionnaire?',
         a: 'Practise the format, not the answers. Knowing what rating, forced-choice and scenario questions look like lets you spend your attention on giving accurate answers.',
       },

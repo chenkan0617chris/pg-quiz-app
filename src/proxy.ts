@@ -19,6 +19,9 @@ const LEGACY_PATHS: Record<string, string> = {
   '/data-interpretation': '/practice',
 };
 
+/** First path segments served by a route; anything else is a 404. */
+const TOP_LEVEL = new Set(['zh', 'en', 'account', 'admin', 'api', 'trpc', 'billing', 'sign-in', 'sign-up', 'opengraph-image']);
+
 /** Search crawlers send no `Accept-Language`, so they land on the English tree. */
 function negotiate(request: NextRequest): Language {
   const accepted = (request.headers.get('accept-language') ?? '').split(',')[0].split(';')[0].trim();
@@ -33,6 +36,16 @@ export default clerkMiddleware((auth, request) => {
     const url = request.nextUrl.clone();
     url.pathname = `/${negotiate(request)}${legacy}`;
     return NextResponse.redirect(url);
+  }
+
+  // `/foo` would otherwise match [lang], start streaming behind loading.tsx and
+  // answer 200 + noindex (a soft 404). Send unknown first segments to a path no
+  // route matches, so the router replies with a real 404 before rendering.
+  const first = pathname.split('/')[1] ?? '';
+  if (first && !first.includes('.') && !first.startsWith('_') && !TOP_LEVEL.has(first)) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${negotiate(request)}/__not-found`;
+    return NextResponse.rewrite(url);
   }
 
   // The root layout renders <html lang> server-side and needs the URL to do it.
